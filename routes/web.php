@@ -89,6 +89,36 @@ Route::get('/offers', [OffersController::class, 'index'])->name('offers');
 // About
 Route::view('/about', 'about.index')->name('about');
 
+Route::get('/robots.txt', function () {
+    $content = [
+        'User-agent: *',
+        'Allow: /',
+        'Sitemap: ' . url('/sitemap.xml'),
+    ];
+
+    return response(implode(PHP_EOL, $content), 200)
+        ->header('Content-Type', 'text/plain; charset=UTF-8');
+});
+
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        ['loc' => route('home'), 'changefreq' => 'hourly', 'priority' => '1.0'],
+        ['loc' => route('offers'), 'changefreq' => 'daily', 'priority' => '0.9'],
+        ['loc' => route('about'), 'changefreq' => 'weekly', 'priority' => '0.7'],
+        ['loc' => route('updates.index'), 'changefreq' => 'hourly', 'priority' => '0.9'],
+        ['loc' => route('jobs.index'), 'changefreq' => 'daily', 'priority' => '0.8'],
+        ['loc' => route('farming.index'), 'changefreq' => 'daily', 'priority' => '0.8'],
+        ['loc' => route('rents.index'), 'changefreq' => 'daily', 'priority' => '0.8'],
+        ['loc' => route('buy.index'), 'changefreq' => 'daily', 'priority' => '0.8'],
+        ['loc' => route('services.index'), 'changefreq' => 'daily', 'priority' => '0.8'],
+        ['loc' => route('newspaper'), 'changefreq' => 'daily', 'priority' => '0.7'],
+    ];
+
+    return response()
+        ->view('shared.sitemap_xml', ['urls' => $urls])
+        ->header('Content-Type', 'application/xml; charset=UTF-8');
+})->name('sitemap');
+
 // Shop Dashboard
 Route::get('/shop_dashboard', [ShopDashboardController::class, 'index'])->name('shop_dashboard')->middleware('auth');
 

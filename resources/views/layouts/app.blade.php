@@ -1,9 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AajchaOffer</title>
+  @php
+    $seoTitle = trim($__env->yieldContent('title')) ?: 'AajchaOffer - Aajcha Bhav, Aajche Offers, Todays Rate';
+    $seoDescription = trim($__env->yieldContent('meta_description')) ?: 'AajchaOffer gives daily city updates for aajcha bhav, aajche offers, local market prices, jobs, farming, rents, buy & sell, and services.';
+    $seoKeywords = trim($__env->yieldContent('meta_keywords')) ?: 'aajcha offer, aajcha bhav, aajche offers, todays rate, city pulses rate, local offers, market bhav';
+    $canonicalUrl = url()->current();
+  @endphp
+  <title>{{ $seoTitle }}</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="{{ $seoDescription }}">
+  <meta name="keywords" content="{{ $seoKeywords }}">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="{{ $canonicalUrl }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ $seoTitle }}">
+  <meta property="og:description" content="{{ $seoDescription }}">
+  <meta property="og:url" content="{{ $canonicalUrl }}">
+  <meta property="og:site_name" content="AajchaOffer">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ $seoTitle }}">
+  <meta name="twitter:description" content="{{ $seoDescription }}">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <script type="application/ld+json">
+    {!! json_encode([
+      '@context' => 'https://schema.org',
+      '@type' => 'WebSite',
+      'name' => 'AajchaOffer',
+      'url' => url('/'),
+      'potentialAction' => [
+        '@type' => 'SearchAction',
+        'target' => url('/') . '?q={search_term_string}',
+        'query-input' => 'required name=search_term_string',
+      ],
+    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+  </script>
+  <script type="application/ld+json">
+    {!! json_encode([
+      '@context' => 'https://schema.org',
+      '@type' => 'Organization',
+      'name' => 'AajchaOffer',
+      'url' => url('/'),
+      'logo' => asset('images/icons/about.svg'),
+    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+  </script>
   <link rel="stylesheet" href="{{ asset('css/application.css') }}">
   <style>
     .global-top{position:sticky;top:0;z-index:120;background:rgba(255,248,240,.96);backdrop-filter:blur(14px);border-bottom:1px solid #F0E8DC;padding:.62rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem}
