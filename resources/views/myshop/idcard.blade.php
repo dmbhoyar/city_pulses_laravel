@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shop ID Card</title>
+  <style>
+    .card { width:300px;border:1px solid #ccc;padding:12px;border-radius:6px;font-family:Arial }
+    .logo{height:48px;width:48px;background:#eee;display:inline-block}
+  </style>
+</head>
+<body>
+  @if(isset($shop) && $shop)
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="logo"></div>
+        <div>
+          <div style="font-weight:700">{{ $shop->name }}</div>
+          <div style="font-size:12px">{{ $shop->address }}</div>
+        </div>
+      </div>
+      <hr>
+      <div>Owner: {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</div>
+      <div>Phone: {{ $shop->phone }}</div>
+      <div><small>Issued: {{ \Carbon\Carbon::today()->format('d M Y') }}</small></div>
+    </div>
+    <p><button onclick="window.print()" class="toggle-btn">Print / Save as PDF</button></p>
+  @else
+    <p>No shop found.</p>
+  @endif
+</body>
+</html>
