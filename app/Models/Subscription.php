@@ -9,11 +9,28 @@ class Subscription extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['status', 'amount', 'provider', 'provider_id', 'starts_at', 'expires_at', 'user_id', 'shop_id'];
+    protected $fillable = [
+        'status',
+        'amount',
+        'provider',
+        'provider_id',
+        'payment_transaction_id',
+        'payment_screenshot_path',
+        'comment',
+        'admin_notes',
+        'reviewed_by',
+        'reviewed_at',
+        'plan_key',
+        'starts_at',
+        'expires_at',
+        'user_id',
+        'shop_id',
+    ];
 
     protected $casts = [
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
+        'reviewed_at' => 'datetime',
     ];
 
     public function user()
@@ -24,6 +41,11 @@ class Subscription extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
     }
 
     public function isActive(): bool

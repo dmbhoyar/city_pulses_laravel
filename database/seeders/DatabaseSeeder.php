@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(SuperAdminUserSeeder::class);
+
         // Create default superadmin from environment config
         $adminEmail = env('ADMIN_EMAIL', 'admin@citypulses.com');
         User::firstOrCreate(

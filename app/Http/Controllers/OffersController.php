@@ -10,17 +10,48 @@ class OffersController extends Controller
 {
     public function index(Request $request)
     {
-        $cityId = $request->session()->get('city_id');
+        $cityId = (int) $request->session()->get('city_id', 0);
         $city   = $cityId ? City::find($cityId) : null;
-        $today  = now()->toDateString();
+
+        if (!$city) {
+            $city = City::query()
+                ->whereRaw('LOWER(name) = ?', ['washim'])
+                ->first();
+
+            if (!$city) {
+                $city = City::query()->orderBy('id')->first();
+            }
+
+            if ($city) {
+                $request->session()->put('city_id', $city->id);
+            }
+        }
+
+        $today  = now();
+        $todayDate = $today->toDateString();
+
+        $offersQuery = Update::query()
+            ->with(['shop.user', 'city'])
+            ->offers();
 
         if ($city) {
-            $offers = Update::where('city_id', $city->id)->offers()->latest()->get();
-            $events = Update::where('city_id', $city->id)->events()->whereDate('created_at', $today)->latest()->get();
+            $offersQuery->where(function ($query) use ($city) {
+                $query->where('city_id', $city->id)
+                    ->orWhereHas('shop', function ($shopQuery) use ($city) {
+                        $shopQuery->whereJsonContains('page_config->service_cities', (int) $city->id);
+                    });
+            });
+
+            $events = Update::where('city_id', $city->id)
+                ->events()
+                ->whereDate('created_at', $todayDate)
+                ->latest()
+                ->get();
         } else {
-            $offers = Update::offers()->latest()->get();
-            $events = Update::events()->whereDate('created_at', $today)->latest()->get();
+            $events = Update::events()->whereDate('created_at', $todayDate)->latest()->get();
         }
+
+        $offers = $offersQuery->latest()->get();
 
         return view('offers.index', compact('city', 'offers', 'events', 'today'));
     }

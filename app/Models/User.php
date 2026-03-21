@@ -47,25 +47,35 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->hasMany(Subscription::class);
     }
 
+    public function templateUnlockRequests()
+    {
+        return $this->hasMany(TemplateUnlockRequest::class);
+    }
+
+    public function serviceReviews()
+    {
+        return $this->hasMany(ServiceReview::class);
+    }
+
     // Role helpers
     public function isShopowner(): bool
     {
-        return $this->role === 'shopowner';
+        return in_array(strtolower((string) $this->role), ['shopowner', 'shop_owner', 'shop-owner'], true);
     }
 
     public function isServiceProvider(): bool
     {
-        return $this->role === 'service_provider';
+        return in_array(strtolower((string) $this->role), ['service_provider', 'serviceprovider', 'service-provider'], true);
     }
 
     public function isShopworker(): bool
     {
-        return $this->role === 'shopworker';
+        return in_array(strtolower((string) $this->role), ['shopworker', 'shop_worker', 'shop-worker'], true);
     }
 
     public function isSuperadmin(): bool
     {
-        return $this->role === 'superadmin';
+        return in_array(strtolower((string) $this->role), ['superadmin', 'super_admin', 'super-admin', 'admin'], true);
     }
 
     public function getFullNameAttribute(): string

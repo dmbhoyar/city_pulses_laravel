@@ -275,13 +275,13 @@ form .form-row{margin-bottom:12px}
 .sidebar-user .user-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent-pink),var(--accent-coral));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
 .sidebar-user .user-name{font-weight:700;color:#222}
 .sidebar-user .user-email{font-size:12px;color:#666}
-.sidebar-user .user-actions{margin-top:10px;display:flex;gap:8px}
+.sidebar-user .user-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
 .sidebar-user .button{padding:8px 10px;border-radius:8px;border:1px solid #ddd;background:#e9d08e}
 .sidebar-user{background:transparent;border:none;border-radius:0;padding:6px 0;margin:0;margin-top:12px;border-top:1px solid #f1f1f1}
 .sidebar-user .user-top{display:flex;align-items:center;gap:10px;padding:6px 8px}
 .sidebar-user .user-info{display:flex;flex-direction:column;margin-left:8px}
 .sidebar-user .user-name{font-weight:700;color:#222;font-size:14px}
-.sidebar-user .user-actions{margin-top:6px;display:flex;gap:8px;padding:6px 8px}
+.sidebar-user .user-actions{margin-top:6px;display:flex;gap:8px;padding:6px 8px;flex-wrap:wrap}
 .sidebar-user .button{padding:8px 10px;border-radius:6px;border:1px solid #ddd;background:#fff}
 .sidebar-user .button.primary{background:var(--accent-pink);color:#fff;border-color:var(--accent-coral)}
 .sidebar-user.sidebar-auth .button{width:100%;display:block}

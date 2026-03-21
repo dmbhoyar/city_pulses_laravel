@@ -19,6 +19,11 @@ use App\Http\Controllers\SubscriptionsController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 use App\Http\Controllers\Admin\ShopsController as AdminShopsController;
+use App\Http\Controllers\Admin\SubscriptionsController as AdminSubscriptionsController;
+use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\Admin\CitiesController as AdminCitiesController;
+use App\Http\Controllers\Admin\JobsController as AdminJobsController;
+use App\Http\Controllers\Admin\OffersController as AdminOffersController;
 use App\Http\Controllers\Webhooks\StripeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -78,7 +83,9 @@ Route::delete('/buy/{listing}', [BuyController::class, 'destroy'])->name('buy.de
 
 // Services
 Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
-Route::get('/services/{listing}', [ServicesController::class, 'show'])->name('services.show');
+Route::get('/services/{publicSlug}', [ServicesController::class, 'show'])->name('services.show');
+Route::post('/services/{publicSlug}/reviews', [ServicesController::class, 'storeReview'])
+    ->name('services.reviews.store');
 
 // Newspaper
 Route::get('/newspaper', [NewspaperController::class, 'show'])->name('newspaper');
@@ -125,12 +132,17 @@ Route::get('/shop_dashboard', [ShopDashboardController::class, 'index'])->name('
 // Subscriptions
 Route::get('/subscriptions/new', [SubscriptionsController::class, 'create'])->name('subscriptions.new')->middleware('auth');
 Route::post('/subscriptions', [SubscriptionsController::class, 'store'])->name('subscriptions.create')->middleware('auth');
+Route::patch('/subscriptions/template', [SubscriptionsController::class, 'updateTemplate'])->name('subscriptions.template.update')->middleware('auth');
+Route::post('/subscriptions/template-unlock-request', [SubscriptionsController::class, 'requestTemplateUnlock'])->name('subscriptions.template_unlock_request')->middleware('auth');
 
 // MyShop
 Route::middleware('auth')->group(function () {
     Route::get('/myshop', [MyshopController::class, 'index'])->name('myshop');
     Route::get('/myshop/configure', [MyshopController::class, 'configure'])->name('configure_myshop');
     Route::patch('/myshop/configure', [MyshopController::class, 'configureSave'])->name('configure_myshop_save');
+    Route::get('/myshop/unlock', [MyshopController::class, 'unlockPage'])->name('myshop.unlock');
+    Route::get('/myshop/requests', [MyshopController::class, 'clientRequests'])->name('myshop_requests');
+    Route::patch('/myshop/requests/{id}', [MyshopController::class, 'updateClientRequest'])->name('myshop_requests_update');
     Route::get('/myshop/workers', [MyshopController::class, 'workers'])->name('workers_myshop');
     Route::post('/myshop/workers', [MyshopController::class, 'createWorker'])->name('create_worker_myshop');
     Route::patch('/myshop/workers', [MyshopController::class, 'updateWorker'])->name('update_worker_myshop');
@@ -148,21 +160,77 @@ Route::middleware('auth')->group(function () {
     Route::get('/myservice/configure', [MyserviceController::class, 'configure'])->name('configure_myservice');
     Route::patch('/myservice/configure', [MyserviceController::class, 'configureSave'])->name('configure_myservice_save');
     Route::post('/myservice/configure', [MyserviceController::class, 'configureSave']);
-    Route::get('/myservice/business_card', [MyserviceController::class, 'businessCard'])->name('business_card_myservice');
-    Route::post('/myservice/business_card', [MyserviceController::class, 'businessCardSave'])->name('business_card_myservice_save');
+    Route::get('/myservice/unlock', [MyserviceController::class, 'unlockPage'])->name('myservice.unlock');
+    Route::get('/myservice/workers', [MyserviceController::class, 'workers'])->name('workers_myservice');
+    Route::post('/myservice/workers', [MyserviceController::class, 'createWorker'])->name('create_worker_myservice');
+    Route::patch('/myservice/workers', [MyserviceController::class, 'updateWorker'])->name('update_worker_myservice');
+    Route::get('/myservice/worker/{id}/experience', [MyserviceController::class, 'workerExperience'])->name('worker_experience_myservice');
+    Route::get('/myservice/offer/new', [MyserviceController::class, 'offerNew'])->name('myservice_offer_new');
+    Route::post('/myservice/offer', [MyserviceController::class, 'offerCreate'])->name('myservice_offer_create');
+    Route::get('/myservice/requests', [MyserviceController::class, 'clientRequests'])->name('myservice_requests');
+    Route::patch('/myservice/requests/{id}', [MyserviceController::class, 'updateClientRequest'])->name('myservice_requests_update');
+    Route::get('/myservice/experience', [MyserviceController::class, 'experience'])->name('myservice_experience');
+    Route::get('/myservice/idcard', [MyserviceController::class, 'idcard'])->name('myservice_idcard');
 });
 
 // Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/users', [AdminUsersController::class, 'index'])->name('users.index');
+    Route::post('/users', [AdminUsersController::class, 'store'])->name('users.store');
+    Route::patch('/users/{user}', [AdminUsersController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [AdminUsersController::class, 'destroy'])->name('users.destroy');
+    Route::get('/cities', [AdminCitiesController::class, 'index'])->name('cities.index');
+    Route::post('/cities', [AdminCitiesController::class, 'store'])->name('cities.store');
+    Route::patch('/cities/{city}', [AdminCitiesController::class, 'update'])->name('cities.update');
+    Route::delete('/cities/{city}', [AdminCitiesController::class, 'destroy'])->name('cities.destroy');
+    Route::get('/jobs', [AdminJobsController::class, 'index'])->name('jobs.index');
+    Route::post('/jobs', [AdminJobsController::class, 'store'])->name('jobs.store');
+    Route::patch('/jobs/{job}', [AdminJobsController::class, 'update'])->name('jobs.update');
+    Route::delete('/jobs/{job}', [AdminJobsController::class, 'destroy'])->name('jobs.destroy');
+    Route::get('/offers', [AdminOffersController::class, 'index'])->name('offers.index');
+    Route::post('/offers', [AdminOffersController::class, 'store'])->name('offers.store');
+    Route::patch('/offers/{offer}', [AdminOffersController::class, 'update'])->name('offers.update');
+    Route::delete('/offers/{offer}', [AdminOffersController::class, 'destroy'])->name('offers.destroy');
     Route::get('/shops', [AdminShopsController::class, 'index'])->name('shops.index');
     Route::delete('/shops/{shop}', [AdminShopsController::class, 'destroy'])->name('shops.destroy');
+    Route::get('/subscriptions', [AdminSubscriptionsController::class, 'index'])->name('subscriptions.index');
+    Route::patch('/subscriptions/{subscription}/status', [AdminSubscriptionsController::class, 'updateSubscriptionStatus'])->name('subscriptions.status');
+    Route::patch('/template-unlock-requests/{unlockRequest}/status', [AdminSubscriptionsController::class, 'updateUnlockStatus'])->name('template_unlock_requests.status');
+    Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
+    Route::patch('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
 });
 
 // Webhooks
 Route::post('/webhooks/stripe', [StripeController::class, 'create'])->name('webhooks.stripe');
+
+// Public client request capture (from template forms)
+Route::post('/client-requests', [ShopsController::class, 'storeClientRequest'])->name('client_requests.store');
+
+// Public Service ID Card
+Route::get('/{publicSlug}/id-card', [ShopsController::class, 'publicIdcardBySlug'])
+    ->where('publicSlug', '[a-z0-9-]+')
+    ->name('shops.idcard.public');
+
+Route::get('/{service}/{provider}/id-card', [ShopsController::class, 'publicIdcard'])
+    ->where([
+        'service' => '[a-z0-9-]+',
+        'provider' => '[a-z0-9-]+',
+    ])
+    ->name('shops.idcard.public.legacy');
+
+// Public Service Page (custom slug)
+Route::get('/{publicSlug}', [ShopsController::class, 'publicShowBySlug'])
+    ->where('publicSlug', '[a-z0-9-]+')
+    ->name('shops.public');
+
+// Public Service Page (legacy service/provider slug)
+Route::get('/{service}/{provider}', [ShopsController::class, 'publicShow'])
+    ->where([
+        'service' => '[a-z0-9-]+',
+        'provider' => '[a-z0-9-]+',
+    ])
+    ->name('shops.public.legacy');
 
 // Health check
 Route::get('/up', function () {

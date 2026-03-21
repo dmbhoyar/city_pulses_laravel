@@ -47,6 +47,10 @@
   <link rel="stylesheet" href="{{ asset('css/application.css') }}">
   <style>
     .global-top{position:sticky;top:0;z-index:120;background:rgba(255,248,240,.96);backdrop-filter:blur(14px);border-bottom:1px solid #F0E8DC;padding:.62rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem}
+      /* Panel active item */
+      .panel-list li.active-item{background:linear-gradient(90deg,#eef5ff,#f4f8ff);border-left:3px solid #2f4e74;padding-left:5px}
+      .panel-list li.active-item .badge{background:#2f4e74 !important;color:#fff !important}
+      .panel-list li.active-item .label,.panel-list li.active-item .label a{color:#2f4e74;font-weight:700}
     .global-brand{display:flex;align-items:center;gap:.6rem;min-width:0}
     .global-badge{display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .global-logo{width:36px;height:36px;display:block}
@@ -79,15 +83,87 @@
     .mobile-sidebar-brand .mobile-logo{width:26px;height:26px;display:block}
     .mobile-sidebar-brand .mobile-title{font-weight:700;font-size:.95rem;color:#334a68}
     .sidebar-panel{background:#f3f4f6 !important;border-right:1px solid #d9dde3 !important}
+    .guide-bot{position:fixed;right:16px;bottom:16px;z-index:420;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+    .guide-toggle{
+      width:56px;height:56px;border:none;border-radius:50%;
+      background:transparent;color:#fff;cursor:pointer;position:relative;
+      box-shadow:none;display:flex;align-items:center;justify-content:center;
+      transition:transform .18s ease;
+      animation:guideFloat 2.2s ease-in-out infinite;
+    }
+    .guide-toggle:hover{transform:translateY(-2px)}
+    .guide-toggle:focus-visible{outline:3px solid rgba(255,255,255,.72);outline-offset:2px}
+    .guide-toggle-icon{width:52px;height:52px;display:block;filter:drop-shadow(0 5px 10px rgba(20,34,58,.28)) drop-shadow(0 0 10px rgba(255,153,0,.25))}
+    .guide-toggle-dot{display:none}
+    @keyframes guideFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    .guide-card{width:min(92vw,360px);background:#fff;border:1px solid #d7e2f4;border-radius:14px;box-shadow:0 18px 42px rgba(27,44,77,.24);padding:12px;display:none}
+    .guide-card.open{display:block}
+    .guide-card::before{content:'';display:block;height:4px;border-radius:10px;background:linear-gradient(90deg,#2f9c8e,#63c1b7,#8e5bd6);margin:-12px -12px 10px}
+    .guide-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+    .guide-head strong{font-size:14px;color:#2d4669}
+    .guide-close{border:1px solid #d4dff2;background:#fff;color:#54709b;border-radius:8px;width:30px;height:30px;cursor:pointer}
+    .guide-copy{font-size:12.5px;line-height:1.5;color:#5a7293;margin:0 0 10px}
+    .guide-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+    .guide-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#f9fbff 0%,#f3f8ff 100%);border:1px solid #dce8fa;border-radius:9px;padding:8px 9px}
+    .guide-list span{font-size:12px;color:#35537a;font-weight:600;line-height:1.35}
+    .guide-focus-btn{border:1px solid #c8d8f3;background:#fff;color:#2f5c97;border-radius:8px;font-size:11px;font-weight:700;padding:5px 9px;cursor:pointer;white-space:nowrap}
+    .guide-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+    .guide-secondary,.guide-primary{border-radius:8px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer}
+    .guide-secondary{border:1px solid #d3dff2;background:#fff;color:#4a678f}
+    .guide-primary{border:none;background:#2f9c8e;color:#fff}
+    .guide-focus{outline:3px solid rgba(255,107,0,.6)!important;outline-offset:3px;border-radius:10px;animation:guidePulse 1.2s ease 2}
+    @keyframes guidePulse{0%{box-shadow:0 0 0 0 rgba(255,107,0,.45)}100%{box-shadow:0 0 0 14px rgba(255,107,0,0)}}
     @media(max-width:700px){
       .global-copy small{max-width:150px}
       .global-time{display:none}
       .global-city-form{display:none}
       .mobile-city-btn{display:inline-flex}
+      .guide-bot{right:10px;bottom:10px}
+      .guide-toggle{width:50px;height:50px}
+      .guide-toggle-icon{width:46px;height:46px}
+      .guide-card{width:min(95vw,330px);padding:10px}
+      .guide-card::before{margin:-10px -10px 10px}
+      .guide-list li{padding:7px 8px}
     }
   </style>
 </head>
-<body>
+@php
+  $routeShopParam = request()->route('shop');
+  $routeShopId = is_object($routeShopParam)
+    ? ($routeShopParam->id ?? null)
+    : (is_numeric($routeShopParam) ? (int) $routeShopParam : null);
+  $ownsRouteShop = auth()->check() && $routeShopId
+    ? auth()->user()->shops()->where('id', $routeShopId)->exists()
+    : false;
+  $isOwnedServicePage = request()->routeIs('shops.show') && $ownsRouteShop && auth()->check() && auth()->user()->isServiceProvider();
+  $isOwnedShopPage = request()->routeIs('shops.show') && $ownsRouteShop && auth()->check() && auth()->user()->isShopowner();
+
+  $isMyServiceBody = request()->routeIs('myservice')
+      || request()->routeIs('configure_myservice*')
+      || request()->routeIs('workers_myservice')
+      || request()->routeIs('create_worker_myservice')
+      || request()->routeIs('update_worker_myservice')
+      || request()->routeIs('worker_experience_myservice')
+      || request()->routeIs('myservice_offer_*')
+      || request()->routeIs('myservice_requests*')
+      || request()->routeIs('myservice_experience')
+    || request()->routeIs('myservice_idcard')
+    || $isOwnedServicePage;
+  $isMyShopBody = request()->routeIs('myshop')
+      || request()->routeIs('configure_myshop*')
+      || request()->routeIs('myshop_requests*')
+      || request()->routeIs('workers_myshop')
+      || request()->routeIs('create_worker_myshop')
+      || request()->routeIs('update_worker_myshop')
+      || request()->routeIs('worker_experience_myshop')
+      || request()->routeIs('myshop_offer_*')
+      || request()->routeIs('myshop_experience')
+    || request()->routeIs('myshop_idcard')
+    || $isOwnedShopPage;
+  $isAdminBody = request()->routeIs('admin.*') && auth()->check() && auth()->user()->isSuperadmin();
+  $bodyRouteGroup = $isAdminBody ? 'admin' : ($isMyServiceBody ? 'myservice' : ($isMyShopBody ? 'myshop' : ''));
+@endphp
+<body data-user-role="{{ auth()->check() ? auth()->user()->role : 'guest' }}" data-path="{{ request()->path() }}" data-route-group="{{ $bodyRouteGroup }}">
 
 <div class="layout" id="main-layout">
   <!-- Left icon bar -->
@@ -174,12 +250,86 @@
     </div>
 
     <div class="sidebar-content">
-      <div class="panel-title {{ request()->routeIs('home') ? 'active' : '' }}">{{ request()->routeIs('about') ? 'About Us' : 'Home' }}</div>
+      @php
+        $ctrl = request()->route()?->getActionMethod() ? class_basename(request()->route()->getController()) : '';
+        $panelRouteShopParam = request()->route('shop');
+        $panelRouteShopId = is_object($panelRouteShopParam)
+          ? ($panelRouteShopParam->id ?? null)
+          : (is_numeric($panelRouteShopParam) ? (int) $panelRouteShopParam : null);
+        $panelOwnsRouteShop = auth()->check() && $panelRouteShopId
+          ? auth()->user()->shops()->where('id', $panelRouteShopId)->exists()
+          : false;
+        $panelIsOwnedServicePage = request()->routeIs('shops.show') && $panelOwnsRouteShop && auth()->check() && auth()->user()->isServiceProvider();
+        $panelIsOwnedShopPage = request()->routeIs('shops.show') && $panelOwnsRouteShop && auth()->check() && auth()->user()->isShopowner();
+        $panelIsSuperadmin = auth()->check() && auth()->user()->isSuperadmin();
+
+        $isMyService = !$panelIsSuperadmin && (request()->routeIs('myservice')
+          || request()->routeIs('configure_myservice*')
+          || request()->routeIs('workers_myservice')
+          || request()->routeIs('create_worker_myservice')
+          || request()->routeIs('update_worker_myservice')
+          || request()->routeIs('worker_experience_myservice')
+          || request()->routeIs('myservice_offer_*')
+          || request()->routeIs('myservice_requests*')
+          || request()->routeIs('myservice_experience')
+          || request()->routeIs('myservice_idcard')
+          || $panelIsOwnedServicePage);
+        $isMyShop = !$panelIsSuperadmin && (request()->routeIs('myshop')
+          || request()->routeIs('configure_myshop*')
+          || request()->routeIs('myshop_requests*')
+          || request()->routeIs('workers_myshop')
+          || request()->routeIs('create_worker_myshop')
+          || request()->routeIs('update_worker_myshop')
+          || request()->routeIs('worker_experience_myshop')
+          || request()->routeIs('myshop_offer_*')
+          || request()->routeIs('myshop_experience')
+          || request()->routeIs('myshop_idcard')
+          || $panelIsOwnedShopPage);
+
+        $myServiceShop = auth()->check() ? auth()->user()->shops()->first() : null;
+        $myServicePageUrl = $myServiceShop
+          ? route('shops.public', ['publicSlug' => $myServiceShop->public_page_slug])
+          : route('myservice');
+        $myServiceUrlEncoded = urlencode($myServicePageUrl);
+        $myServiceShareText = 'Check my service page: ' . $myServicePageUrl;
+        $myServiceShareTextEncoded = urlencode($myServiceShareText);
+        $myServiceWhatsappShareUrl = "https://wa.me/?text={$myServiceShareTextEncoded}";
+        $myServiceFacebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u={$myServiceUrlEncoded}";
+        $myServiceXShareUrl = "https://twitter.com/intent/tweet?url={$myServiceUrlEncoded}&text={$myServiceShareTextEncoded}";
+        $myServiceTelegramShareUrl = "https://t.me/share/url?url={$myServiceUrlEncoded}&text={$myServiceShareTextEncoded}";
+      @endphp
+      <div class="panel-title {{ request()->routeIs('home') || $isMyService || $isMyShop || $panelIsSuperadmin ? 'active' : '' }}">
+        {{ request()->routeIs('about') ? 'About Us' : ($panelIsSuperadmin ? 'Admin Panel' : ($isMyService ? 'My Service' : ($isMyShop ? 'My Shop' : 'Home'))) }}
+      </div>
       <ul class="panel-list">
-        @php $ctrl = request()->route()?->getActionMethod() ? class_basename(request()->route()->getController()) : ''; @endphp
         @if(request()->routeIs('about'))
           <li><a href="{{ route('about') }}" class="panel-link">Our Story</a></li>
           <li><a href="{{ route('about') }}#contact" class="panel-link">Contact</a></li>
+        @elseif($panelIsSuperadmin)
+          <li><a href="{{ route('admin.dashboard') }}" class="panel-link">Dashboard</a></li>
+          <li><a href="{{ route('admin.users.index') }}" class="panel-link">Users</a></li>
+          <li><a href="{{ route('admin.shops.index') }}" class="panel-link">Shops</a></li>
+          <li><a href="{{ route('admin.subscriptions.index') }}" class="panel-link">Subscriptions</a></li>
+          <li><a href="{{ route('admin.settings.index') }}" class="panel-link">Settings</a></li>
+        @elseif($isMyService)
+          <li><a href="{{ $myServicePageUrl }}" class="panel-link">My Page</a></li>
+          <li><a href="{{ route('configure_myservice') }}" class="panel-link">Configure Service</a></li>
+          <li><a href="{{ route('workers_myservice') }}" class="panel-link">Workers</a></li>
+          <li><a href="{{ route('myservice_offer_new') }}" class="panel-link">Offers</a></li>
+          <li><a href="{{ route('myservice_requests') }}" class="panel-link">Client Requests</a></li>
+          <li><a href="{{ route('myservice_experience') }}" class="panel-link">Experience Letter</a></li>
+          <li><a href="{{ route('myservice_idcard') }}" class="panel-link">ID Card</a></li>
+          <li><a href="{{ route('subscriptions.new') }}" class="panel-link">Subscription</a></li>
+          <li><a href="{{ route('shop_dashboard') }}" class="panel-link">Dashboard</a></li>
+        @elseif($isMyShop)
+          <li><a href="{{ route('myshop') }}" class="panel-link">Shop Home</a></li>
+          <li><a href="{{ route('configure_myshop') }}" class="panel-link">Configure Shop</a></li>
+          <li><a href="{{ route('workers_myshop') }}" class="panel-link">Workers</a></li>
+          <li><a href="{{ route('myshop_offer_new') }}" class="panel-link">Offers</a></li>
+          <li><a href="{{ route('myshop_requests') }}" class="panel-link">Client Requests</a></li>
+          <li><a href="{{ route('myshop_experience') }}" class="panel-link">Experience Letter</a></li>
+          <li><a href="{{ route('myshop_idcard') }}" class="panel-link">ID Card</a></li>
+          <li><a href="{{ route('subscriptions.new') }}" class="panel-link">Subscription</a></li>
         @elseif(str_contains($ctrl, 'Home'))
           <li><a href="{{ route('home') }}" class="panel-link">Today's Pulses</a></li>
           <li><a href="{{ route('offers') }}" class="panel-link">Offers &amp; Benefits</a></li>
@@ -199,18 +349,42 @@
           <li><a href="{{ route('buy.index') }}" class="panel-link">Electronics</a></li>
           <li><a href="{{ route('buy.index') }}" class="panel-link">Cars</a></li>
         @elseif(str_contains($ctrl, 'Services'))
-          <li><a href="{{ route('services.index') }}" class="panel-link">Plumbing</a></li>
-          <li><a href="{{ route('services.index') }}" class="panel-link">Events</a></li>
+          <li><a href="{{ route('services.index') }}" class="panel-link">Service ID Cards</a></li>
         @else
           <li><a href="{{ route('home') }}" class="panel-link">Today's Pulses</a></li>
           <li><a href="{{ route('offers') }}" class="panel-link">Offers &amp; Benefits</a></li>
         @endif
       </ul>
       <div class="panel-details">
-        <h4>Recommended</h4>
+        <h4>{{ $panelIsSuperadmin || $isMyService || $isMyShop ? 'Workspace' : 'Recommended' }}</h4>
         <ul class="recommendations">
-          <li>See today's top stories</li>
-          <li>Nearby events</li>
+          @if($panelIsSuperadmin)
+            <li>Manage platform users and business pages</li>
+            <li>Review subscriptions and unlock requests</li>
+          @elseif($isMyService)
+            @php
+              $sideShop = auth()->check() ? auth()->user()->shops()->first() : null;
+              $sideWorkersCount = $sideShop ? \App\Models\User::where('shop_id', $sideShop->id)->count() : 0;
+              $sideOffersCount = $sideShop && $sideShop->city_id
+                ? \App\Models\Update::offers()->where('city_id', $sideShop->city_id)->count()
+                : 0;
+            @endphp
+            <li>Total workers: {{ $sideWorkersCount }}</li>
+            <li>Active city offers: {{ $sideOffersCount }}</li>
+          @elseif($isMyShop)
+            @php
+              $sideShop = auth()->check() ? auth()->user()->shops()->first() : null;
+              $sideWorkersCount = $sideShop ? \App\Models\User::where('shop_id', $sideShop->id)->count() : 0;
+            @endphp
+            <li>Total workers: {{ $sideWorkersCount }}</li>
+            <li>Use Configure to update shop details</li>
+          @elseif(str_contains($ctrl, 'Services'))
+            <li>Verified service provider ID cards</li>
+            <li>Open card to view details and reviews</li>
+          @else
+            <li>See today's top stories</li>
+            <li>Nearby events</li>
+          @endif
         </ul>
       </div>
     </div>
@@ -224,8 +398,10 @@
   <div class="main">
     <!-- Unified top header (all pages) -->
     @php
-      $currentCityId = session('city_id');
-      $currentCityName = $currentCityId ? \App\Models\City::find($currentCityId)?->name : null;
+      $defaultCity = \App\Models\City::query()->whereRaw('LOWER(name) = ?', ['washim'])->first();
+      $currentCityId = session('city_id') ?: $defaultCity?->id;
+      $currentCity = $currentCityId ? \App\Models\City::find($currentCityId) : null;
+      $currentCityName = $currentCity?->name;
       $cityOptions = \App\Models\City::orderBy('name')->get(['id', 'name']);
     @endphp
     <header class="global-top">
@@ -309,6 +485,40 @@
   </div>
 </div>
 
+<div class="guide-bot" id="guide-bot">
+  <div class="guide-card" id="guide-card" role="dialog" aria-label="Quick guide">
+    <div class="guide-head">
+      <strong>Welcome to AajchaOffer 👋</strong>
+      <button type="button" class="guide-close" id="guide-close" aria-label="Close guide">✕</button>
+    </div>
+    <p class="guide-copy">First time here? Use this guide to quickly learn where to select city and how to navigate tabs.</p>
+    <ul class="guide-list">
+      <li>
+        <span>Select your city from the top-right city selector.</span>
+        <button type="button" class="guide-focus-btn" data-focus="#mobile-city-btn, .global-city">Show</button>
+      </li>
+      <li>
+        <span>Browse main tabs from left icons (Home, Updates, Jobs, Farming, Rents, Buy, Services, About).</span>
+        <button type="button" class="guide-focus-btn" data-focus=".iconbar, .mobile-menu-btn">Show</button>
+      </li>
+      <li>
+        <span>Use side menu links for section shortcuts and details.</span>
+        <button type="button" class="guide-focus-btn" data-focus=".sidebar-panel, .mobile-sections">Show</button>
+      </li>
+    </ul>
+    <div class="guide-actions">
+      <button type="button" class="guide-secondary" id="guide-later">Later</button>
+      <button type="button" class="guide-primary" id="guide-done">Got it</button>
+    </div>
+  </div>
+  <button type="button" class="guide-toggle" id="guide-toggle" aria-label="Open quick guide">
+    <img class="guide-toggle-icon" src="{{ asset('images/icons/guide-robot.svg') }}" alt="Guide robot" width="36" height="36">
+    <span class="guide-toggle-dot one" aria-hidden="true"></span>
+    <span class="guide-toggle-dot two" aria-hidden="true"></span>
+    <span class="guide-toggle-dot three" aria-hidden="true"></span>
+  </button>
+</div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function(){
     const t = document.getElementById('globalTime');
@@ -379,6 +589,12 @@
   });
 
   document.addEventListener('DOMContentLoaded', function(){
+    const myServicePageUrl = @json($myServicePageUrl);
+    const myServiceWhatsappShareUrl = @json($myServiceWhatsappShareUrl);
+    const myServiceFacebookShareUrl = @json($myServiceFacebookShareUrl);
+    const myServiceXShareUrl = @json($myServiceXShareUrl);
+    const myServiceTelegramShareUrl = @json($myServiceTelegramShareUrl);
+
     const mapping = {
       home: {
         title: "Home",
@@ -424,10 +640,60 @@
       },
       services: {
         title: "Services",
-        items: [['S',"Plumbing","{{ route('services.index') }}"],['E',"Events","{{ route('services.index') }}"]],
-        rec: ["Top rated","Request a service"],
+        items: [['S',"Service ID Cards","{{ route('services.index') }}"]],
+        rec: ["Top rated providers","Verified profiles"],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#0d6efd" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4zM4 10h16v8H4z"/></svg>',
         color: '#0d6efd'
+      },
+      admin: {
+        title: "Admin Panel",
+        items: [
+          ['🏠',"Dashboard",      "{{ route('admin.dashboard') }}"],
+          ['👤',"Users",          "{{ route('admin.users.index') }}"],
+          ['🏬',"Shops",          "{{ route('admin.shops.index') }}"],
+          ['🏙',"Cities",         "{{ route('admin.cities.index') }}"],
+          ['💼',"Jobs",           "{{ route('admin.jobs.index') }}"],
+          ['🏷',"Offers",         "{{ route('admin.offers.index') }}"],
+          ['💳',"Subscriptions",  "{{ route('admin.subscriptions.index') }}"],
+          ['⚙',"Settings",       "{{ route('admin.settings.index') }}"],
+        ],
+        rec: ["Manage platform modules","Review unlock/subscription queue","Keep data updated and clean"],
+        icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l9 4v6c0 5-3.5 9.5-9 10-5.5-.5-9-5-9-10V6l9-4zm0 3.2L6 7.7v4.2c0 3.9 2.6 7.3 6 7.9 3.4-.6 6-4 6-7.9V7.7l-6-2.5z"/></svg>',
+        color: '#2f4e74'
+      },
+      myservice: {
+        title: "My Service",
+        items: [
+          ['🌐',"My Page",          myServicePageUrl],
+          ['⚙',"Configure",       "{{ route('configure_myservice') }}"],
+          ['👥',"Workers",         "{{ route('workers_myservice') }}"],
+          ['🏷',"Add Offer",       "{{ route('myservice_offer_new') }}"],
+          ['📞',"Client Requests", "{{ route('myservice_requests') }}"],
+          ['📋',"Experience",      "{{ route('myservice_experience') }}"],
+          ['🪪',"ID Card",         "{{ route('myservice_idcard') }}"],
+          ['⭐',"Subscription",    "{{ route('subscriptions.new') }}"],
+          ['📊',"Dashboard",       "{{ route('shop_dashboard') }}"],
+        ],
+        rec: ["Manage your service team","Handle client requests quickly","Share your ID card"],
+        icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>',
+        color: '#2f4e74'
+      },
+      myshop: {
+        title: "My Shop",
+        items: [
+          ['🏠',"Shop Home",       "{{ route('myshop') }}"],
+          ['⚙',"Configure",       "{{ route('configure_myshop') }}"],
+          ['👥',"Workers",         "{{ route('workers_myshop') }}"],
+          ['🏷',"Add Offer",       "{{ route('myshop_offer_new') }}"],
+          ['📞',"Client Requests", "{{ route('myshop_requests') }}"],
+          ['📋',"Experience",      "{{ route('myshop_experience') }}"],
+          ['🪪',"ID Card",         "{{ route('myshop_idcard') }}"],
+          ['⭐',"Subscription",    "{{ route('subscriptions.new') }}"],
+          ['📊',"Dashboard",       "{{ route('shop_dashboard') }}"],
+        ],
+        rec: ["Manage your shop team","Handle client requests quickly","Share your ID card"],
+        icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 12H7v-2h8v2zm0-4H7v-2h8v2zm5-5H4V6h16v1z"/></svg>',
+        color: '#253a5a'
       }
     };
 
@@ -455,13 +721,58 @@
       panelTitle.innerHTML = (def.icon||'') + `<span class="panel-title-text">${def.title}</span>`;
       panelTitle.classList.add('active');
       panelTitle.style.borderLeftColor = def.color||'#a10b0b';
-      panelList.innerHTML = def.items.map((i,idx)=>{
+      const curPath = window.location.pathname;
+      panelList.innerHTML = def.items.map((i)=>{
         const badge = `<span class="badge">${i[0]}</span>`;
-        const label = i[2] ? `<a class="label" href="${i[2]}">${i[1]}</a>` : `<span class="label">${i[1]}</span>`;
-        return `<li class="${idx===0?'active-item':''}">${badge}${label}</li>`;
+        let label = `<span class="label">${i[1]}</span>`;
+        if (i[2]) {
+          if (String(i[2]).startsWith('action:')) {
+            const action = String(i[2]).replace('action:', '');
+            label = `<a class="label panel-action-link" href="#" data-action="${action}" data-url="${myServicePageUrl}">${i[1]}</a>`;
+          } else {
+            let isExternal = false;
+            try {
+              const targetUrl = new URL(i[2], window.location.origin);
+              isExternal = targetUrl.origin !== window.location.origin;
+            } catch(e) {}
+            label = `<a class="label" href="${i[2]}" ${isExternal ? 'target="_blank" rel="noopener"' : ''}>${i[1]}</a>`;
+          }
+        }
+        let isActive = false;
+        try { isActive = i[2] && (curPath === new URL(i[2], window.location.origin).pathname); } catch(e){}
+        return `<li class="${isActive ? 'active-item' : ''}">${badge}${label}</li>`;
       }).join('');
       recList.innerHTML = def.rec.map(r=>`<li>${r}</li>`).join('');
     }
+
+    panelList.addEventListener('click', async function(e){
+      const actionLink = e.target.closest('.panel-action-link');
+      if (!actionLink) return;
+      e.preventDefault();
+
+      const action = actionLink.getAttribute('data-action');
+      const url = actionLink.getAttribute('data-url') || myServicePageUrl;
+
+      if (action === 'copy') {
+        try {
+          await navigator.clipboard.writeText(url);
+          const prev = actionLink.textContent;
+          actionLink.textContent = 'Copied ✓';
+          setTimeout(() => actionLink.textContent = prev, 1300);
+        } catch (err) {
+          window.prompt('Copy this link:', url);
+        }
+      }
+
+      if (action === 'pdf') {
+        const printWin = window.open(url, '_blank');
+        if (printWin) {
+          setTimeout(() => {
+            try { printWin.print(); } catch (err) {}
+          }, 900);
+        }
+      }
+    });
 
     iconItems.forEach(function(li){
       li.addEventListener('click', function(e){
@@ -496,9 +807,143 @@
       });
     }
 
+    // Highlight correct icon for workspace routes
+    const routeGroup = document.body.dataset.routeGroup || '';
+    if (routeGroup && mapping[routeGroup]) {
+      document.querySelectorAll('.icon-item').forEach(n => n.classList.remove('selected'));
+    }
     const initial = document.querySelector('.icon-item.selected');
-    const initialKey = initial&&initial.dataset.key ? initial.dataset.key : 'home';
+    const initialKey = routeGroup && mapping[routeGroup] ? routeGroup
+      : (initial && initial.dataset.key ? initial.dataset.key : 'home');
     renderFor(initialKey);
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const storageKey = 'aajchaoffer_guide_seen_v1';
+    const guideCard = document.getElementById('guide-card');
+    const guideToggle = document.getElementById('guide-toggle');
+    const guideClose = document.getElementById('guide-close');
+    const guideLater = document.getElementById('guide-later');
+    const guideDone = document.getElementById('guide-done');
+    const focusButtons = document.querySelectorAll('.guide-focus-btn');
+
+    if (!guideCard || !guideToggle) return;
+
+    const openGuide = () => guideCard.classList.add('open');
+    const closeGuide = () => guideCard.classList.remove('open');
+
+    const findVisibleTarget = (selectorCsv) => {
+      const selectors = String(selectorCsv || '').split(',').map(s => s.trim()).filter(Boolean);
+      for (const selector of selectors) {
+        const candidate = document.querySelector(selector);
+        if (!candidate) continue;
+        const style = window.getComputedStyle(candidate);
+        const rect = candidate.getBoundingClientRect();
+        const isVisible = style.display !== 'none'
+          && style.visibility !== 'hidden'
+          && style.opacity !== '0'
+          && rect.width > 0
+          && rect.height > 0
+          && candidate.offsetParent !== null;
+        if (!isVisible) continue;
+        return candidate;
+      }
+      return null;
+    };
+
+    const focusElement = (element) => {
+      document.querySelectorAll('.guide-focus').forEach(el => el.classList.remove('guide-focus'));
+      element.classList.add('guide-focus');
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      window.setTimeout(() => element.classList.remove('guide-focus'), 2200);
+    };
+
+    guideToggle.addEventListener('click', function(){
+      guideCard.classList.contains('open') ? closeGuide() : openGuide();
+    });
+
+    if (guideClose) {
+      guideClose.addEventListener('click', closeGuide);
+    }
+
+    if (guideLater) {
+      guideLater.addEventListener('click', closeGuide);
+    }
+
+    if (guideDone) {
+      guideDone.addEventListener('click', function(){
+        localStorage.setItem(storageKey, '1');
+        closeGuide();
+      });
+    }
+
+    focusButtons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        const target = findVisibleTarget(this.getAttribute('data-focus'));
+        if (target) focusElement(target);
+      });
+    });
+
+    if (!localStorage.getItem(storageKey)) {
+      window.setTimeout(openGuide, 650);
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const role = document.body.getAttribute('data-user-role') || '';
+    const path = '/' + (document.body.getAttribute('data-path') || '').replace(/^\/+/, '');
+    const isServiceFlow = role === 'service_provider' && (path.startsWith('/myservice') || path.startsWith('/shop_dashboard') || path.startsWith('/subscriptions'));
+    if (!isServiceFlow) return;
+
+    const replacements = [
+      [/Shop Owner/gi, 'Service Provider'],
+      [/Shop Logo/gi, 'Service Logo'],
+      [/Shop Type/gi, 'Service Type'],
+      [/Configure Shop/gi, 'Configure Service'],
+      [/My Shop/gi, 'My Service'],
+      [/Shop Dashboard/gi, 'Service Dashboard'],
+      [/shop owner/gi, 'service provider'],
+      [/shop/gi, 'service'],
+      [/Shop/g, 'Service'],
+    ];
+
+    const swapText = (input) => {
+      let output = input;
+      replacements.forEach(([pattern, replacement]) => {
+        output = output.replace(pattern, replacement);
+      });
+      return output;
+    };
+
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return NodeFilter.FILTER_REJECT;
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    const textNodes = [];
+    while (walker.nextNode()) {
+      textNodes.push(walker.currentNode);
+    }
+    textNodes.forEach((node) => {
+      const next = swapText(node.nodeValue);
+      if (next !== node.nodeValue) {
+        node.nodeValue = next;
+      }
+    });
+
+    document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach((el) => {
+      const placeholder = el.getAttribute('placeholder') || '';
+      const updated = swapText(placeholder);
+      if (updated !== placeholder) {
+        el.setAttribute('placeholder', updated);
+      }
+    });
   });
 </script>
 

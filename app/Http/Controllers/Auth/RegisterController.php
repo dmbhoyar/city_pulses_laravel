@@ -23,6 +23,7 @@ class RegisterController extends Controller
             'last_name'     => 'nullable|string|max:100',
             'email'         => 'required|string|email|max:255|unique:users',
             'mobile_number' => 'required|string|max:20',
+            'role'          => 'required|in:normal,shopowner,shopworker,service_provider',
             'password'      => 'required|string|min:8|confirmed',
         ]);
 
@@ -32,7 +33,7 @@ class RegisterController extends Controller
             'email'         => $validated['email'],
             'mobile_number' => $validated['mobile_number'],
             'password'      => Hash::make($validated['password']),
-            'role'          => 'normal',
+            'role'          => $validated['role'],
         ]);
 
         event(new Registered($user));

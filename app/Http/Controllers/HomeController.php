@@ -22,9 +22,25 @@ class HomeController extends Controller
         $city = null;
         if ($request->session()->has('city_id')) {
             $city = City::find($request->session()->get('city_id'));
-        } elseif ($request->filled('city')) {
+        }
+
+        if (!$city && $request->filled('city')) {
             $city = City::where('name', $request->input('city'))->first();
             if ($city) $request->session()->put('city_id', $city->id);
+        }
+
+        if (!$city) {
+            $city = City::query()
+                ->whereRaw('LOWER(name) = ?', ['washim'])
+                ->first();
+
+            if (!$city) {
+                $city = City::query()->orderBy('id')->first();
+            }
+
+            if ($city) {
+                $request->session()->put('city_id', $city->id);
+            }
         }
 
         $today = now()->toDateString();

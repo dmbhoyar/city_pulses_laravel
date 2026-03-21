@@ -13,11 +13,11 @@
 <div class="grid">
   @foreach($shops as $s)
     <div class="card">
-      <h3><a href="{{ route('shops.show', $s->id) }}">{{ $s->name }}</a></h3>
+      <h3><a href="{{ route('shops.public', ['publicSlug' => $s->public_page_slug]) }}">{{ $s->name }}</a></h3>
       <p>{{ $s->address }}</p>
       <p>{{ $s->phone }}</p>
       <div style="margin-top:8px">
-        <a href="{{ route('shops.show', $s->id) }}" class="button">View</a>
+        <a href="{{ route('shops.public', ['publicSlug' => $s->public_page_slug]) }}" class="button">View</a>
       </div>
     </div>
   @endforeach

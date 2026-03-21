@@ -1,0 +1,171 @@
+@php
+  $cfg = $shop->page_config ?? [];
+  $tc = is_array($cfg['template_content'] ?? null) ? $cfg['template_content'] : [];
+  $services = is_array($cfg['services'] ?? null) ? array_values(array_filter($cfg['services'], fn ($item) => !empty($item['name']))) : [];
+
+  $brandName = trim((string) ($tc['footer_brand'] ?? $shop->name ?? 'Nakshtea Astro'));
+  $heroBadge = trim((string) ($tc['hero_badge'] ?? 'Vedic Astrology · Numerology · Vastu · Remedies'));
+  $heroTitle = trim((string) ($tc['hero_title'] ?? $brandName));
+  $heroDescription = trim((string) ($tc['hero_description'] ?? 'Personalised birth chart readings, powerful remedies, and live expert guidance — in Hindi & English, 24/7.'));
+  $heroTagline = trim((string) ($tc['footer_tagline'] ?? 'Ancient Wisdom. Modern Guidance.'));
+
+  $providerName = trim((string) ($tc['provider_name'] ?? optional($shop->user)->full_name ?? 'Astro Expert'));
+  $providerContact = trim((string) ($tc['provider_contact'] ?? $shop->phone ?? optional($shop->user)->mobile_number ?? ''));
+  $providerEmail = trim((string) ($tc['provider_email'] ?? optional($shop->user)->email ?? ''));
+  $providerBio = trim((string) ($tc['provider_bio'] ?? 'Our expert astrologers are available for confidential consultation in Hindi and English.'));
+
+  $serviceTitle = trim((string) ($tc['services_title'] ?? 'Our Astrology Services'));
+  $serviceSubtitle = trim((string) ($tc['services_subtitle'] ?? 'Deep reports, sacred rituals, transit analysis and specialist readings for every need'));
+  $whyTitle = trim((string) ($tc['why_title'] ?? 'Why Choose Us'));
+  $whySubtitle = trim((string) ($tc['why_subtitle'] ?? 'Authentic, accurate, and always available.'));
+  $ctaTitle = trim((string) ($tc['cta_title'] ?? 'Get Your Personalised Reading Today'));
+  $ctaDescription = trim((string) ($tc['cta_description'] ?? 'Accurate, confidential guidance on any life question — available 24/7'));
+  $ctaButton = trim((string) ($tc['cta_button'] ?? 'Get Callback'));
+
+  $defaultItems = [
+      ['icon' => '📅', 'name' => 'Horoscope Reading', 'description' => 'Year-ahead forecasts with monthly predictions.', 'price' => 'From ₹499'],
+      ['icon' => '🔢', 'name' => 'Numerology', 'description' => 'Name and destiny number analysis.', 'price' => 'From ₹499'],
+      ['icon' => '🏡', 'name' => 'Vastu Guidance', 'description' => 'Home and office Vastu correction support.', 'price' => 'From ₹499'],
+      ['icon' => '🤝', 'name' => 'Match Making', 'description' => 'Detailed compatibility and kundali matching.', 'price' => 'From ₹499'],
+  ];
+
+  $allItems = count($services) ? array_map(function ($item) {
+      return [
+          'icon' => trim((string) ($item['icon'] ?? '✨')),
+          'name' => trim((string) ($item['name'] ?? 'Service')),
+          'description' => trim((string) ($item['description'] ?? 'Professional consultation service.')),
+          'price' => trim((string) ($item['price'] ?? 'From ₹499')),
+      ];
+  }, $services) : $defaultItems;
+
+  $half = (int) ceil(count($allItems) / 2);
+  $astrologyItems = array_slice($allItems, 0, $half);
+  $serviceItems = array_slice($allItems, $half);
+@endphp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ $brandName }} – Vedic Astrology, Numerology & Vastu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+:root{--gold:#f5c518;--gold2:#c97000;--bg:#03000d;--surface:rgba(255,255,255,.03);--border:rgba(245,197,24,.12);--text:#f0e8d0;--muted:rgba(240,220,160,.5);--nav-h:70px;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+.cosmos{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 20% 30%,rgba(80,0,150,.35) 0%,transparent 50%),radial-gradient(ellipse at 80% 70%,rgba(10,0,80,.45) 0%,transparent 55%),radial-gradient(ellipse at 50% 5%,rgba(200,100,0,.09) 0%,transparent 40%),radial-gradient(ellipse at 10% 90%,rgba(60,0,120,.2) 0%,transparent 45%),var(--bg);}#starCanvas{position:absolute;inset:0;width:100%;height:100%;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:rgba(3,0,13,.0);border-bottom:1px solid transparent;transition:background .4s,border-color .4s,backdrop-filter .4s;}
+.nav.scrolled{background:rgba(3,0,13,.92);border-color:rgba(245,197,24,.12);backdrop-filter:blur(18px);} .nav-logo{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);letter-spacing:.1em;cursor:pointer;line-height:1;text-decoration:none;}
+.nav-logo small{display:block;font-family:'Outfit',sans-serif;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(245,197,24,.38);font-weight:300;margin-top:2px;}
+.nav-links{display:flex;gap:6px;align-items:center;}.nav-links a{font-size:12px;color:rgba(255,220,150,.55);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:color .2s,background .2s;font-weight:500;padding:6px 12px;border-radius:4px;}.nav-links a:hover{color:var(--gold);background:rgba(245,197,24,.06);} .nav-links a.active{color:var(--gold);} 
+.nav-cta,.btn-gold,.form-submit,.modal-submit,.btn-buy{padding:10px 22px;background:linear-gradient(135deg,var(--gold2),var(--gold));border:none;border-radius:4px;color:#1a0800;font-size:12px;font-weight:700;font-family:'Outfit',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:opacity .2s,transform .2s;box-shadow:0 0 18px rgba(245,197,24,.2);} .nav-cta:hover,.btn-gold:hover,.form-submit:hover,.modal-submit:hover{opacity:.85;transform:translateY(-1px);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:600;} .hamburger span{display:block;width:24px;height:2px;background:var(--gold);border-radius:2px;transition:all .3s;} .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);} .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);} .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;background:rgba(3,0,13,.97);z-index:490;flex-direction:column;padding:32px 5%;gap:4px;overflow-y:auto;border-top:1px solid var(--border);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);} .mobile-menu.open{transform:translateX(0);} .mobile-menu a{font-size:16px;color:rgba(255,220,150,.65);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;padding:14px 16px;border-radius:8px;border-bottom:1px solid rgba(245,197,24,.06);transition:color .2s,background .2s;cursor:pointer;font-weight:500;}
+.hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(var(--nav-h) + 40px) 6% 80px;overflow:hidden;}
+.hero-orbit,.hero-orbit2{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;animation:slowSpin 80s linear infinite;border:1px solid rgba(245,197,24,.06);} .hero-orbit{width:680px;height:680px;} .hero-orbit2{width:440px;height:440px;animation:slowSpin 50s linear infinite reverse;border-color:rgba(245,197,24,.09);} @keyframes slowSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.22);border-radius:30px;padding:7px 20px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:30px;}
+.hero h1{font-family:'Cinzel',serif;font-size:clamp(46px,9vw,104px);font-weight:900;line-height:.92;background:linear-gradient(180deg,#fff 0%,var(--gold) 45%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;letter-spacing:.04em;}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,2.8vw,28px);color:rgba(240,220,160,.65);margin-bottom:24px;letter-spacing:.04em;}
+.hero-desc{font-size:16px;color:var(--muted);line-height:1.85;max-width:560px;margin:0 auto 46px;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:70px;}
+.btn-gold{padding:15px 38px;font-size:14px;}.btn-ghost{padding:15px 36px;background:transparent;border:1.5px solid rgba(245,197,24,.35);border-radius:5px;color:var(--gold);font-size:14px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.hero-stats{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;padding-top:38px;border-top:1px solid rgba(245,197,24,.1);} .hstat-v{font-family:'Cinzel',serif;font-size:30px;font-weight:700;color:var(--gold);line-height:1;} .hstat-l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,220,160,.38);margin-top:6px;}
+.section{position:relative;z-index:2;padding:80px 6%;scroll-margin-top:var(--nav-h);} .section.alt{background:rgba(255,255,255,.017);border-top:1px solid rgba(245,197,24,.07);border-bottom:1px solid rgba(245,197,24,.07);} .sec-head{text-align:center;margin-bottom:56px;}
+.sec-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:600;} .sec-title{font-family:'Cinzel',serif;font-size:clamp(26px,4vw,46px);font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.1;letter-spacing:.04em;} .sec-sub{font-size:15px;color:var(--muted);max-width:480px;margin:0 auto;line-height:1.75;}
+.divider{position:relative;z-index:2;display:flex;align-items:center;gap:16px;max-width:320px;margin:0 auto 72px;color:rgba(245,197,24,.35);font-size:13px;letter-spacing:.3em;}
+.svc-grid,.prod-grid,.testi-grid,.why-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+.svc-card,.testi-card,.why-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px 22px;transition:border-color .25s,transform .2s;} .svc-card:hover,.testi-card:hover,.why-card:hover{border-color:rgba(245,197,24,.35);transform:translateY(-3px);} .svc-card .ico,.why-ico{font-size:30px;margin-bottom:14px;display:block;} .svc-card h3,.why-card h4{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);margin-bottom:8px;} .svc-card p,.why-card p{font-size:13px;color:var(--muted);line-height:1.7;}
+.prod-card{background:linear-gradient(135deg,rgba(100,55,0,.28),rgba(50,15,0,.5));border:1px solid rgba(245,197,24,.18);border-radius:16px;padding:28px 22px;text-align:center;} .prod-card .ico{font-size:42px;margin-bottom:12px;display:block;} .prod-card h3{font-family:'Cinzel',serif;font-size:16px;color:var(--gold);margin-bottom:8px;} .prod-card p{font-size:14px;color:var(--muted);line-height:1.65;} .prod-badge{display:inline-block;margin-top:10px;background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.22);border-radius:20px;padding:5px 16px;font-size:11px;color:rgba(245,197,24,.7);}
+.cta-section{position:relative;z-index:2;text-align:center;padding:90px 6%;border-top:1px solid rgba(245,197,24,.1);} .cta-section h2{font-family:'Cinzel',serif;font-size:clamp(28px,4.5vw,52px);font-weight:700;color:var(--gold);margin-bottom:14px;} .cta-section p{font-size:16px;color:var(--muted);margin-bottom:40px;line-height:1.7;max-width:500px;margin-left:auto;margin-right:auto;}
+.cta-form{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:480px;margin:0 auto 20px;} .cta-input{flex:1;min-width:180px;padding:15px 20px;background:rgba(255,255,255,.05);border:1px solid rgba(245,197,24,.25);border-radius:5px;color:var(--text);font-size:14px;outline:none;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;} .contact-form{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px 28px;} .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;} .form-field{margin-bottom:14px;}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(245,197,24,.15);border-radius:6px;color:var(--text);font-size:14px;outline:none;} .form-field textarea{resize:vertical;min-height:100px;}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;} .modal-overlay.open{display:flex;} .modal{background:linear-gradient(135deg,#0d0520,#070118);border:1px solid rgba(245,197,24,.25);border-radius:20px;padding:32px;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto;}
+.modal-close{position:absolute;top:16px;right:18px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(245,197,24,.15);color:var(--muted);font-size:18px;line-height:1;cursor:pointer;}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,#1a0800,#2d1400);border:1px solid rgba(245,197,24,.3);border-radius:8px;padding:14px 24px;color:var(--gold);font-size:14px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s,transform .3s;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);} .wa-float{position:fixed;bottom:28px;right:24px;z-index:400;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#128C7E,#25D366);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,.4);border:2px solid rgba(255,255,255,.2);text-decoration:none;}
+.back-top{position:fixed;bottom:28px;left:24px;z-index:400;width:44px;height:44px;border-radius:50%;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.3);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:18px;opacity:0;pointer-events:none;} .back-top.show{opacity:1;pointer-events:auto;}
+footer{position:relative;z-index:2;background:rgba(0,0,0,.55);border-top:1px solid rgba(245,197,24,.1);padding:48px 6% 28px;} .footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;} .footer-brand{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);letter-spacing:.1em;margin-bottom:10px;}
+.footer-col a{display:block;font-size:13px;color:rgba(240,220,160,.45);text-decoration:none;margin-bottom:10px;cursor:pointer;}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}.reveal.visible{opacity:1;transform:translateY(0);} @media(max-width:960px){.footer-top{grid-template-columns:1fr 1fr;}.contact-grid{grid-template-columns:1fr;}} @media(max-width:768px){.nav-links,.nav-cta{display:none;}.hamburger{display:flex;}.mobile-menu{display:flex;}.form-row,.footer-top{grid-template-columns:1fr;}} @media(max-width:480px){.hero-stats{gap:24px;}.modal{padding:26px 20px;}}
+</style>
+</head>
+<body>
+<div class="cosmos"><canvas id="starCanvas"></canvas></div>
+<nav class="nav" id="navbar">
+  <a class="nav-logo" onclick="scrollToSection('hero')">{{ $brandName }}<small>{{ request()->getHost() }}</small></a>
+  <div class="nav-links">
+    <a onclick="scrollToSection('astrology')">Astrology</a><a onclick="scrollToSection('services')">Services</a><a onclick="scrollToSection('products')">Products</a><a onclick="scrollToSection('why')">Why Us</a><a onclick="scrollToSection('contact')">Contact</a>
+  </div>
+  <button class="nav-cta" onclick="openModal('Talk to Astrologer','📞','Get expert guidance on any life question','General Consultation')">Talk to Astrologer</button>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="scrollToSection('astrology');toggleMenu()">🔭 Astrology</a><a onclick="scrollToSection('services');toggleMenu()">✨ Services</a><a onclick="scrollToSection('products');toggleMenu()">💎 Products</a><a onclick="scrollToSection('why');toggleMenu()">⭐ Why Us</a><a onclick="scrollToSection('testimonials');toggleMenu()">💬 Reviews</a><a onclick="scrollToSection('contact');toggleMenu()">📞 Contact</a>
+</div>
+<section class="hero" id="hero">
+  <div class="hero-orbit"></div><div class="hero-orbit2"></div>
+  <div class="hero-badge">✦ {{ $heroBadge }}</div>
+  <h1>{{ $heroTitle }}</h1>
+  <div class="hero-tagline">{{ $heroTagline }}</div>
+  <p class="hero-desc">{{ $heroDescription }}</p>
+  <div class="hero-btns">
+    <button class="btn-gold" onclick="openModal('Talk to Astrologer','🔮','Connect with our expert astrologer now','General Consultation')">{{ $tc['primary_cta'] ?? 'Talk to Astrologer' }}</button>
+    <button class="btn-ghost" onclick="openModal('Detailed Report','📅','Get your complete personalised forecast','Detailed Report')">{{ $tc['secondary_cta'] ?? 'Get Forecast' }}</button>
+  </div>
+  <div class="hero-stats"><div><div class="hstat-v">50K+</div><div class="hstat-l">Happy Clients</div></div><div><div class="hstat-v">25</div><div class="hstat-l">Years Experience</div></div><div><div class="hstat-v">4.9★</div><div class="hstat-l">Rating</div></div><div><div class="hstat-v">24/7</div><div class="hstat-l">Available</div></div></div>
+</section>
+<div class="divider">✦ ✦ ✦</div>
+<section class="section" id="astrology"><div class="sec-head"><div class="sec-eyebrow">01 · Astrology Consultation</div><div class="sec-title">Expert Readings for Every Life Area</div><div class="sec-sub">Personalised consultations — accurate, confidential, and deeply insightful</div></div><div class="svc-grid" id="astrologyGrid"></div></section>
+<section class="section alt" id="services"><div class="sec-head"><div class="sec-eyebrow">02 · Premium Services</div><div class="sec-title">{{ $serviceTitle }}</div><div class="sec-sub">{{ $serviceSubtitle }}</div></div><div class="svc-grid" id="servicesGrid"></div></section>
+<section class="section" id="products"><div class="sec-head"><div class="sec-eyebrow">03 · Sacred Products</div><div class="sec-title">Authentic Astrology Products</div><div class="sec-sub">Certified gemstones, sacred Vastu items and professional tools</div></div><div class="prod-grid" id="productsGrid"></div></section>
+<section class="section alt" id="why"><div class="sec-head"><div class="sec-eyebrow">Why Us</div><div class="sec-title">{{ $whyTitle }}</div><div class="sec-sub">{{ $whySubtitle }}</div></div><div class="why-grid">
+  <div class="why-card reveal"><span class="why-ico">🎓</span><h4>Expert Guidance</h4><p>Certified practitioners with real consultation experience.</p></div>
+  <div class="why-card reveal"><span class="why-ico">🔒</span><h4>100% Confidential</h4><p>Your personal details and life questions are private and secure.</p></div>
+  <div class="why-card reveal"><span class="why-ico">⚡</span><h4>Fast Response</h4><p>Live consultations and quick report turnaround timelines.</p></div>
+  <div class="why-card reveal"><span class="why-ico">🌍</span><h4>Hindi & English</h4><p>Consultation support in both languages for comfort.</p></div>
+</div></section>
+<section class="section" id="testimonials"><div class="sec-head"><div class="sec-eyebrow">Client Words</div><div class="sec-title">Real Stories, Real Results</div><div class="sec-sub">Thousands of lives guided by the stars</div></div><div class="testi-grid"><div class="testi-card reveal"><div style="color:var(--gold);margin-bottom:10px">★★★★★</div><p>“Accurate reading and practical remedies. Great experience.”</p></div><div class="testi-card reveal"><div style="color:var(--gold);margin-bottom:10px">★★★★★</div><p>“Clear guidance and supportive consultation.”</p></div><div class="testi-card reveal"><div style="color:var(--gold);margin-bottom:10px">★★★★★</div><p>“Professional approach with quick follow up.”</p></div></div></section>
+<div class="cta-section"><h2>{{ $ctaTitle }}</h2><p>{{ $ctaDescription }}</p><div class="cta-form"><input class="cta-input" type="tel" id="ctaPhone" placeholder="Enter your phone number"/><button class="btn-gold" onclick="submitCTA()">{{ $ctaButton }}</button></div></div>
+<section class="section alt" id="contact"><div class="sec-head"><div class="sec-eyebrow">Get in Touch</div><div class="sec-title">Book a Consultation</div><div class="sec-sub">Fill the form or reach us directly — we respond quickly</div></div><div class="contact-grid"><div>
+  <h3 style="font-family:'Cinzel',serif;color:var(--gold);margin-bottom:12px">Reach Us Anytime</h3>
+  <p style="color:var(--muted);line-height:1.8;margin-bottom:20px">{{ $providerBio }}</p>
+  <p style="margin-bottom:8px"><strong>Provider:</strong> {{ $providerName }}</p>
+  @if($providerContact !== '')<p style="margin-bottom:8px"><strong>Phone:</strong> {{ $providerContact }}</p>@endif
+  @if($providerEmail !== '')<p style="margin-bottom:8px"><strong>Email:</strong> {{ $providerEmail }}</p>@endif
+  @if($shop->address)<p style="margin-bottom:8px"><strong>Address:</strong> {{ $shop->address }}</p>@endif
+  <button class="btn-gold" style="margin-top:10px" onclick="openWhatsApp()">💬 Chat on WhatsApp</button>
+</div><div class="contact-form">
+  <h3 style="font-family:'Cinzel',serif;color:var(--gold);margin-bottom:16px">Quick Booking Form</h3>
+  <div class="form-row"><div class="form-field"><label>Your Name</label><input type="text" id="cf-name" placeholder="Full name"/></div><div class="form-field"><label>Phone Number</label><input type="tel" id="cf-phone" placeholder="+91 XXXXX XXXXX"/></div></div>
+  <div class="form-field"><label>Service Required</label><select id="cf-service"><option value="">Select a service…</option>@foreach($allItems as $item)<option>{{ $item['name'] }}</option>@endforeach</select></div>
+  <div class="form-field"><label>Your Question / Message</label><textarea id="cf-msg" placeholder="Describe your question..."></textarea></div>
+  <button class="form-submit" onclick="submitContactForm()">✦ Submit Booking Request</button>
+</div></div></section>
+<footer><div class="footer-top"><div><div class="footer-brand">✨ {{ $brandName }}</div><div style="font-style:italic;color:rgba(240,220,160,.45)">{{ $heroTagline }}</div><div style="font-size:13px;color:rgba(240,220,160,.38);line-height:1.7">{{ $heroDescription }}</div></div><div class="footer-col"><h4>Services</h4>@foreach(array_slice($allItems,0,5) as $item)<a onclick="openModal('{{ e($item['name']) }}','{{ e($item['icon']) }}','{{ e($item['description']) }}','{{ e($item['name']) }}')">{{ $item['name'] }}</a>@endforeach</div><div class="footer-col"><h4>Quick Links</h4><a onclick="scrollToSection('hero')">Home</a><a onclick="scrollToSection('products')">Products</a><a onclick="scrollToSection('testimonials')">Reviews</a><a onclick="scrollToSection('contact')">Contact</a></div><div class="footer-col"><h4>Provider</h4><a>{{ $providerName }}</a>@if($providerContact !== '')<a>{{ $providerContact }}</a>@endif @if($providerEmail !== '')<a>{{ $providerEmail }}</a>@endif</div></div><div style="padding-top:24px;border-top:1px solid rgba(245,197,24,.07);font-size:12px;color:rgba(240,220,160,.28)">© {{ now()->year }} {{ $brandName }} · All Rights Reserved</div></footer>
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)"><div class="modal" id="modal"><button class="modal-close" onclick="closeModal()">✕</button><span id="modalBadge" style="font-size:30px;display:block;text-align:center;margin-bottom:12px">🔮</span><h2 id="modalTitle" style="font-family:'Cinzel',serif;color:var(--gold);margin-bottom:8px;text-align:center">Book a Consultation</h2><p id="modalSub" style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px"></p><div class="form-field"><label>Your Name</label><input type="text" id="m-name" placeholder="Full name"/></div><div class="form-field"><label>Phone Number</label><input type="tel" id="m-phone" placeholder="+91 XXXXX XXXXX"/></div><div class="form-field"><label>Service</label><input type="text" id="m-service"/></div><div class="form-field"><label>Your Question</label><textarea id="m-msg" style="min-height:80px"></textarea></div><button class="modal-submit" onclick="submitModal()">✦ Book Consultation Now</button></div></div>
+<div class="toast" id="toast"></div>
+<a class="wa-float" onclick="openWhatsApp()" title="WhatsApp"><svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></a>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){const c=document.getElementById('starCanvas');const ctx=c.getContext('2d');let stars=[];function resize(){c.width=window.innerWidth;c.height=window.innerHeight;init()}function init(){stars=[];const n=Math.floor((c.width*c.height)/4000);for(let i=0;i<n;i++){stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.2+.2,o:Math.random()*.8+.1,s:Math.random()*.015+.003,d:Math.random()>0.5?1:-1})}}function draw(){ctx.clearRect(0,0,c.width,c.height);stars.forEach(s=>{s.o+=s.s*s.d;if(s.o>1||s.o<.05)s.d*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(245,197,24,${s.o})`;ctx.fill()});requestAnimationFrame(draw)}window.addEventListener('resize',resize);resize();draw();})();
+const ASTROLOGY=@json($astrologyItems); const SERVICES=@json(count($serviceItems) ? $serviceItems : $astrologyItems); const PRODUCTS=[{ico:'💎',name:'Gemstone / Rashi Ratna',description:'Certified natural gemstones prescribed as per your chart.',badge:'Lab Certified'},{ico:'🏡',name:'Vastu Products',description:'Yantra, pyramids, crystals and sacred vastu items.',badge:'Energised'},{ico:'🛠️',name:'Vastu Tools',description:'Professional vastu tools and divination instruments.',badge:'Professional Grade'}];
+function buildGrid(data,containerId){const el=document.getElementById(containerId);el.innerHTML=data.map(item=>`<div class="svc-card reveal" onclick="openModal('${(item.name||'').replace(/'/g,"\\'")}','${(item.icon||'✨').replace(/'/g,"\\'")}','${(item.description||'').replace(/'/g,"\\'")}','${(item.name||'').replace(/'/g,"\\'")}')"><span class="ico">${item.icon||'✨'}</span><h3>${item.name||''}</h3><p>${item.description||''}</p><div class="prod-badge" style="margin-top:10px">${item.price||'From ₹499'}</div></div>`).join('');}
+function buildProducts(){const el=document.getElementById('productsGrid');el.innerHTML=PRODUCTS.map(p=>`<div class="prod-card reveal" onclick="openModal('${p.name}','${p.ico}','${p.description}','${p.name}')"><span class="ico">${p.ico}</span><h3>${p.name}</h3><p>${p.description}</p><span class="prod-badge">${p.badge}</span><button class="btn-buy" style="margin-top:12px;width:100%">Order Now</button></div>`).join('');}
+buildGrid(ASTROLOGY,'astrologyGrid');buildGrid(SERVICES,'servicesGrid');buildProducts();
+const navbar=document.getElementById('navbar');const backTop=document.getElementById('backTop');window.addEventListener('scroll',()=>{navbar.classList.toggle('scrolled',window.scrollY>50);backTop.classList.toggle('show',window.scrollY>400);document.querySelectorAll('.reveal').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight-60)el.classList.add('visible');});},{passive:true});
+function scrollToSection(id){const el=document.getElementById(id);if(el){const top=el.getBoundingClientRect().top+window.scrollY-70;window.scrollTo({top,behavior:'smooth'});}}
+function toggleMenu(){const menu=document.getElementById('mobileMenu');const btn=document.getElementById('hamburger');const open=menu.classList.toggle('open');btn.classList.toggle('open',open);document.body.style.overflow=open?'hidden':'';}
+function openModal(title,badge,sub,service){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBadge').textContent=badge;document.getElementById('modalSub').textContent=sub;document.getElementById('m-service').value=service||title;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeModalOutside(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);} 
+function submitModal(){const name=document.getElementById('m-name').value.trim();const phone=document.getElementById('m-phone').value.trim();if(!name||!phone){showToast('Please enter name and phone number');return;}closeModal();showToast('Booking confirmed! We will call you shortly.');}
+function submitCTA(){const phone=document.getElementById('ctaPhone').value.trim();if(!phone){showToast('Please enter your phone number');return;}showToast('Thank you! We will call you shortly.');document.getElementById('ctaPhone').value='';}
+function submitContactForm(){const name=document.getElementById('cf-name').value.trim();const phone=document.getElementById('cf-phone').value.trim();if(!name||!phone){showToast('Please enter name and phone number');return;}showToast('Booking request submitted! We will contact you shortly.');}
+function openWhatsApp(){const base='{{ $providerContact !== '' ? preg_replace('/\D+/', '', $providerContact) : '919876543210' }}';window.open(`https://wa.me/${base}?text=Hello!%20I%20would%20like%20to%20book%20a%20consultation.`,'_blank');}
+window.addEventListener('load',()=>{setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight-60)el.classList.add('visible');});},100);});
+</script>
+</body>
+</html>

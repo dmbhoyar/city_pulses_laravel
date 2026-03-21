@@ -1,12 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+  $isServiceProvider = auth()->check() && auth()->user()->isServiceProvider();
+  $entityTitle = $isServiceProvider ? 'Service Dashboard' : 'Shop Dashboard';
+  $entityName = $isServiceProvider ? 'service' : 'shop';
+  $configureRoute = $isServiceProvider ? route('configure_myservice') : route('configure_myshop');
+  $configureLabel = $isServiceProvider ? 'Configure Service' : 'Configure Shop';
+@endphp
 <div class="panel">
-  <h1 style="margin:0">Shop Dashboard</h1>
+  <h1 style="margin:0">{{ $entityTitle }}</h1>
   @if(isset($shop) && $shop)
     <h2 style="margin-top:8px">{{ $shop->name }}</h2>
     <div class="card">
-      <p><strong>Total revenue:</strong> {{ number_to_currency($revenue_total ?? 0) }}</p>
+      <p><strong>Total revenue:</strong> {{ number_to_currency($revenueTotal ?? 0) }}</p>
+      <p style="margin-top:6px"><strong>Subscription:</strong>
+        @if(!empty($activeSubscription))
+          Active ({{ $activeSubscription->plan_key ?: 'yearly_base' }}) · valid till {{ optional($activeSubscription->expires_at)->format('d M Y') }}
+        @else
+          Not active
+        @endif
+      </p>
+      <p style="margin-top:6px"><strong>Astro Dynamic Unlock:</strong>
+        @if(!empty($astroUnlockRequest))
+          {{ ucfirst($astroUnlockRequest->status) }}
+        @else
+          Not requested
+        @endif
+      </p>
     </div>
 
     <h3 style="margin-top:12px">Offers</h3>
@@ -21,11 +42,11 @@
     @endif
 
     <div style="margin-top:12px">
-      <a href="{{ route('configure_myshop') }}" class="toggle-btn">Configure Shop</a>
+      <a href="{{ $configureRoute }}" class="toggle-btn">{{ $configureLabel }}</a>
       <a href="{{ route('subscriptions.new') }}" class="button">Subscription</a>
     </div>
   @else
-    <p>No shop found for your account.</p>
+    <p>No {{ $entityName }} found for your account.</p>
   @endif
 </div>
 @endsection

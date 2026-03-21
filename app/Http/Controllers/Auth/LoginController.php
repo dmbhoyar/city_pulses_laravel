@@ -22,7 +22,12 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('home'))->with('notice', 'Welcome back!');
+            $user = Auth::user();
+            $defaultRoute = $user && method_exists($user, 'isSuperadmin') && $user->isSuperadmin()
+                ? route('admin.dashboard')
+                : route('home');
+
+            return redirect()->intended($defaultRoute)->with('notice', 'Welcome back!');
         }
 
         return back()->withErrors([

@@ -23,11 +23,9 @@
   .about-page * { margin: 0; padding: 0; box-sizing: border-box; }
 
   .about-page .brand-logo { display: inline-flex; align-items: center; gap: 10px; }
-  .about-page .logo-icon {
-    width: 48px; height: 48px; background: var(--brand-pink); border-radius: 12px;
-    display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;
+  .about-page .hero-brand-logo {
+    width: 48px; height: 48px; display: block; flex-shrink: 0;
   }
-  .about-page .logo-icon svg { width: 28px; height: 28px; }
   .about-page .logo-text-wrap { display: flex; flex-direction: column; line-height: 1.1; }
   .about-page .logo-name {
     font-family: 'Nunito', sans-serif; font-weight: 800; font-style: italic;
@@ -166,12 +164,7 @@
     <div class="hero-logo-wrap">
       <div class="hero-logo-card">
         <div class="brand-logo">
-          <div class="logo-icon">
-            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2.5" fill="none"/>
-              <line x1="18" y1="18" x2="24" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-          </div>
+          @include('shared.brand_logo', ['className' => 'hero-brand-logo', 'title' => 'AajchaOffer logo'])
           <div class="logo-text-wrap">
             <span class="logo-name">AajchaOffer</span>
             <span class="logo-tagline">Aajcha bhav, aajcha offer</span>

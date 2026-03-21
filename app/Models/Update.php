@@ -12,7 +12,7 @@ class Update extends Model
 
     const UPDATE_TYPES = ['general', 'offer', 'event'];
 
-    protected $fillable = ['title', 'content', 'update_type', 'source_url', 'published_at', 'city_id'];
+    protected $fillable = ['title', 'content', 'update_type', 'source_url', 'photo_path', 'published_at', 'city_id', 'shop_id'];
 
     protected $casts = [
         'published_at' => 'datetime',
@@ -21,6 +21,11 @@ class Update extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
     }
 
     public function scopeOffers(Builder $query): Builder

@@ -9,9 +9,22 @@ class ServiceProviderMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!auth()->check() || !auth()->user()->isServiceProvider()) {
+        if (!auth()->check()) {
             return redirect()->route('home')->with('alert', 'Not authorized');
         }
-        return $next($request);
+
+        $user = auth()->user();
+
+        if ($user->isSuperadmin() || $user->isServiceProvider()) {
+            return $next($request);
+        }
+
+        if (strtolower((string) $user->role) === 'normal') {
+            $user->role = 'service_provider';
+            $user->save();
+            return $next($request);
+        }
+
+        return redirect()->route('home')->with('alert', 'Not authorized');
     }
 }
