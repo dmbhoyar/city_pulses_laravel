@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Edit Job</h2>
-@include('jobs._form', ['job' => $job, 'formAction' => route('jobs.update', $job->id), 'method' => 'PATCH'])
+<div class="panel" style="max-width:980px;margin:0 auto;">
+	<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+		<h2 style="margin:0">Edit Job Listing</h2>
+		<a href="{{ route('jobs.show', $job) }}" class="button">← Back to Job</a>
+	</div>
+	@include('jobs._form', ['job' => $job, 'cities' => $cities, 'formAction' => route('jobs.update', $job->id), 'method' => 'PATCH'])
+</div>
 @endsection

@@ -16,7 +16,7 @@
 
   <div style="margin-top:12px">
     @auth
-      @if(auth()->user()->id === $job->user_id || auth()->user()->isSuperadmin())
+      @if(auth()->user()->isSuperadmin())
         <a href="{{ route('jobs.edit', $job->id) }}" class="button">Edit</a>
         <form action="{{ route('jobs.destroy', $job->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Are you sure?')">
           @csrf

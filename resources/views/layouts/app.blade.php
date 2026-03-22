@@ -346,11 +346,23 @@
             @endif
           @endauth
         @elseif(str_contains($ctrl, 'Jobs'))
-          <li><a href="{{ route('jobs.index') }}" class="panel-link">Shops</a></li>
-          <li><a href="{{ route('jobs.index') }}" class="panel-link">Government</a></li>
+          <li><a href="{{ route('jobs.index') }}" class="panel-link">All Jobs</a></li>
+          <li><a href="{{ route('jobs.index', ['category' => 'IT']) }}" class="panel-link">IT Jobs</a></li>
+          <li><a href="{{ route('jobs.index', ['category' => 'Government']) }}" class="panel-link">Government Jobs</a></li>
+          <li><a href="{{ route('jobs.index', ['category' => 'Sales']) }}" class="panel-link">Sales Jobs</a></li>
+          @auth
+            @if(auth()->user()->isSuperadmin())
+              <li><a href="{{ route('jobs.create') }}" class="panel-link">Add Job</a></li>
+            @endif
+          @endauth
         @elseif(str_contains($ctrl, 'Farming'))
-          <li><a href="{{ route('farming.index') }}" class="panel-link">Crops</a></li>
-          <li><a href="{{ route('farming.index') }}" class="panel-link">Markets</a></li>
+          <li><a href="{{ route('farming.index') }}#articles" class="panel-link">City Articles</a></li>
+          <li><a href="{{ route('farming.index') }}#mandi" class="panel-link">Mandi Prices</a></li>
+          <li><a href="{{ route('farming.index') }}#schemes" class="panel-link">Govt Schemes</a></li>
+          <li><a href="{{ route('farming.index') }}#jobs" class="panel-link">Agri Jobs</a></li>
+          <li><a href="{{ route('farming.index') }}#calendar" class="panel-link">Crop Calendar</a></li>
+          <li><a href="{{ route('farming.index') }}#weather" class="panel-link">Weather</a></li>
+          <li><a href="{{ route('farming.create') }}" class="panel-link">Share Blog</a></li>
         @elseif(str_contains($ctrl, 'Rents'))
           <li><a href="{{ route('rents.index') }}" class="panel-link">🏠 Houses</a></li>
           <li><a href="{{ route('rents.index', ['subcategory' => 'flat']) }}" class="panel-link">🏢 Flats</a></li>
@@ -398,9 +410,16 @@
           @elseif(str_contains($ctrl, 'Services'))
             <li>Verified service provider ID cards</li>
             <li>Open card to view details and reviews</li>
+          @elseif(str_contains($ctrl, 'Jobs'))
+            <li>City-based jobs include shop/service provider listings</li>
+            <li>Only superadmin can add jobs from Jobs module</li>
           @elseif(str_contains($ctrl, 'Updates'))
             <li>Open newspaper sections from the same edition page</li>
             <li>Use city filter to switch the local edition</li>
+          @elseif(str_contains($ctrl, 'Farming'))
+            <li>All farming sections are city-wise with selected city context</li>
+            <li>Anyone can share blog with rich editor (name + photos + formatting)</li>
+            <li>Use mandi, weather and crop calendar for local planning</li>
           @else
             <li>See today's top stories</li>
             <li>Nearby events</li>
@@ -644,15 +663,33 @@
       },
       jobs: {
         title: "Jobs",
-        items: [['S',"Shops","{{ route('jobs.index') }}"],['G',"Government","{{ route('jobs.index') }}"]],
-        rec: ["Post a job","Manage applications"],
+        items: [
+          ['💼',"All Jobs","{{ route('jobs.index') }}"],
+          ['IT',"IT Jobs","{{ route('jobs.index', ['category' => 'IT']) }}"],
+          ['G',"Government","{{ route('jobs.index', ['category' => 'Government']) }}"],
+          ['S',"Sales","{{ route('jobs.index', ['category' => 'Sales']) }}"],
+          @auth
+            @if(auth()->user()->isSuperadmin())
+              ['+',"Add Job","{{ route('jobs.create') }}"],
+            @endif
+          @endauth
+        ],
+        rec: ["Jobs are listed city-wise","Shop/service provider job entries appear here","Only superadmin can add jobs here"],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#1761a0" xmlns="http://www.w3.org/2000/svg"><path d="M6 7h12v2H6zM6 11h12v6H6z"/></svg>',
         color: '#1761a0'
       },
       farming: {
         title: "Farming",
-        items: [['F',"Crops","{{ route('farming.index') }}"],['M',"Markets","{{ route('farming.index') }}"]],
-        rec: ["Farming tips","Local suppliers"],
+        items: [
+          ['🌾',"Articles","{{ route('farming.index') }}#articles"],
+          ['💰',"Mandi","{{ route('farming.index') }}#mandi"],
+          ['🏛',"Schemes","{{ route('farming.index') }}#schemes"],
+          ['💼',"Agri Jobs","{{ route('farming.index') }}#jobs"],
+          ['📅',"Calendar","{{ route('farming.index') }}#calendar"],
+          ['🌦',"Weather","{{ route('farming.index') }}#weather"],
+          ['+',"Share Blog","{{ route('farming.create') }}"],
+        ],
+        rec: ["City-wise farming data","Anyone can publish blog with rich editor","Live weather/mandi/news APIs"],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2e7d32" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 7h-6l3-7zM6 12h12v8H6z"/></svg>',
         color: '#2e7d32'
       },

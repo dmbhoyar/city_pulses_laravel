@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Job;
 use App\Models\JobApplication;
 use Illuminate\Http\Request;
@@ -15,13 +16,56 @@ class JobsController extends Controller
 
     public function index(Request $request)
     {
-        $q = $request->input('q');
-        $jobs = Job::search($q)->orderByDesc('created_at');
+        $selectedCityId = null;
         if ($request->filled('city_id')) {
-            $jobs->where('city_id', $request->input('city_id'));
+            $selectedCityId = (int) $request->input('city_id');
+            $request->session()->put('city_id', $selectedCityId);
+        } elseif ($request->session()->has('city_id')) {
+            $selectedCityId = (int) $request->session()->get('city_id');
         }
-        $jobs = $jobs->paginate(20);
-        return view('jobs.index', compact('jobs', 'q'));
+
+        $q = trim((string) $request->input('q', ''));
+        $category = trim((string) $request->input('category', ''));
+
+        $jobsQuery = Job::query()
+            ->with('city')
+            ->search($q)
+            ->orderByDesc('created_at');
+
+        if ($selectedCityId) {
+            $jobsQuery->where('city_id', $selectedCityId);
+        }
+
+        if ($category !== '') {
+            $jobsQuery->where('category', $category);
+        }
+
+        $jobs = $jobsQuery->paginate(24)->withQueryString();
+        $cities = City::query()->orderBy('name')->get(['id', 'name']);
+        $categories = Job::query()
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+
+        $totalJobs = Job::query()->count();
+        $cityJobs = $selectedCityId
+            ? Job::query()->where('city_id', $selectedCityId)->count()
+            : $totalJobs;
+        $selectedCityName = optional($cities->firstWhere('id', $selectedCityId))->name;
+
+        return view('jobs.index', compact(
+            'jobs',
+            'q',
+            'category',
+            'cities',
+            'categories',
+            'selectedCityId',
+            'selectedCityName',
+            'totalJobs',
+            'cityJobs'
+        ));
     }
 
     public function show(Job $job)
@@ -31,18 +75,18 @@ class JobsController extends Controller
 
     public function create()
     {
-        if (!auth()->user()?->isShopowner() && !auth()->user()?->isSuperadmin()) {
-            return redirect()->route('jobs.index')->with('alert', 'Only shop owners can create jobs.');
-        }
+        $this->ensureSuperadmin();
+
         $job = new Job();
-        return view('jobs.create', compact('job'));
+        $cities = City::query()->orderBy('name')->get(['id', 'name']);
+
+        return view('jobs.create', compact('job', 'cities'));
     }
 
     public function store(Request $request)
     {
-        if (!auth()->user()?->isShopowner() && !auth()->user()?->isSuperadmin()) {
-            return redirect()->route('jobs.index')->with('alert', 'Only shop owners can create jobs.');
-        }
+        $this->ensureSuperadmin();
+
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
@@ -50,21 +94,30 @@ class JobsController extends Controller
             'company'      => 'nullable|string|max:255',
             'location'     => 'nullable|string|max:255',
             'external_url' => 'nullable|url',
+            'city_id'      => 'nullable|exists:cities,id',
         ]);
+
         $job = new Job($validated);
         $job->user_id = auth()->id();
-        $job->city_id = $job->city_id ?? auth()->user()->shops()->first()?->city_id;
+        $job->city_id = $validated['city_id'] ?? null;
         $job->save();
+
         return redirect()->route('jobs.show', $job)->with('notice', 'Job created.');
     }
 
     public function edit(Job $job)
     {
-        return view('jobs.edit', compact('job'));
+        $this->ensureSuperadmin();
+
+        $cities = City::query()->orderBy('name')->get(['id', 'name']);
+
+        return view('jobs.edit', compact('job', 'cities'));
     }
 
     public function update(Request $request, Job $job)
     {
+        $this->ensureSuperadmin();
+
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
@@ -72,13 +125,17 @@ class JobsController extends Controller
             'company'      => 'nullable|string|max:255',
             'location'     => 'nullable|string|max:255',
             'external_url' => 'nullable|url',
+            'city_id'      => 'nullable|exists:cities,id',
         ]);
         $job->update($validated);
+
         return redirect()->route('jobs.show', $job)->with('notice', 'Job updated.');
     }
 
     public function destroy(Job $job)
     {
+        $this->ensureSuperadmin();
+
         $job->delete();
         return redirect()->route('jobs.index')->with('notice', 'Job removed.');
     }
@@ -105,5 +162,14 @@ class JobsController extends Controller
             return redirect()->route('jobs.show', $job)->with('notice', 'Application submitted. The employer will be notified.');
         }
         return back()->with('alert', 'There was a problem submitting your application.')->withInput();
+    }
+
+    private function ensureSuperadmin(): void
+    {
+        $user = auth()->user();
+
+        if (!$user || !$user->isSuperadmin()) {
+            abort(403, 'Only superadmin can manage jobs from this page.');
+        }
     }
 }

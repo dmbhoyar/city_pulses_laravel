@@ -15,12 +15,26 @@
         <input type="text" id="company" name="company" value="{{ old('company', $job->company ?? '') }}">
       </div>
       <div class="field">
+        <label for="city_id">City</label>
+        <select id="city_id" name="city_id">
+          <option value="">Select city</option>
+          @foreach(($cities ?? []) as $city)
+            <option value="{{ $city->id }}" {{ (string) old('city_id', $job->city_id ?? '') === (string) $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="field">
         <label for="location">Location</label>
         <input type="text" id="location" name="location" value="{{ old('location', $job->location ?? '') }}">
       </div>
       <div class="field">
         <label for="category">Category</label>
-        <input type="text" id="category" name="category" value="{{ old('category', $job->category ?? '') }}">
+        <select id="category" name="category">
+          <option value="">Select category</option>
+          @foreach(['IT', 'Government', 'Sales', 'Marketing', 'Support', 'Delivery', 'Operations', 'Finance', 'Healthcare', 'Education'] as $cat)
+            <option value="{{ $cat }}" {{ old('category', $job->category ?? '') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+          @endforeach
+        </select>
       </div>
       <div class="field">
         <label for="external_url">External URL (optional) - shop/government apply link</label>

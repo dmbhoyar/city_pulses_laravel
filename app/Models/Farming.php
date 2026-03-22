@@ -9,7 +9,7 @@ class Farming extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'city_id'];
+    protected $fillable = ['title', 'author_name', 'content', 'city_id'];
 
     public function city()
     {
