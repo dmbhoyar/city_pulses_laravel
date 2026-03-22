@@ -231,9 +231,10 @@ class MyshopController extends Controller
         $pfFields        = $pageConfig['fields'] ?? [];
         $templateContent = $pageConfig['template_content'] ?? [];
 
-        $userId = auth()->id();
         $hasActiveSubscription = Subscription::query()
-            ->where('user_id', $userId)
+            ->where('user_id', auth()->id())
+            ->where('shop_id', $shop->id)
+            ->where('plan_key', 'yearly_base')
             ->where('status', 'active')
             ->whereNotNull('expires_at')
             ->where('expires_at', '>', now())
@@ -298,10 +299,10 @@ class MyshopController extends Controller
     public function unlockPage()
     {
         $shop  = $this->getOrBuildShop();
-        $userId = auth()->id();
-
         $hasActiveSubscription = Subscription::query()
-            ->where('user_id', $userId)
+            ->where('user_id', auth()->id())
+            ->where('shop_id', $shop->id)
+            ->where('plan_key', 'yearly_base')
             ->where('status', 'active')
             ->whereNotNull('expires_at')
             ->where('expires_at', '>', now())
@@ -357,12 +358,24 @@ class MyshopController extends Controller
         $shop = $this->getOrBuildShop();
         $owner = auth()->user();
 
+        $hasActiveSubscription = Subscription::query()
+            ->where('user_id', auth()->id())
+            ->where('shop_id', $shop->id)
+            ->where('plan_key', 'yearly_base')
+            ->where('status', 'active')
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '>', now())
+            ->exists();
+
+        if (!$hasActiveSubscription) {
+            return redirect()->route('subscriptions.new')->with('alert', 'Activate your yearly base subscription first, then save configuration.');
+        }
+
         $normalizedPublicSlug = Str::slug((string) $request->input('public_slug', ''));
         $request->merge(['public_slug' => $normalizedPublicSlug]);
 
         $request->validate([
             'public_slug' => 'nullable|string|min:3|max:80|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-            'tc.provider_photo_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         if ($normalizedPublicSlug !== '') {
@@ -418,14 +431,7 @@ class MyshopController extends Controller
             ] : null;
         }, $rawSvcs)));
 
-        $existingPhoto = trim((string) $request->input('tc.provider_photo_existing', data_get($cfg, 'template_content.provider_photo', '')));
-        $providerPhoto = $existingPhoto;
-        if ($request->hasFile('tc.provider_photo_file')) {
-            if ($existingPhoto && !Str::startsWith($existingPhoto, ['http://', 'https://', 'data:'])) {
-                Storage::disk('public')->delete(ltrim(str_replace('/storage/', '', $existingPhoto), '/'));
-            }
-            $providerPhoto = $request->file('tc.provider_photo_file')->store('provider_profiles', 'public');
-        }
+        $existingTc = is_array($cfg['template_content'] ?? null) ? $cfg['template_content'] : [];
 
         $cfg['template_content'] = [
             'hero_badge'        => trim((string) $request->input('tc.hero_badge', 'Trusted Local Shop')),
@@ -443,14 +449,14 @@ class MyshopController extends Controller
             'cta_button'        => trim((string) $request->input('tc.cta_button', 'Contact Now')),
             'footer_brand'      => trim((string) $request->input('tc.footer_brand', $shop->name ?: 'My Shop')),
             'footer_tagline'    => trim((string) $request->input('tc.footer_tagline', 'Trusted · Local · Professional')),
-            'provider_name'     => trim((string) $request->input('tc.provider_name', $owner->full_name ?: 'Shop Owner')),
-            'provider_age'      => trim((string) $request->input('tc.provider_age', '')),
-            'provider_email'    => trim((string) $request->input('tc.provider_email', $owner->email ?: '')),
-            'provider_contact'  => trim((string) $request->input('tc.provider_contact', $shop->phone ?: ($owner->mobile_number ?? ''))),
-            'provider_photo'    => $providerPhoto,
-            'provider_title'    => trim((string) $request->input('tc.provider_title', 'Founder & Lead Shop Expert')),
-            'provider_bio'      => trim((string) $request->input('tc.provider_bio', 'Trusted local shop owner focused on reliable products and customer-friendly support.')),
-            'provider_experience' => trim((string) $request->input('tc.provider_experience', '5+ Years Experience')),
+            'provider_name'     => trim((string) ($existingTc['provider_name'] ?? ($owner->full_name ?: 'Shop Owner'))),
+            'provider_age'      => trim((string) ($existingTc['provider_age'] ?? '')),
+            'provider_email'    => trim((string) ($existingTc['provider_email'] ?? ($owner->email ?: ''))),
+            'provider_contact'  => trim((string) ($existingTc['provider_contact'] ?? ($shop->phone ?: ($owner->mobile_number ?? '')))),
+            'provider_photo'    => trim((string) ($existingTc['provider_photo'] ?? '')),
+            'provider_title'    => trim((string) ($existingTc['provider_title'] ?? 'Founder & Lead Shop Expert')),
+            'provider_bio'      => trim((string) ($existingTc['provider_bio'] ?? 'Trusted local shop owner focused on reliable products and customer-friendly support.')),
+            'provider_experience' => trim((string) ($existingTc['provider_experience'] ?? '5+ Years Experience')),
         ];
 
         $rawGroups = $request->input('service_groups', []);

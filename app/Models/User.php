@@ -78,6 +78,11 @@ class User extends Authenticatable implements CanResetPasswordContract
         return in_array(strtolower((string) $this->role), ['superadmin', 'super_admin', 'super-admin', 'admin'], true);
     }
 
+    public function isSeller(): bool
+    {
+        return in_array(strtolower((string) $this->role), ['seller'], true);
+    }
+
     public function getFullNameAttribute(): string
     {
         $parts = array_filter([$this->first_name, $this->last_name]);

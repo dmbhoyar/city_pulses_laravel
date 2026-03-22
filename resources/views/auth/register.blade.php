@@ -6,6 +6,10 @@
 
   <form action="{{ route('register') }}" method="POST" class="devise-form">
     @csrf
+    @php $finalRedirectTo = old('redirect_to', $redirectTo ?? ''); @endphp
+    @if(!empty($finalRedirectTo))
+      <input type="hidden" name="redirect_to" value="{{ $finalRedirectTo }}">
+    @endif
 
     <div class="field">
       <label for="first_name">First name</label>
@@ -24,12 +28,18 @@
 
     <div class="field">
       <label for="role">Register as</label>
-      <select id="role" name="role" class="form-control">
-        <option value="normal" {{ old('role','normal') === 'normal' ? 'selected' : '' }}>Normal</option>
-        <option value="shopowner" {{ old('role') === 'shopowner' ? 'selected' : '' }}>Shop Owner</option>
-        <option value="shopworker" {{ old('role') === 'shopworker' ? 'selected' : '' }}>Shop Worker</option>
-        <option value="service_provider" {{ old('role') === 'service_provider' ? 'selected' : '' }}>Service Provider</option>
-      </select>
+      @if(($lockSellerRole ?? false) === true)
+        <input type="text" value="Seller" readonly>
+        <input type="hidden" name="role" value="seller">
+      @else
+        <select id="role" name="role" class="form-control">
+          <option value="normal" {{ old('role','normal') === 'normal' ? 'selected' : '' }}>Normal</option>
+          <option value="seller" {{ old('role') === 'seller' ? 'selected' : '' }}>Seller</option>
+          <option value="shopowner" {{ old('role') === 'shopowner' ? 'selected' : '' }}>Shop Owner</option>
+          <option value="shopworker" {{ old('role') === 'shopworker' ? 'selected' : '' }}>Shop Worker</option>
+          <option value="service_provider" {{ old('role') === 'service_provider' ? 'selected' : '' }}>Service Provider</option>
+        </select>
+      @endif
     </div>
 
     <div class="field">

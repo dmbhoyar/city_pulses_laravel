@@ -1,4 +1,18 @@
 <div class="page-config-form" style="margin-top:12px">
+  <style>
+    .page-config-row{border:1px solid #e6e6e6;padding:8px;margin-bottom:8px}
+    .page-config-layout{display:flex;gap:8px;align-items:flex-start}
+    .page-config-main{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) 120px;gap:8px}
+    .page-config-main > div{min-width:0}
+    .page-config-actions{width:110px;text-align:right}
+    .page-config-actions .button{margin-left:4px}
+    @media (max-width: 760px){
+      .page-config-layout{flex-direction:column}
+      .page-config-main{grid-template-columns:1fr}
+      .page-config-actions{width:auto;text-align:left}
+      .page-config-actions .button{margin:0 6px 6px 0}
+    }
+  </style>
   <h4>Shop Page Configuration</h4>
   <p>Use the UI below to add/remove fields for your shop page. Click <strong>Save Page Config</strong> to persist.</p>
 
@@ -42,21 +56,19 @@
       function createFieldRow(field, idx){
         field = field || { title: '', value: '', bold: false, align: 'left' };
         const row = document.createElement('div');
-        row.className = 'page-field-row';
-        row.style.border = '1px solid #e6e6e6';
-        row.style.padding = '8px';
-        row.style.marginBottom = '8px';
+        row.className = 'page-field-row page-config-row';
         row.dataset.index = idx;
 
         row.innerHTML = `
-          <div style="display:flex;gap:8px;align-items:flex-start">
-            <div style="flex:1">
+          <div class="page-config-layout">
+            <div class="page-config-main">
+            <div>
               <label>Title</label><br/><input type="text" class="pf-title" value="${escapeHtml(field.title)}" style="width:100%" />
             </div>
-            <div style="flex:2">
+            <div>
               <label>Value</label><br/><input type="text" class="pf-value" value="${escapeHtml(field.value)}" style="width:100%" />
             </div>
-            <div style="width:120px">
+            <div>
               <label>Bold</label><br/><input type="checkbox" class="pf-bold" ${field.bold ? 'checked' : ''} />
               <br/>
               <label>Align</label><br/>
@@ -66,7 +78,8 @@
                 <option value="right" ${field.align=='right' ? 'selected' : ''}>Right</option>
               </select>
             </div>
-            <div style="width:110px;text-align:right">
+            </div>
+            <div class="page-config-actions">
               <button type="button" class="pf-up button">↑</button>
               <button type="button" class="pf-down button">↓</button>
               <button type="button" class="pf-remove button">Remove</button>

@@ -13,7 +13,10 @@ class RegisterController extends Controller
 {
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        $lockSellerRole = request()->boolean('seller');
+        $redirectTo = (string) request()->query('redirect_to', '');
+
+        return view('auth.register', compact('lockSellerRole', 'redirectTo'));
     }
 
     public function register(Request $request)
@@ -23,8 +26,9 @@ class RegisterController extends Controller
             'last_name'     => 'nullable|string|max:100',
             'email'         => 'required|string|email|max:255|unique:users',
             'mobile_number' => 'required|string|max:20',
-            'role'          => 'required|in:normal,shopowner,shopworker,service_provider',
+            'role'          => 'required|in:normal,shopowner,shopworker,service_provider,seller',
             'password'      => 'required|string|min:8|confirmed',
+            'redirect_to'   => 'nullable|string|max:2048',
         ]);
 
         $user = User::create([
@@ -38,6 +42,11 @@ class RegisterController extends Controller
 
         event(new Registered($user));
         Auth::login($user);
+
+        $redirectTo = trim((string) ($validated['redirect_to'] ?? ''));
+        if ($redirectTo !== '') {
+            return redirect()->to($redirectTo)->with('notice', 'Registration successful!');
+        }
 
         return redirect()->route('home')->with('notice', 'Registration successful!');
     }

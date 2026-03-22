@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\CitiesController as AdminCitiesController;
 use App\Http\Controllers\Admin\JobsController as AdminJobsController;
 use App\Http\Controllers\Admin\OffersController as AdminOffersController;
+use App\Http\Controllers\Admin\ListingsController as AdminListingsController;
 use App\Http\Controllers\Webhooks\StripeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -70,16 +71,29 @@ Route::resource('updates', UpdatesController::class);
 
 // Rents
 Route::get('/rents', [RentsController::class, 'index'])->name('rents.index');
-Route::get('/rents/{listing}', [RentsController::class, 'show'])->name('rents.show');
+Route::get('/rents/new', [RentsController::class, 'create'])->name('rents.new');
+Route::post('/rents', [RentsController::class, 'store'])->name('rents.store');
+Route::get('/rents/{listing}', [RentsController::class, 'show'])
+    ->whereNumber('listing')
+    ->name('rents.show');
+Route::get('/rents/{listing}/edit', [RentsController::class, 'edit'])
+    ->whereNumber('listing')
+    ->name('rents.edit');
+Route::patch('/rents/{listing}', [RentsController::class, 'update'])
+    ->whereNumber('listing')
+    ->name('rents.update');
+Route::delete('/rents/{listing}', [RentsController::class, 'destroy'])
+    ->whereNumber('listing')
+    ->name('rents.destroy');
 
 // Buy (listings with sell category)
 Route::get('/buy', [BuyController::class, 'index'])->name('buy.index');
-Route::get('/buy/{listing}', [BuyController::class, 'show'])->name('buy.show');
 Route::get('/buy/new', [BuyController::class, 'create'])->name('buy.new');
-Route::post('/buy', [BuyController::class, 'store'])->name('buy.create');
-Route::get('/buy/{listing}/edit', [BuyController::class, 'edit'])->name('buy.edit');
-Route::patch('/buy/{listing}', [BuyController::class, 'update'])->name('buy.update');
-Route::delete('/buy/{listing}', [BuyController::class, 'destroy'])->name('buy.destroy');
+Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');
+Route::get('/buy/{listing}', [BuyController::class, 'show'])->whereNumber('listing')->name('buy.show');
+Route::get('/buy/{listing}/edit', [BuyController::class, 'edit'])->whereNumber('listing')->name('buy.edit');
+Route::patch('/buy/{listing}', [BuyController::class, 'update'])->whereNumber('listing')->name('buy.update');
+Route::delete('/buy/{listing}', [BuyController::class, 'destroy'])->whereNumber('listing')->name('buy.destroy');
 
 // Services
 Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
@@ -133,6 +147,7 @@ Route::get('/shop_dashboard', [ShopDashboardController::class, 'index'])->name('
 Route::get('/subscriptions/new', [SubscriptionsController::class, 'create'])->name('subscriptions.new')->middleware('auth');
 Route::post('/subscriptions', [SubscriptionsController::class, 'store'])->name('subscriptions.create')->middleware('auth');
 Route::patch('/subscriptions/template', [SubscriptionsController::class, 'updateTemplate'])->name('subscriptions.template.update')->middleware('auth');
+Route::patch('/subscriptions/profile', [SubscriptionsController::class, 'updateProfile'])->name('subscriptions.profile.update')->middleware('auth');
 Route::post('/subscriptions/template-unlock-request', [SubscriptionsController::class, 'requestTemplateUnlock'])->name('subscriptions.template_unlock_request')->middleware('auth');
 
 // MyShop
@@ -192,10 +207,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/offers', [AdminOffersController::class, 'store'])->name('offers.store');
     Route::patch('/offers/{offer}', [AdminOffersController::class, 'update'])->name('offers.update');
     Route::delete('/offers/{offer}', [AdminOffersController::class, 'destroy'])->name('offers.destroy');
+    Route::get('/listings', [AdminListingsController::class, 'index'])->name('listings.index');
+    Route::patch('/listings/{listing}/status', [AdminListingsController::class, 'updateStatus'])->name('listings.status');
     Route::get('/shops', [AdminShopsController::class, 'index'])->name('shops.index');
     Route::delete('/shops/{shop}', [AdminShopsController::class, 'destroy'])->name('shops.destroy');
     Route::get('/subscriptions', [AdminSubscriptionsController::class, 'index'])->name('subscriptions.index');
     Route::patch('/subscriptions/{subscription}/status', [AdminSubscriptionsController::class, 'updateSubscriptionStatus'])->name('subscriptions.status');
+    Route::patch('/subscriptions/listings/{listing}/status', [AdminSubscriptionsController::class, 'updateListingStatus'])->name('subscriptions.listings.status');
     Route::patch('/template-unlock-requests/{unlockRequest}/status', [AdminSubscriptionsController::class, 'updateUnlockStatus'])->name('template_unlock_requests.status');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');

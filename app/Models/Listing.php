@@ -11,7 +11,30 @@ class Listing extends Model
 
     const CATEGORY_TYPES = ['sell', 'rent', 'service', 'vehicle', 'land'];
 
-    protected $fillable = ['title', 'description', 'category', 'subcategory', 'price', 'contact_number', 'location', 'status', 'user_id', 'city_id', 'shop_id'];
+    protected $fillable = [
+        'title',
+        'description',
+        'category',
+        'subcategory',
+        'price',
+        'contact_number',
+        'location',
+        'status',
+        'user_id',
+        'city_id',
+        'shop_id',
+        'photos',
+        'payment_transaction_id',
+        'payment_screenshot_path',
+        'admin_notes',
+        'reviewed_by',
+        'reviewed_at',
+    ];
+
+    protected $casts = [
+        'photos' => 'array',
+        'reviewed_at' => 'datetime',
+    ];
 
     public function user()
     {
@@ -26,5 +49,10 @@ class Listing extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
     }
 }

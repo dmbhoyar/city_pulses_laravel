@@ -1,21 +1,300 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="panel">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h2 style="margin:0">Buy &amp; Sell</h2>
-    @auth
-      <a href="{{ route('buy.new') }}" class="toggle-btn">New Buy Record</a>
-    @endauth
+<style>
+  :root {
+    --gold:#D4A017;--gold-light:#F0C040;--dark:#0D0D0D;--dark2:#141414;--dark3:#1C1C1C;--dark4:#252525;
+    --card-bg:#181818;--text:#F5F0E8;--text-muted:#9A9080;--text-dim:#5A5248;
+    --accent-green:#2EC87A;--accent-red:#E84040;--accent-blue:#4A8FE8;
+    --border:rgba(212,160,23,0.15);--border-hover:rgba(212,160,23,0.4);--radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  /* HERO */
+  .hero{padding:3rem 2rem;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+  .hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(212,160,23,0.12) 0%,transparent 70%);pointer-events:none}
+  .hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.05;letter-spacing:-1px;margin-bottom:1rem}
+  .hero h1 span{color:var(--gold)}
+  .hero p{color:var(--text-muted);font-size:1rem;max-width:520px;margin:0 auto 2rem;line-height:1.6}
+  .hero-search{display:flex;max-width:580px;margin:0 auto;background:var(--dark3);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
+  .hero-search:focus-within{border-color:var(--gold)}
+  .hero-search select{background:var(--dark4);border:none;color:var(--text-muted);font-size:13px;padding:0 16px;border-right:1px solid var(--border);cursor:pointer;outline:none;min-width:120px}
+  .hero-search input{flex:1;background:transparent;border:none;color:var(--text);font-size:14px;padding:12px 16px;outline:none}
+  .hero-search input::placeholder{color:var(--text-dim)}
+  .hero-search .search-btn{background:var(--gold);border:none;color:var(--dark);padding:0 24px;font-weight:700;font-size:13px;cursor:pointer;transition:background .2s}
+  .hero-search .search-btn:hover{background:var(--gold-light)}
+
+  /* STATS */
+  .stats-strip{display:flex;justify-content:center;border-bottom:1px solid var(--border);background:var(--dark2);overflow-x:auto}
+  .stat-item{padding:1rem 2rem;border-right:1px solid var(--border);text-align:center;white-space:nowrap}
+  .stat-item:last-child{border-right:none}
+  .stat-num{font-size:1.5rem;font-weight:700;color:var(--gold);letter-spacing:-1px}
+  .stat-label{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+  /* SECTION */
+  .section{padding:2rem;max-width:1280px;margin:0 auto}
+
+  /* CATEGORY TABS */
+  .cat-tabs{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .cat-tabs::-webkit-scrollbar{display:none}
+  .cat-tab{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--dark3);cursor:pointer;white-space:nowrap;font-size:13px;font-weight:500;color:var(--text-muted);transition:all .2s}
+  .cat-tab:hover{border-color:var(--border-hover);color:var(--text)}
+  .cat-tab.active{background:rgba(212,160,23,0.12);border-color:var(--gold);color:var(--gold)}
+
+  /* FILTER */
+  .filter-bar{display:flex;gap:10px;align-items:center;margin:1rem 0;flex-wrap:wrap}
+  .filter-chip{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--dark3);color:var(--text-muted);font-size:12px;cursor:pointer;transition:all .2s}
+  .filter-chip:hover,.filter-chip.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,0.06)}
+
+  /* LISTINGS GRID */
+  .listings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:1rem}
+  .listing-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s;cursor:pointer;position:relative;animation:fadeInUp .4s ease both}
+  .listing-card:hover{border-color:var(--border-hover);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+  .card-img-wrapper{position:relative;height:180px;background:linear-gradient(135deg,var(--dark3),var(--dark4));display:flex;align-items:center;justify-content:center;font-size:3rem;overflow:hidden}
+  .card-img-wrapper img{width:100%;height:100%;object-fit:cover;display:block}
+  .card-badge{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:.5px}
+  .badge-sell{background:rgba(212,160,23,0.9);color:var(--dark)}
+  .badge-new{background:rgba(46,200,122,0.9);color:#fff}
+  .badge-used{background:rgba(232,64,64,0.85);color:#fff}
+  .card-fav{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.6);border:none;color:var(--text-muted);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+  .card-fav:hover,.card-fav.active{color:#E84040;background:rgba(232,64,64,0.15)}
+  .card-body{padding:14px 16px}
+  .card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card-price{font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+  .card-price span{font-size:12px;color:var(--text-muted);font-weight:400}
+  .card-meta{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-dim);padding-top:8px;border-top:1px solid var(--border)}
+
+  /* NO RESULTS */
+  .no-results{text-align:center;padding:3rem;color:var(--text-muted);display:none;grid-column:1/-1}
+  .no-results.show{display:block}
+
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;backdrop-filter:blur(4px);overflow:auto}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--dark2);border:1px solid var(--border);border-radius:18px;width:90%;max-width:560px;max-height:92vh;overflow-y:auto;margin:2rem 0}
+  .modal-head{padding:1.25rem 1.5rem;position:sticky;top:0;background:var(--dark2);z-index:5;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .modal-head h2{font-size:1.15rem}
+  .modal-x{background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;padding:2px 8px;border-radius:6px;transition:color .2s;line-height:1}
+  .modal-x:hover{color:var(--text)}
+  .modal-body{padding:1.25rem 1.5rem 1.5rem}
+
+  .form-group{margin-bottom:1rem}
+  .form-group label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+  .form-group input,.form-group select,.form-group textarea{width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:10px 14px;outline:none;font-family:inherit;transition:border-color .2s}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
+  .form-group textarea{resize:vertical;min-height:80px}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .modal-actions{display:flex;gap:10px;margin-top:1.5rem}
+  
+  .btn-primary{background:var(--gold);border:none;color:var(--dark);padding:10px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;transition:all .2s;font-family:inherit}
+  .btn-primary:hover{background:var(--gold-light);transform:translateY(-1px)}
+  .btn-outline{background:transparent;border:1px solid var(--border-hover);color:var(--gold);padding:10px 18px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;transition:all .2s}
+  .btn-outline:hover{background:rgba(212,160,23,0.08)}
+
+  /* DETAIL PANEL */
+  .detail-panel{display:none;position:fixed;right:0;top:0;bottom:0;width:min(480px,100%);z-index:150;background:var(--dark2);border-left:1px solid var(--border);overflow-y:auto;transform:translateX(100%);transition:transform .3s}
+  .detail-panel.open{display:block;transform:translateX(0)}
+  .panel-hdr{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;position:sticky;top:0;background:var(--dark2);z-index:5}
+  .panel-cls{background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;padding:4px}
+  .panel-body{padding:1.5rem}
+  .panel-placeholder{width:100%;height:240px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:var(--dark4);border-radius:12px;margin-bottom:1.5rem}
+  .panel-price{font-size:1.8rem;font-weight:700;color:var(--gold);margin-bottom:6px}
+  .panel-title{font-size:1.05rem;font-weight:600;margin-bottom:12px}
+  .panel-desc{color:var(--text-muted);font-size:13px;line-height:1.6;margin-bottom:1.5rem}
+  .panel-specs{background:var(--dark3);border-radius:10px;padding:1rem;margin-bottom:1.5rem}
+  .spec-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+  .spec-row:last-child{border-bottom:none}
+  .spec-k{color:var(--text-muted)}
+  .spec-v{font-weight:500}
+  .panel-actions{display:flex;gap:10px}
+  .panel-actions .btn-primary{flex:1;padding:12px}
+
+  .toast{position:fixed;bottom:2rem;right:2rem;z-index:300;background:var(--dark3);border:1px solid var(--accent-green);border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);transform:translateY(100px);opacity:0;transition:all .3s;max-width:300px}
+  .toast.show{transform:translateY(0);opacity:1}
+
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .listing-card:nth-child(1){animation-delay:.05s}.listing-card:nth-child(2){animation-delay:.1s}.listing-card:nth-child(3){animation-delay:.15s}.listing-card:nth-child(4){animation-delay:.2s}.listing-card:nth-child(5){animation-delay:.25s}.listing-card:nth-child(6){animation-delay:.3s}
+
+  @media(max-width:768px){
+    .form-row{grid-template-columns:1fr}
+    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+    .detail-panel{width:100%}
+    .hero-search{flex-direction:column}
+    .hero-search select,.hero-search .search-btn{border-right:none;border-bottom:1px solid var(--border)}
+  }
+</style>
+
+<div class="hero">
+  <h1>Buy & Sell <span>Marketplace</span></h1>
+  <p>Find trusted deals on vehicles, land, electronics — or reach thousands of buyers instantly.</p>
+  <div class="hero-search">
+    <select id="searchCategory" onchange="applyFilters()"><option value="">All Categories</option><option value="vehicles">🚗 Vehicles</option><option value="bikes">🏍️ Bikes</option><option value="land">🌾 Land</option><option value="mobile">📱 Mobiles</option><option value="farm">🚜 Farm Equip</option><option value="electronics">💻 Electronics</option></select>
+    <input type="text" id="searchInput" value="{{ $search ?? '' }}" placeholder="Search listings…" oninput="applyFilters()">
+    <button class="search-btn" onclick="applyFilters()">Search</button>
   </div>
 </div>
 
-<div class="grid" style="margin-top:12px">
-  @foreach($listings as $buy)
-    <div class="card">
-      <h3><a href="{{ route('buy.show', $buy->id) }}">{{ $buy->title }}</a></h3>
-      <span>City: {{ $buy->city?->name }}</span>
-    </div>
-  @endforeach
+<div class="stats-strip">
+  <div class="stat-item"><div class="stat-num" id="totalListings">{{ $listings->total() }}</div><div class="stat-label">Active Listings</div></div>
+  <div class="stat-item"><div class="stat-num" id="cityListings">{{ $cityActive }}</div><div class="stat-label">{{ $selectedCityName ?: 'All Cities' }}</div></div>
+  <div class="stat-item"><div class="stat-num">99%</div><div class="stat-label">Safe Transactions</div></div>
+  <div class="stat-item"><div class="stat-num">24Cr+</div><div class="stat-label">Deals Closed</div></div>
 </div>
+
+<div class="section">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:1rem">
+    <h2 style="font-size:1.3rem;color:var(--text)">Browse Listings</h2>
+    @auth
+      @if(auth()->user()->isSeller() || auth()->user()->isSuperadmin())
+        <a class="btn-primary" href="{{ route('buy.new') }}" style="text-decoration:none;display:inline-flex;align-items:center">+ Post Listing</a>
+      @else
+        <span class="btn-outline" title="Only seller role can post Buy & Sell listings">Seller role required</span>
+      @endif
+    @else
+      <a class="btn-primary" href="{{ route('login', ['seller' => 1, 'redirect_to' => route('buy.new')]) }}" style="text-decoration:none;display:inline-flex;align-items:center">+ Post Listing</a>
+    @endauth
+  </div>
+
+  <div class="cat-tabs">
+    <div class="cat-tab active" onclick="filterByCat('',this)" data-cat="">🔥 All</div>
+    <div class="cat-tab" onclick="filterByCat('vehicles',this)" data-cat="vehicles">🚗 Vehicles</div>
+    <div class="cat-tab" onclick="filterByCat('bikes',this)" data-cat="bikes">🏍️ Bikes</div>
+    <div class="cat-tab" onclick="filterByCat('land',this)" data-cat="land">🌾 Land</div>
+    <div class="cat-tab" onclick="filterByCat('mobile',this)" data-cat="mobile">📱 Mobiles</div>
+    <div class="cat-tab" onclick="filterByCat('farm',this)" data-cat="farm">🚜 Farm Equip</div>
+    <div class="cat-tab" onclick="filterByCat('electronics',this)" data-cat="electronics">💻 Electronics</div>
+  </div>
+
+  <form method="GET" action="{{ route('buy.index') }}" class="filter-bar" id="filterForm" style="margin-top:1rem">
+    <input type="hidden" id="subcategoryFilter" name="subcategory" value="{{ $subcategory ?? '' }}">
+    <input type="hidden" id="cityIdFilter" name="city_id" value="{{ $selectedCityId ?? '' }}">
+    <input type="hidden" id="searchFilter" name="q" value="{{ $search ?? '' }}">
+    <select name="city_id_select" id="citySelect" onchange="document.getElementById('cityIdFilter').value=this.value;document.getElementById('filterForm').submit()" class="filter-chip" style="margin-left:auto">
+      <option value="">All Cities</option>
+      @foreach($cities as $city)
+        <option value="{{ $city->id }}" {{ (int)($selectedCityId ?? 0) === (int)$city->id ? 'selected' : '' }}>📍 {{ $city->name }}</option>
+      @endforeach
+    </select>
+  </form>
+
+  {{-- Listings Grid --}}
+  <div class="listings-grid" id="listingsGrid">
+    @forelse($listings as $item)
+      @php
+        $emojis = [
+          'vehicles' => '🚗', 'bikes' => '🏍️', 'land' => '🌾',
+          'mobile' => '📱', 'farm' => '🚜', 'electronics' => '💻'
+        ];
+        $emoji = $emojis[$item->subcategory] ?? '🛒';
+        $firstPhotoPath = is_array($item->photos ?? null) && !empty($item->photos[0]) ? $item->photos[0] : '';
+        $firstPhotoUrl = $firstPhotoPath !== '' ? \Illuminate\Support\Facades\Storage::url($firstPhotoPath) : '';
+      @endphp
+      <div class="listing-card" onclick="openPanel({{ $item->id }}, '{{ addslashes($item->title) }}', {{ $item->price ?? 0 }}, '{{ addslashes($item->description ?? '') }}', '{{ $item->city?->name ?: 'City not set' }}', '{{ addslashes($firstPhotoUrl) }}', '{{ addslashes($emoji) }}', '{{ addslashes((string)($item->contact_number ?? '')) }}')">
+        <div class="card-img-wrapper">
+          @if($firstPhotoUrl !== '')
+            <img src="{{ $firstPhotoUrl }}" alt="{{ $item->title }}">
+          @else
+            {{ $emoji }}
+          @endif
+        </div>
+        <div class="card-badge badge-sell">SELL</div>
+        <button class="card-fav" onclick="event.stopPropagation()">♥</button>
+        <div class="card-body">
+          <div class="card-title">{{ $item->title }}</div>
+          <div class="card-price">{{ $item->price ? '₹' . number_format((float)$item->price, 0) : 'Contact' }} <span>Asking Price</span></div>
+          <div class="card-meta">
+            <span>📍 {{ $item->city?->name ?: 'City not set' }}</span>
+            <span>⭐ Verified</span>
+          </div>
+        </div>
+      </div>
+    @empty
+      <div class="no-results show" style="grid-column:1/-1">
+        <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
+        <p>No listings found. Try a different search or <button class="btn-outline" onclick="window.location.href='{{ route('buy.index') }}'">View All</button></p>
+      </div>
+    @endforelse
+  </div>
+
+  {{-- Pagination --}}
+  @if($listings->count())
+    <div style="margin-top:2rem;text-align:center">
+      {{ $listings->links('pagination::simple-bootstrap-5') }}
+    </div>
+  @endif
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-panel" id="detailPanel">
+  <div class="panel-hdr">
+    <button class="panel-cls" onclick="closePanel()">✕</button>
+    <span style="font-size:14px;color:var(--text-muted)">Listing Detail</span>
+  </div>
+  <div class="panel-body">
+    <div class="panel-placeholder" id="panelIcon"></div>
+    <div class="panel-price" id="panelPrice"></div>
+    <div class="panel-title" id="panelTitle"></div>
+    <div class="panel-desc" id="panelDesc"></div>
+    <div class="panel-specs" id="panelSpecs"></div>
+    <div class="panel-actions">
+      <a id="panelCallBtn" class="btn-primary" href="#" style="flex:1;text-align:center;text-decoration:none;padding:12px">📞 Call Seller</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span>✅</span><span id="toastMsg"></span></div>
+
+<script>
+function applyFilters(){
+  const search = document.getElementById('searchInput').value;
+  const cat = document.getElementById('searchCategory').value;
+  const form = document.getElementById('filterForm');
+  document.getElementById('searchFilter').value = search;
+  if(cat) document.getElementById('subcategoryFilter').value = cat;
+  form.submit();
+}
+
+function filterByCat(cat, el){
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('subcategoryFilter').value = cat;
+  document.getElementById('filterForm').submit();
+}
+
+function openPanel(id, title, price, desc, city, photoUrl, fallbackEmoji, contactNumber){
+  document.getElementById('panelTitle').textContent = title;
+  document.getElementById('panelPrice').textContent = price ? '₹' + price.toLocaleString('en-IN') : 'Contact';
+  document.getElementById('panelDesc').textContent = desc || 'No description provided.';
+  document.getElementById('panelSpecs').innerHTML = `<div class="spec-row"><span class="spec-k">Location</span><span class="spec-v">${city}</span></div>`;
+  const panelIcon = document.getElementById('panelIcon');
+  if (photoUrl) {
+    panelIcon.innerHTML = `<img src="${photoUrl}" alt="${title}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+  } else {
+    panelIcon.textContent = fallbackEmoji || '🛒';
+  }
+  const callBtn = document.getElementById('panelCallBtn');
+  const digits = String(contactNumber || '').replace(/\D+/g, '');
+  if (digits.length) {
+    callBtn.href = `tel:${digits}`;
+    callBtn.style.pointerEvents = 'auto';
+    callBtn.style.opacity = '1';
+  } else {
+    callBtn.href = '#';
+    callBtn.style.pointerEvents = 'none';
+    callBtn.style.opacity = '.55';
+  }
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+function closePanel(){
+  document.getElementById('detailPanel').classList.remove('open');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
 @endsection

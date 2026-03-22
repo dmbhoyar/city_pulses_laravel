@@ -2,6 +2,8 @@
 
 @section('content')
 <style>
+  .sub-form-card,.sub-profile-card{overflow:hidden}
+  .sub-form-card,.sub-form-card *,.sub-profile-card,.sub-profile-card *{box-sizing:border-box}
   .sub-state{border-radius:14px;padding:22px 18px;text-align:center;margin-top:12px}
   .sub-state.active{background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);border:1.5px solid #6ee7b7}
   .sub-state.pending{background:linear-gradient(135deg,#fef9c3 0%,#fde68a 100%);border:1.5px solid #fcd34d}
@@ -38,12 +40,24 @@
   .sub-form-grid{display:grid;gap:10px}
   .sub-field label{display:block;font-size:12px;font-weight:600;color:#4a6580;margin-bottom:4px}
   .sub-field input,.sub-field textarea{width:100%;padding:9px 11px;border:1px solid #c8d8ee;border-radius:8px;font-size:13px;background:#f9fbff;color:#1e3a5f}
+  .sub-field input,.sub-field textarea,.sub-field select{max-width:100%;min-width:0}
   .sub-field textarea{resize:vertical;min-height:74px}
   .sub-field input:focus,.sub-field textarea:focus{outline:none;border-color:#4f85c5;background:#fff}
   .sub-submit-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .sub-submit{padding:12px 18px;background:#f5c518;border:2px solid #e0b10f;color:#2d1c00;font-size:14px;font-weight:800;border-radius:10px;cursor:pointer}
   .sub-submit:disabled{opacity:.55;cursor:not-allowed}
   .sub-proof-note{font-size:11px;color:#7a95b0}
+  .sub-profile-card{margin-top:12px;background:#fff;border:1px solid #dbe7f8;border-radius:12px;padding:16px}
+  .sub-profile-card h3{margin:0 0 8px;color:#2f4e74}
+  .sub-profile-note{font-size:12px;color:#5d6f86;line-height:1.7;margin:0 0 12px}
+  .sub-profile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .sub-profile-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sub-profile-grid > *{min-width:0}
+  .sub-profile-photo{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .sub-profile-photo img{width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid #dbe7f8}
+  @media (max-width: 760px){
+    .sub-profile-grid,.sub-profile-grid.two{grid-template-columns:1fr}
+  }
 
   .template-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
   .tpl-card{border:2px solid #dbe7f8;border-radius:12px;padding:12px;cursor:pointer;transition:border-color .2s,background .2s,transform .2s;text-align:left;background:#fafcff}
@@ -119,6 +133,14 @@
     $entityLabel = $entityLabel ?? 'Service';
     $dashboardLabel = $dashboardLabel ?? 'MyService';
     $websiteLabel = $websiteLabel ?? 'Public service website';
+    $profileLabel = $entityLabel === 'Shop' ? 'Shop Owner Profile' : 'Service Provider Profile';
+    $profileTc = $shop->page_config['template_content'] ?? [];
+    $profileDefaultName = auth()->user()->full_name ?: ($entityLabel === 'Shop' ? 'Shop Owner' : 'Service Provider');
+    $profileDefaultTitle = $entityLabel === 'Shop' ? 'Founder & Lead Shop Expert' : 'Founder & Lead Service Expert';
+    $profileDefaultContact = $shop->phone ?: (auth()->user()->mobile_number ?? '');
+    $profileDefaultBio = $entityLabel === 'Shop'
+      ? 'Trusted local shop owner focused on reliable products and customer-friendly support.'
+      : 'Experienced local professional dedicated to reliable and customer-friendly service.';
   @endphp
 
   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
@@ -255,6 +277,87 @@
     </div>
   </div>
   @endif
+
+  <div class="sub-profile-card">
+    <h3>{{ $profileLabel }}</h3>
+    <p class="sub-profile-note">This profile appears on your public page. It is now managed from this Subscription section.</p>
+
+    @if(!$hasActiveSubscription)
+      <div style="margin-bottom:10px;padding:10px;border:1px solid #f0d79a;background:#fff7e4;border-radius:8px;font-size:12px;color:#7b5b1d">
+        Activate your yearly base subscription first to save profile details.
+      </div>
+    @endif
+
+    <form method="POST" action="{{ route('subscriptions.profile.update') }}" enctype="multipart/form-data" class="sub-form-grid">
+      @csrf
+      @method('PATCH')
+
+      <div class="sub-profile-grid">
+        <div class="sub-field">
+          <label for="profile_provider_name">Provider Name</label>
+          <input id="profile_provider_name" type="text" name="profile[provider_name]" value="{{ old('profile.provider_name', $profileTc['provider_name'] ?? $profileDefaultName) }}" placeholder="Your full name">
+        </div>
+        <div class="sub-field">
+          <label for="profile_provider_age">Age</label>
+          <input id="profile_provider_age" type="text" name="profile[provider_age]" value="{{ old('profile.provider_age', $profileTc['provider_age'] ?? '') }}" placeholder="e.g. 32">
+        </div>
+        <div class="sub-field">
+          <label for="profile_provider_title">Professional Title</label>
+          <input id="profile_provider_title" type="text" name="profile[provider_title]" value="{{ old('profile.provider_title', $profileTc['provider_title'] ?? $profileDefaultTitle) }}" placeholder="Founder & Lead Expert">
+        </div>
+      </div>
+
+      <div class="sub-profile-grid">
+        <div class="sub-field">
+          <label for="profile_provider_email">Email</label>
+          <input id="profile_provider_email" type="email" name="profile[provider_email]" value="{{ old('profile.provider_email', $profileTc['provider_email'] ?? (auth()->user()->email ?? '')) }}" placeholder="name@example.com">
+        </div>
+        <div class="sub-field">
+          <label for="profile_provider_contact">Contact Number</label>
+          <input id="profile_provider_contact" type="text" name="profile[provider_contact]" value="{{ old('profile.provider_contact', $profileTc['provider_contact'] ?? $profileDefaultContact) }}" placeholder="+91 ...">
+        </div>
+        <div class="sub-field">
+          <label for="profile_provider_experience">Experience Tag</label>
+          <input id="profile_provider_experience" type="text" name="profile[provider_experience]" value="{{ old('profile.provider_experience', $profileTc['provider_experience'] ?? '5+ Years Experience') }}" placeholder="10+ Years Experience">
+        </div>
+      </div>
+
+      <div class="sub-profile-grid two">
+        <div class="sub-field">
+          <label for="profile_provider_photo_file">Provider Photo</label>
+          <input id="profile_provider_photo_file" type="file" name="profile[provider_photo_file]" accept="image/*">
+          <input type="hidden" name="profile[provider_photo_existing]" value="{{ old('profile.provider_photo_existing', $profileTc['provider_photo'] ?? '') }}">
+          <div class="sub-proof-note">Upload JPG/PNG/WEBP (max 2MB).</div>
+          @php
+            $profilePhoto = (string) ($profileTc['provider_photo'] ?? '');
+            $profilePhotoUrl = $profilePhoto === ''
+              ? ''
+              : (\Illuminate\Support\Str::startsWith($profilePhoto, ['http://', 'https://', 'data:', '/']) ? $profilePhoto : \Illuminate\Support\Facades\Storage::url($profilePhoto));
+          @endphp
+          @if($profilePhotoUrl !== '')
+            <div class="sub-profile-photo">
+              <img src="{{ $profilePhotoUrl }}" alt="Current profile photo">
+              <span class="sub-proof-note">Current photo</span>
+            </div>
+          @endif
+        </div>
+        <div class="sub-field">
+          <label for="profile_provider_bio">Provider Bio</label>
+          <textarea id="profile_provider_bio" name="profile[provider_bio]" rows="4" placeholder="Describe the provider, expertise, trust, and background">{{ old('profile.provider_bio', $profileTc['provider_bio'] ?? $profileDefaultBio) }}</textarea>
+        </div>
+      </div>
+
+      @if($errors->has('profile.provider_name') || $errors->has('profile.provider_age') || $errors->has('profile.provider_title') || $errors->has('profile.provider_email') || $errors->has('profile.provider_contact') || $errors->has('profile.provider_experience') || $errors->has('profile.provider_bio') || $errors->has('profile.provider_photo_file'))
+        <div style="color:#d64545;font-size:12px">
+          {{ $errors->first('profile.provider_name') ?: $errors->first('profile.provider_age') ?: $errors->first('profile.provider_title') ?: $errors->first('profile.provider_email') ?: $errors->first('profile.provider_contact') ?: $errors->first('profile.provider_experience') ?: $errors->first('profile.provider_bio') ?: $errors->first('profile.provider_photo_file') }}
+        </div>
+      @endif
+
+      <div class="sub-submit-row">
+        <button type="submit" class="sub-submit" {{ !$hasActiveSubscription ? 'disabled' : '' }}>Save {{ $profileLabel }}</button>
+      </div>
+    </form>
+  </div>
 
   <div class="card" style="margin-top:12px;padding:16px;border:1px solid #f3e5b2;background:#fffdf6">
     <h3 style="margin-top:0">Paid Template Add-on</h3>

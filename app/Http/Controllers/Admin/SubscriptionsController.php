@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdminSetting;
+use App\Models\Listing;
 use App\Models\Subscription;
 use App\Models\TemplateUnlockRequest;
 use Illuminate\Http\Request;
@@ -17,12 +18,21 @@ class SubscriptionsController extends Controller
 
     public function index()
     {
-        $subscriptions = Subscription::with(['user', 'shop', 'reviewer'])->latest('id')->paginate(30);
-        $unlockRequests = TemplateUnlockRequest::with(['user', 'shop', 'reviewer'])->latest('id')->paginate(30);
+        $subscriptions = Subscription::with(['user', 'shop', 'reviewer'])
+            ->latest('id')
+            ->paginate(30, ['*'], 'subscriptions_page');
+        $unlockRequests = TemplateUnlockRequest::with(['user', 'shop', 'reviewer'])
+            ->latest('id')
+            ->paginate(30, ['*'], 'unlock_page');
+        $listingRequests = Listing::query()
+            ->with(['user', 'city', 'reviewer'])
+            ->whereIn('category', ['sell', 'rent'])
+            ->latest('id')
+            ->paginate(30, ['*'], 'listing_page');
         $astroUnlockPrice = (float) AdminSetting::getValue('astro_dynamic_template_price', '499');
         $unlockSlaHours = (int) AdminSetting::getValue('template_unlock_sla_hours', '24');
 
-        return view('admin.subscriptions.index', compact('subscriptions', 'unlockRequests', 'astroUnlockPrice', 'unlockSlaHours'));
+        return view('admin.subscriptions.index', compact('subscriptions', 'unlockRequests', 'listingRequests', 'astroUnlockPrice', 'unlockSlaHours'));
     }
 
     public function updateSubscriptionStatus(Request $request, Subscription $subscription)
@@ -70,5 +80,22 @@ class SubscriptionsController extends Controller
         ]);
 
         return back()->with('notice', 'Template unlock request updated.');
+    }
+
+    public function updateListingStatus(Request $request, Listing $listing)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:pending,active,rejected,removed',
+            'admin_notes' => 'nullable|string|max:2000',
+        ]);
+
+        $listing->update([
+            'status' => $validated['status'],
+            'admin_notes' => trim((string) ($validated['admin_notes'] ?? '')),
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+        ]);
+
+        return back()->with('notice', 'Listing status updated.');
     }
 }

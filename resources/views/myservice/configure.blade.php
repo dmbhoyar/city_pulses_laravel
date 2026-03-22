@@ -11,6 +11,16 @@
 @endphp
 <style>
   .cfg-section{background:#fff;border:1px solid #dbe7f8;border-radius:10px;padding:16px;margin-top:12px}
+  .cfg-section,.cfg-section *{box-sizing:border-box}
+  .cfg-section{overflow:hidden}
+  .cfg-section .form-row{min-width:0}
+  .cfg-section input[type="text"],
+  .cfg-section input[type="email"],
+  .cfg-section input[type="url"],
+  .cfg-section input[type="file"],
+  .cfg-section textarea,
+  .cfg-section select{width:100%;max-width:100%;min-width:0}
+  .cfg-section textarea{resize:vertical}
   .cfg-section h3{margin:0 0 10px;font-size:15px;color:#2f4e74;border-bottom:1px solid #e8eef9;padding-bottom:6px}
   .cfg-section h3 span{font-size:11px;font-weight:400;color:#86a0be;margin-left:6px}
   .template-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
@@ -165,6 +175,26 @@
   .pf-row .pf-body input,.pf-row .pf-body select{width:100%;box-sizing:border-box}
   .pf-actions{display:flex;flex-direction:column;gap:3px;width:34px}
   .pf-actions button{padding:2px 5px;font-size:11px}
+  .cfg-grid{display:grid;gap:10px}
+  .cfg-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cfg-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cfg-grid.split{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+  .cfg-grid > *{min-width:0}
+  .svc-inline-grid{display:grid;grid-template-columns:90px minmax(0,1fr) 150px;gap:6px}
+  .svc-inline-grid > *{min-width:0}
+  .grp-item-row{display:grid;grid-template-columns:70px minmax(0,1fr) 130px;gap:5px;margin-bottom:5px;align-items:start}
+  .grp-item-row > *{min-width:0}
+  .grp-item-desc{grid-column:1/-1;display:flex;gap:5px;align-items:center}
+  .grp-item-desc textarea{flex:1;min-width:0}
+  @media (max-width: 760px){
+    .cfg-grid.two,.cfg-grid.three,.cfg-grid.split,.svc-inline-grid,.pf-row .pf-body{grid-template-columns:1fr}
+    .svc-row,.pf-row{flex-direction:column}
+    .svc-remove{align-self:flex-end}
+    .pf-actions{flex-direction:row;width:auto}
+    .grp-item-desc{flex-direction:column;align-items:stretch}
+    .grp-item-desc .grp-item-remove{align-self:flex-end}
+    .cfg-section{padding:12px}
+  }
 </style>
 
 <div class="panel">
@@ -188,7 +218,7 @@
         <label for="description">Description</label>
         <textarea id="description" name="description" rows="3" placeholder="Briefly describe what you offer…">{{ old('description', $shop->description ?? '') }}</textarea>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="cfg-grid two">
         <div class="form-row" style="margin:0">
           <label for="phone">Phone Number</label>
           <input type="text" id="phone" name="phone" value="{{ old('phone', $shop->phone ?? '') }}" placeholder="+91 …">
@@ -530,7 +560,7 @@
     <div class="cfg-section">
       <h3>Template Content <span>These fields control your public website text</span></h3>
       @php $tc = old('tc', $templateContent ?? []); @endphp
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="cfg-grid two">
         <div class="form-row" style="margin:0">
           <label for="tc_hero_badge">Hero Badge</label>
           <input id="tc_hero_badge" type="text" name="tc[hero_badge]" value="{{ $tc['hero_badge'] ?? '' }}" placeholder="Trusted Since 2010 · 5000+ Customers">
@@ -544,7 +574,7 @@
         <label for="tc_hero_description">Hero Description</label>
         <textarea id="tc_hero_description" name="tc[hero_description]" rows="3" placeholder="Short intro for your service page">{{ $tc['hero_description'] ?? '' }}</textarea>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div class="cfg-grid three">
         <div class="form-row" style="margin:0">
           <label for="tc_primary_cta">Primary CTA Button</label>
           <input id="tc_primary_cta" type="text" name="tc[primary_cta]" value="{{ $tc['primary_cta'] ?? '' }}" placeholder="Book Now">
@@ -558,7 +588,7 @@
           <input id="tc_services_label" type="text" name="tc[services_label]" value="{{ $tc['services_label'] ?? '' }}" placeholder="Our Services">
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="cfg-grid two">
         <div class="form-row" style="margin:0">
           <label for="tc_services_title">Services Section Title</label>
           <input id="tc_services_title" type="text" name="tc[services_title]" value="{{ $tc['services_title'] ?? '' }}" placeholder="Services We Offer">
@@ -568,7 +598,7 @@
           <input id="tc_services_subtitle" type="text" name="tc[services_subtitle]" value="{{ $tc['services_subtitle'] ?? '' }}" placeholder="Choose from our most popular services">
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="cfg-grid two">
         <div class="form-row" style="margin:0">
           <label for="tc_why_title">Why-Us Title</label>
           <input id="tc_why_title" type="text" name="tc[why_title]" value="{{ $tc['why_title'] ?? '' }}" placeholder="Why Choose Us">
@@ -578,7 +608,7 @@
           <input id="tc_why_subtitle" type="text" name="tc[why_subtitle]" value="{{ $tc['why_subtitle'] ?? '' }}" placeholder="Quality work and transparent pricing">
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div class="cfg-grid three">
         <div class="form-row" style="margin:0">
           <label for="tc_cta_title">Bottom CTA Title</label>
           <input id="tc_cta_title" type="text" name="tc[cta_title]" value="{{ $tc['cta_title'] ?? '' }}" placeholder="Need Help Today?">
@@ -592,7 +622,7 @@
           <input id="tc_cta_button" type="text" name="tc[cta_button]" value="{{ $tc['cta_button'] ?? '' }}" placeholder="Contact Now">
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="cfg-grid two">
         <div class="form-row" style="margin:0">
           <label for="tc_footer_brand">Footer Brand</label>
           <input id="tc_footer_brand" type="text" name="tc[footer_brand]" value="{{ $tc['footer_brand'] ?? '' }}" placeholder="Your brand name">
@@ -605,57 +635,11 @@
     </div>
 
     <div class="cfg-section">
-      <h3>{{ $providerProfileLabel }} <span>This appears on the public page</span></h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-        <div class="form-row" style="margin:0">
-          <label for="tc_provider_name">Provider Name</label>
-          <input id="tc_provider_name" type="text" name="tc[provider_name]" value="{{ $tc['provider_name'] ?? '' }}" placeholder="Your full name">
-        </div>
-        <div class="form-row" style="margin:0">
-          <label for="tc_provider_age">Age</label>
-          <input id="tc_provider_age" type="text" name="tc[provider_age]" value="{{ $tc['provider_age'] ?? '' }}" placeholder="e.g. 32">
-        </div>
-        <div class="form-row" style="margin:0">
-          <label for="tc_provider_title">Professional Title</label>
-          <input id="tc_provider_title" type="text" name="tc[provider_title]" value="{{ $tc['provider_title'] ?? '' }}" placeholder="Founder & Lead Expert">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-        <div class="form-row" style="margin:0">
-          <label for="tc_provider_email">Email</label>
-          <input id="tc_provider_email" type="email" name="tc[provider_email]" value="{{ $tc['provider_email'] ?? '' }}" placeholder="name@example.com">
-        </div>
-        <div class="form-row" style="margin:0">
-          <label for="tc_provider_contact">Contact Number</label>
-          <input id="tc_provider_contact" type="text" name="tc[provider_contact]" value="{{ $tc['provider_contact'] ?? '' }}" placeholder="+91 ...">
-        </div>
-        <div class="form-row" style="margin:0">
-          <label for="tc_provider_experience">Experience Tag</label>
-          <input id="tc_provider_experience" type="text" name="tc[provider_experience]" value="{{ $tc['provider_experience'] ?? '' }}" placeholder="10+ Years Experience">
-        </div>
-      </div>
-      <div class="form-row">
-        <label for="tc_provider_photo_file">Provider Photo</label>
-        <input id="tc_provider_photo_file" type="file" name="tc[provider_photo_file]" accept="image/*">
-        <input type="hidden" name="tc[provider_photo_existing]" value="{{ $tc['provider_photo'] ?? '' }}">
-        <small style="display:block;margin-top:6px;color:#7d92ae">Upload JPG/PNG/WEBP (max 2MB).</small>
-        @if(!empty($tc['provider_photo']))
-          @php
-            $existingPhoto = (string) $tc['provider_photo'];
-            $existingPhotoUrl = \Illuminate\Support\Str::startsWith($existingPhoto, ['http://', 'https://', 'data:', '/'])
-              ? $existingPhoto
-              : \Illuminate\Support\Facades\Storage::url($existingPhoto);
-          @endphp
-          <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-            <img src="{{ $existingPhotoUrl }}" alt="Current provider photo" style="width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid #dbe7f8">
-            <span style="font-size:12px;color:#6d84a5">Current photo</span>
-          </div>
-        @endif
-      </div>
-      <div class="form-row">
-        <label for="tc_provider_bio">Provider Bio</label>
-        <textarea id="tc_provider_bio" name="tc[provider_bio]" rows="3" placeholder="Describe the provider, expertise, trust, and background">{{ $tc['provider_bio'] ?? '' }}</textarea>
-      </div>
+      <h3>{{ $providerProfileLabel }} <span>This is managed from Subscription page now</span></h3>
+      <p style="margin:0;color:#6d84a5;font-size:13px;line-height:1.7">
+        To update {{ strtolower($providerProfileLabel) }} details (name, contact, bio, photo), go to
+        <a href="{{ route('subscriptions.new') }}">Subscription</a>.
+      </p>
     </div>
 
     {{-- ─── Services Offered ────────────────────────────── --}}
@@ -684,7 +668,7 @@
         @foreach($svcs as $i => $svc)
           <div class="svc-row">
             <div class="svc-body">
-              <div style="display:grid;grid-template-columns:90px 1fr 150px;gap:6px">
+              <div class="svc-inline-grid">
                 <input type="text" name="services[{{ $i }}][icon]" value="{{ $svc['icon'] ?? '🛠️' }}" placeholder="Icon" list="service-icon-options">
                 <input type="text" name="services[{{ $i }}][name]" value="{{ $svc['name'] ?? '' }}" placeholder="Service name (e.g. Plumbing Repair)">
                 <input type="text" name="services[{{ $i }}][price]" value="{{ $svc['price'] ?? '' }}" placeholder="Price (e.g. From ₹499)">
@@ -712,18 +696,18 @@
                 <strong style="font-size:13px;color:#2d4a7a">Section {{ $gi + 1 }}</strong>
                 <button type="button" class="grp-remove" style="background:#fee;border:1px solid #fbb;color:#c33;border-radius:6px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Remove</button>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 2fr;gap:6px;margin-bottom:6px">
+              <div class="cfg-grid split" style="margin-bottom:6px">
                 <input type="text" name="service_groups[{{ $gi }}][eyebrow]" value="{{ $grp['eyebrow'] ?? '' }}" placeholder="Eyebrow label (e.g. 01 · Astrology)">
                 <input type="text" name="service_groups[{{ $gi }}][title]"   value="{{ $grp['title'] ?? '' }}"   placeholder="Section heading *">
               </div>
               <input type="text" name="service_groups[{{ $gi }}][subtitle]" value="{{ $grp['subtitle'] ?? '' }}" placeholder="Subtitle / description" style="width:100%;margin-bottom:8px">
               <div class="grp-items-container" style="padding-left:10px;border-left:3px solid #e8eef8">
                 @foreach($grp['items'] ?? [] as $ii => $item)
-                  <div class="grp-item-row" style="display:grid;grid-template-columns:70px 1fr 130px;gap:5px;margin-bottom:5px;align-items:start">
+                  <div class="grp-item-row">
                     <input type="text"  name="service_groups[{{ $gi }}][items][{{ $ii }}][icon]"        value="{{ $item['icon'] ?? '✨' }}"     placeholder="Icon" list="service-icon-options">
                     <input type="text"  name="service_groups[{{ $gi }}][items][{{ $ii }}][name]"        value="{{ $item['name'] ?? '' }}"       placeholder="Service name *">
                     <input type="text"  name="service_groups[{{ $gi }}][items][{{ $ii }}][price]"       value="{{ $item['price'] ?? '' }}"      placeholder="Price">
-                    <div style="grid-column:1/-1;display:flex;gap:5px;align-items:center">
+                    <div class="grp-item-desc">
                       <textarea name="service_groups[{{ $gi }}][items][{{ $ii }}][description]" placeholder="Short description…" rows="1" style="flex:1">{{ $item['description'] ?? '' }}</textarea>
                       <button type="button" class="grp-item-remove" style="background:#fee;border:1px solid #fbb;color:#c33;border-radius:6px;padding:2px 6px;font-size:11px;cursor:pointer;white-space:nowrap">✕</button>
                     </div>
@@ -774,8 +758,14 @@
     </div>
 
     {{-- ─── Submit ───────────────────────────────────────── --}}
+    @if(!$hasActiveSubscription)
+      <div style="margin-top:10px;padding:10px;border:1px solid #f0d79a;background:#fff7e4;border-radius:8px;font-size:12px;color:#7b5b1d">
+        Activate your yearly base subscription first to save configuration.
+        <a href="{{ route('subscriptions.new') }}" class="button" style="margin-left:8px">Go to Subscription</a>
+      </div>
+    @endif
     <div style="display:flex;gap:10px;margin-top:14px">
-      <button type="submit" class="toggle-btn">Save Configuration</button>
+      <button type="submit" class="toggle-btn" {{ !$hasActiveSubscription ? 'disabled' : '' }}>Save Configuration</button>
       @if($shop->id)
         <a href="{{ route('shops.public', ['publicSlug' => $shop->public_page_slug]) }}" target="_blank" class="button">View Public Page ↗</a>
       @endif
@@ -890,7 +880,7 @@ document.addEventListener('DOMContentLoaded', function(){
     row.className = 'svc-row';
     row.innerHTML = `
       <div class="svc-body">
-        <div style="display:grid;grid-template-columns:90px 1fr 150px;gap:6px">
+        <div class="svc-inline-grid">
           <input type="text" name="services[${n}][icon]" value="${esc(icon)}" placeholder="Icon" list="service-icon-options">
           <input type="text" name="services[${n}][name]" value="${esc(name)}" placeholder="Service name (e.g. Plumbing Repair)">
           <input type="text" name="services[${n}][price]" value="${esc(price)}" placeholder="Price (e.g. From ₹499)">
@@ -926,12 +916,11 @@ document.addEventListener('DOMContentLoaded', function(){
       const c   = grpEl.querySelector('.grp-items-container');
       const row = document.createElement('div');
       row.className = 'grp-item-row';
-      row.style.cssText = 'display:grid;grid-template-columns:70px 1fr 130px;gap:5px;margin-bottom:5px;align-items:start';
       row.innerHTML = `
         <input type="text"  name="service_groups[${gi}][items][${ii}][icon]"        value="${esc(icon)}"  placeholder="Icon" list="service-icon-options">
         <input type="text"  name="service_groups[${gi}][items][${ii}][name]"        value="${esc(name)}"  placeholder="Service name *">
         <input type="text"  name="service_groups[${gi}][items][${ii}][price]"       value="${esc(price)}" placeholder="Price">
-        <div style="grid-column:1/-1;display:flex;gap:5px;align-items:center">
+        <div class="grp-item-desc">
           <textarea name="service_groups[${gi}][items][${ii}][description]" rows="1" placeholder="Short description…" style="flex:1">${esc(desc)}</textarea>
           <button type="button" class="grp-item-remove" style="background:#fee;border:1px solid #fbb;color:#c33;border-radius:6px;padding:2px 6px;font-size:11px;cursor:pointer;white-space:nowrap">✕</button>
         </div>`;
@@ -949,7 +938,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <strong style="font-size:13px;color:#2d4a7a">Section ${gi + 1}</strong>
           <button type="button" class="grp-remove" style="background:#fee;border:1px solid #fbb;color:#c33;border-radius:6px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Remove</button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 2fr;gap:6px;margin-bottom:6px">
+        <div class="cfg-grid split" style="margin-bottom:6px">
           <input type="text" name="service_groups[${gi}][eyebrow]"  value="${esc(data.eyebrow||'')}"  placeholder="Eyebrow label (e.g. 01 · Astrology)">
           <input type="text" name="service_groups[${gi}][title]"    value="${esc(data.title||'')}"    placeholder="Section heading *">
         </div>

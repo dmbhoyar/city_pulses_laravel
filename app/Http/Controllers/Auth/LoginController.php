@@ -10,19 +10,34 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.login');
+        $redirectTo = (string) request()->query('redirect_to', '');
+        $lockSellerRole = request()->boolean('seller');
+
+        return view('auth.login', compact('redirectTo', 'lockSellerRole'));
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validated = $request->validate([
             'email'    => 'required|email',
             'password' => 'required|string',
+            'redirect_to' => 'nullable|string|max:2048',
         ]);
+
+        $credentials = [
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+        ];
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             $user = Auth::user();
+            $redirectTo = trim((string) ($validated['redirect_to'] ?? ''));
+
+            if ($redirectTo !== '') {
+                return redirect()->to($redirectTo)->with('notice', 'Welcome back!');
+            }
+
             $defaultRoute = $user && method_exists($user, 'isSuperadmin') && $user->isSuperadmin()
                 ? route('admin.dashboard')
                 : route('home');
@@ -32,7 +47,7 @@ class LoginController extends Controller
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
-        ])->withInput($request->only('email', 'remember'));
+        ])->withInput($request->only('email', 'remember', 'redirect_to'));
     }
 
     public function logout(Request $request)

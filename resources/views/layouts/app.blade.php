@@ -334,8 +334,17 @@
           <li><a href="{{ route('home') }}" class="panel-link">Today's Pulses</a></li>
           <li><a href="{{ route('offers') }}" class="panel-link">Offers &amp; Benefits</a></li>
         @elseif(str_contains($ctrl, 'Updates'))
-          <li><a href="{{ route('updates.index') }}" class="panel-link">News</a></li>
-          <li><a href="{{ route('updates.index') }}" class="panel-link">Alerts</a></li>
+          <li><a href="{{ route('updates.index') }}" class="panel-link">Front Page</a></li>
+          <li><a href="{{ route('updates.index') }}#news" class="panel-link">Latest News</a></li>
+          <li><a href="{{ route('updates.index') }}#events" class="panel-link">Events</a></li>
+          <li><a href="{{ route('updates.index') }}#jobs" class="panel-link">Jobs Feed</a></li>
+          <li><a href="{{ route('updates.index') }}#markets" class="panel-link">Markets</a></li>
+          <li><a href="{{ route('updates.index') }}#opinion" class="panel-link">Opinion</a></li>
+          @auth
+            @if(auth()->user()->isSuperadmin())
+              <li><a href="{{ route('updates.create') }}" class="panel-link">Publish Update</a></li>
+            @endif
+          @endauth
         @elseif(str_contains($ctrl, 'Jobs'))
           <li><a href="{{ route('jobs.index') }}" class="panel-link">Shops</a></li>
           <li><a href="{{ route('jobs.index') }}" class="panel-link">Government</a></li>
@@ -343,11 +352,19 @@
           <li><a href="{{ route('farming.index') }}" class="panel-link">Crops</a></li>
           <li><a href="{{ route('farming.index') }}" class="panel-link">Markets</a></li>
         @elseif(str_contains($ctrl, 'Rents'))
-          <li><a href="{{ route('rents.index') }}" class="panel-link">Houses</a></li>
-          <li><a href="{{ route('rents.index') }}" class="panel-link">Flats</a></li>
+          <li><a href="{{ route('rents.index') }}" class="panel-link">🏠 Houses</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'flat']) }}" class="panel-link">🏢 Flats</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'shop']) }}" class="panel-link">🏪 Shops</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'office']) }}" class="panel-link">💼 Offices</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'land']) }}" class="panel-link">🌾 Land</a></li>
         @elseif(str_contains($ctrl, 'Buy'))
-          <li><a href="{{ route('buy.index') }}" class="panel-link">Electronics</a></li>
-          <li><a href="{{ route('buy.index') }}" class="panel-link">Cars</a></li>
+          <li><a href="{{ route('buy.index') }}" class="panel-link">🛒 All Items</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'vehicles']) }}" class="panel-link">🚗 Vehicles</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'electronics']) }}" class="panel-link">💻 Electronics</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'mobile']) }}" class="panel-link">📱 Mobile Phones</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'bikes']) }}" class="panel-link">🏍️ Bikes</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'farm']) }}" class="panel-link">🚜 Farm Equip</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'land']) }}" class="panel-link">🌾 Land</a></li>
         @elseif(str_contains($ctrl, 'Services'))
           <li><a href="{{ route('services.index') }}" class="panel-link">Service ID Cards</a></li>
         @else
@@ -381,6 +398,9 @@
           @elseif(str_contains($ctrl, 'Services'))
             <li>Verified service provider ID cards</li>
             <li>Open card to view details and reviews</li>
+          @elseif(str_contains($ctrl, 'Updates'))
+            <li>Open newspaper sections from the same edition page</li>
+            <li>Use city filter to switch the local edition</li>
           @else
             <li>See today's top stories</li>
             <li>Nearby events</li>
@@ -605,8 +625,20 @@
       },
       updates: {
         title: "Updates",
-        items: [['N',"News","{{ route('updates.index') }}"],['A',"Alerts","{{ route('updates.index') }}"]],
-        rec: ["Subscribe to alerts","Manage notifications"],
+        items: [
+          ['📰',"Front Page","{{ route('updates.index') }}"],
+          ['N',"Latest News","{{ route('updates.index') }}#news"],
+          ['E',"Events","{{ route('updates.index') }}#events"],
+          ['J',"Jobs Feed","{{ route('updates.index') }}#jobs"],
+          ['M',"Markets","{{ route('updates.index') }}#markets"],
+          ['O',"Opinion","{{ route('updates.index') }}#opinion"],
+          @auth
+            @if(auth()->user()->isSuperadmin())
+              ['+',"Publish Update","{{ route('updates.create') }}"],
+            @endif
+          @endauth
+        ],
+        rec: ["Open each edition section from /updates","Use city filter for local edition","Download today’s newspaper view"],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#0b5ed7" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v2H3zM3 11h12v2H3zM3 17h18v2H3z"/></svg>',
         color: '#0b5ed7'
       },
@@ -632,9 +664,17 @@
         color: '#ff8f00'
       },
       buy: {
-        title: "Buy",
-        items: [['B',"Electronics","{{ route('buy.index') }}"],['C',"Cars","{{ route('buy.index') }}"]],
-        rec: ["Create listing","Popular categories"],
+        title: "Buy & Sell",
+        items: [
+          ['🛒',"All Items","{{ route('buy.index') }}"],
+          ['🚗',"Vehicles","{{ route('buy.index', ['subcategory' => 'vehicles']) }}"],
+          ['🏍',"Bikes","{{ route('buy.index', ['subcategory' => 'bikes']) }}"],
+          ['📱',"Mobile Phones","{{ route('buy.index', ['subcategory' => 'mobile']) }}"],
+          ['💻',"Electronics","{{ route('buy.index', ['subcategory' => 'electronics']) }}"],
+          ['🚜',"Farm Equip","{{ route('buy.index', ['subcategory' => 'farm']) }}"],
+          ['🌾',"Land","{{ route('buy.index', ['subcategory' => 'land']) }}"],
+        ],
+        rec: ["Post listing with payment proof","Filter by city and category"],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#6f42c1" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zM7 10h10v8H7z"/></svg>',
         color: '#6f42c1'
       },
@@ -721,7 +761,7 @@
       panelTitle.innerHTML = (def.icon||'') + `<span class="panel-title-text">${def.title}</span>`;
       panelTitle.classList.add('active');
       panelTitle.style.borderLeftColor = def.color||'#a10b0b';
-      const curPath = window.location.pathname;
+      const currentUrl = new URL(window.location.href);
       panelList.innerHTML = def.items.map((i)=>{
         const badge = `<span class="badge">${i[0]}</span>`;
         let label = `<span class="label">${i[1]}</span>`;
@@ -739,7 +779,13 @@
           }
         }
         let isActive = false;
-        try { isActive = i[2] && (curPath === new URL(i[2], window.location.origin).pathname); } catch(e){}
+        try {
+          if (i[2]) {
+            const targetUrl = new URL(i[2], window.location.origin);
+            isActive = currentUrl.pathname === targetUrl.pathname
+              && ((targetUrl.hash || '') === '' ? (currentUrl.hash || '') === '' : currentUrl.hash === targetUrl.hash);
+          }
+        } catch(e){}
         return `<li class="${isActive ? 'active-item' : ''}">${badge}${label}</li>`;
       }).join('');
       recList.innerHTML = def.rec.map(r=>`<li>${r}</li>`).join('');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminSetting;
+use App\Models\Shop;
 use App\Models\Subscription;
 use App\Models\TemplateUnlockRequest;
 use Illuminate\Http\Request;
@@ -24,24 +25,18 @@ class SubscriptionsController extends Controller
     public function create()
     {
         $isShopowner = auth()->user()->isShopowner();
-        $shop = auth()->user()->shops()->first();
+        $shop = $this->getOrCreateOwnedShop();
         $dashboardRoute = $isShopowner ? 'myshop' : 'myservice';
         $unlockRoute = $isShopowner ? 'myshop.unlock' : 'myservice.unlock';
         $entityLabel = $isShopowner ? 'Shop' : 'Service';
         $dashboardLabel = $isShopowner ? 'MyShop' : 'MyService';
         $websiteLabel = $isShopowner ? 'Public shop website' : 'Public service website';
 
-        if (!$shop) return redirect()->route($dashboardRoute)->with('alert', 'Create your profile first.');
         $subscription = new Subscription(['user_id' => auth()->id(), 'shop_id' => $shop->id]);
         $yearlyPrice = $this->getYearlyBasePrice();
         $astroUnlockPrice = $this->getAstroUnlockPrice();
         $unlockSlaHours = $this->getUnlockSlaHours();
-        $hasActiveSubscription = Subscription::query()
-            ->where('user_id', auth()->id())
-            ->where('status', 'active')
-            ->whereNotNull('expires_at')
-            ->where('expires_at', '>', now())
-            ->exists();
+        $hasActiveSubscription = $this->hasActiveYearlySubscription($shop);
 
         $activeSubscription = Subscription::query()
             ->where('user_id', auth()->id())
@@ -128,10 +123,7 @@ class SubscriptionsController extends Controller
     public function updateTemplate(Request $request)
     {
         $dashboardRoute = auth()->user()->isShopowner() ? 'myshop' : 'myservice';
-        $shop = auth()->user()->shops()->first();
-        if (!$shop) {
-            return redirect()->route($dashboardRoute)->with('alert', 'Create your profile first.');
-        }
+        $shop = $this->getOrCreateOwnedShop();
 
         $selectedTemplate = (string) $request->input('template', 'dynamic_service');
         if (!in_array($selectedTemplate, self::AVAILABLE_TEMPLATES, true)) {
@@ -160,17 +152,10 @@ class SubscriptionsController extends Controller
 
     public function store(Request $request)
     {
-        $shop = auth()->user()->shops()->first();
         $dashboardRoute = auth()->user()->isShopowner() ? 'myshop' : 'myservice';
-        if (!$shop) return redirect()->route($dashboardRoute)->with('alert', 'Create your profile first.');
+        $shop = $this->getOrCreateOwnedShop();
 
-        $activeExists = Subscription::query()
-            ->where('user_id', auth()->id())
-            ->where('status', 'active')
-            ->where('plan_key', 'yearly_base')
-            ->whereNotNull('expires_at')
-            ->where('expires_at', '>', now())
-            ->exists();
+        $activeExists = $this->hasActiveYearlySubscription($shop);
 
         if ($activeExists) {
             return back()->with('notice', 'Your yearly subscription is already active.');
@@ -236,21 +221,11 @@ class SubscriptionsController extends Controller
         $unlockRoute = auth()->user()->isShopowner() ? 'myshop.unlock' : 'myservice.unlock';
         $dashboardRoute = auth()->user()->isShopowner() ? 'myshop' : 'myservice';
 
-        $hasActiveYearlyPlan = Subscription::query()
-            ->where('user_id', auth()->id())
-            ->where('status', 'active')
-            ->where('plan_key', 'yearly_base')
-            ->whereNotNull('expires_at')
-            ->where('expires_at', '>', now())
-            ->exists();
+        $shop = $this->getOrCreateOwnedShop();
+        $hasActiveYearlyPlan = $this->hasActiveYearlySubscription($shop);
 
         if (!$hasActiveYearlyPlan) {
             return back()->with('alert', 'Activate Yearly Base Plan (₹' . $this->getYearlyBasePrice() . ') before requesting Astro Dynamic unlock.');
-        }
-
-        $shop = auth()->user()->shops()->first();
-        if (!$shop) {
-            return redirect()->route($dashboardRoute)->with('alert', 'Create your profile first.');
         }
 
         $approvedRequestExists = TemplateUnlockRequest::query()
@@ -311,6 +286,56 @@ class SubscriptionsController extends Controller
         return redirect()->route($unlockRoute)->with('notice', 'Unlock request sent successfully! Review is usually completed within ' . $slaHours . ' hours.');
     }
 
+    public function updateProfile(Request $request)
+    {
+        $shop = $this->getOrCreateOwnedShop();
+
+        if (!$this->hasActiveYearlySubscription($shop)) {
+            return back()->with('alert', 'Activate your yearly base subscription first to save profile details.');
+        }
+
+        $validated = $request->validate([
+            'profile.provider_name' => 'nullable|string|max:120',
+            'profile.provider_age' => 'nullable|string|max:20',
+            'profile.provider_title' => 'nullable|string|max:160',
+            'profile.provider_email' => 'nullable|email|max:160',
+            'profile.provider_contact' => 'nullable|string|max:40',
+            'profile.provider_experience' => 'nullable|string|max:120',
+            'profile.provider_bio' => 'nullable|string|max:3000',
+            'profile.provider_photo_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $cfg = $shop->page_config ?? [];
+        $tc = is_array($cfg['template_content'] ?? null) ? $cfg['template_content'] : [];
+
+        $owner = auth()->user();
+        $profile = $validated['profile'] ?? [];
+
+        $existingPhoto = trim((string) $request->input('profile.provider_photo_existing', $tc['provider_photo'] ?? ''));
+        $providerPhoto = $existingPhoto;
+        if ($request->hasFile('profile.provider_photo_file')) {
+            if ($existingPhoto && !str_starts_with($existingPhoto, 'http://') && !str_starts_with($existingPhoto, 'https://') && !str_starts_with($existingPhoto, 'data:')) {
+                Storage::disk('public')->delete(ltrim(str_replace('/storage/', '', $existingPhoto), '/'));
+            }
+            $providerPhoto = $request->file('profile.provider_photo_file')->store('provider_profiles', 'public');
+        }
+
+        $tc['provider_name'] = trim((string) ($profile['provider_name'] ?? ($tc['provider_name'] ?? ($owner->full_name ?: 'Service Provider'))));
+        $tc['provider_age'] = trim((string) ($profile['provider_age'] ?? ($tc['provider_age'] ?? '')));
+        $tc['provider_title'] = trim((string) ($profile['provider_title'] ?? ($tc['provider_title'] ?? 'Founder & Lead Expert')));
+        $tc['provider_email'] = trim((string) ($profile['provider_email'] ?? ($tc['provider_email'] ?? ($owner->email ?: ''))));
+        $tc['provider_contact'] = trim((string) ($profile['provider_contact'] ?? ($tc['provider_contact'] ?? ($shop->phone ?: ($owner->mobile_number ?? '')))));
+        $tc['provider_experience'] = trim((string) ($profile['provider_experience'] ?? ($tc['provider_experience'] ?? '5+ Years Experience')));
+        $tc['provider_bio'] = trim((string) ($profile['provider_bio'] ?? ($tc['provider_bio'] ?? '')));
+        $tc['provider_photo'] = $providerPhoto;
+
+        $cfg['template_content'] = $tc;
+        $shop->page_config = $cfg;
+        $shop->save();
+
+        return back()->with('notice', 'Profile details updated successfully.');
+    }
+
     private function getYearlyBasePrice(): float
     {
         return (float) AdminSetting::getValue('yearly_base_plan_price', (string) self::DEFAULT_YEARLY_BASE_PRICE);
@@ -324,5 +349,35 @@ class SubscriptionsController extends Controller
     private function getUnlockSlaHours(): int
     {
         return (int) AdminSetting::getValue('template_unlock_sla_hours', (string) self::DEFAULT_UNLOCK_SLA_HOURS);
+    }
+
+    private function hasActiveYearlySubscription(Shop $shop): bool
+    {
+        return Subscription::query()
+            ->where('user_id', auth()->id())
+            ->where('shop_id', $shop->id)
+            ->where('plan_key', 'yearly_base')
+            ->where('status', 'active')
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '>', now())
+            ->exists();
+    }
+
+    private function getOrCreateOwnedShop(): Shop
+    {
+        $user = auth()->user();
+        $shop = $user->shops()->first();
+        if ($shop) {
+            return $shop;
+        }
+
+        return $user->shops()->create([
+            'name' => $user->isShopowner() ? ($user->full_name . "'s Shop") : 'My Service',
+            'description' => '',
+            'phone' => $user->mobile_number ?? null,
+            'address' => '',
+            'template' => 'dynamic_service',
+            'page_config' => [],
+        ]);
     }
 }
