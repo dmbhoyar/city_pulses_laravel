@@ -44,7 +44,11 @@
       'logo' => asset('images/icons/about.svg'),
     ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
   </script>
-  <link rel="stylesheet" href="{{ asset('css/application.css') }}">
+  @php
+    $appCssPath = public_path('css/application.css');
+    $appCssVersion = is_file($appCssPath) ? (string) @filemtime($appCssPath) : (string) time();
+  @endphp
+  <link rel="stylesheet" href="{{ asset('css/application.css') }}?v={{ $appCssVersion }}">
   <style>
     .global-top{position:sticky;top:0;z-index:120;background:rgba(255,248,240,.96);backdrop-filter:blur(14px);border-bottom:1px solid #F0E8DC;padding:.62rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem}
       /* Panel active item */
