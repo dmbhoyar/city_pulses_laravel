@@ -119,6 +119,7 @@
 
     .ao-home{--sf:#FF6B00;--gd:#D4A017;--em:#1A936F;--cr:#FFF8F0;--ink:#1A1A2E;--mu:#6B7280;--cd:#FFFFFF;--bd:#F0E8DC;--rd:#E53E3E;--bl:#2B6CB0;font-family:'DM Sans','Noto Sans Devanagari',sans-serif;color:var(--ink);max-width:100%;overflow-x:hidden;margin:0 auto;padding:1rem;width:100%}
     .ao-home *{box-sizing:border-box}
+    .ao-inner{max-width:1120px;margin:0 auto;width:100%}
     @media(max-width:768px){.ao-home{padding:0.75rem}}
     @media(max-width:640px){.ao-home{padding:0.5rem}}
     @media(max-width:480px){.ao-home{padding:0.5rem;font-size:0.95rem}}
@@ -201,6 +202,27 @@
     .ao-market-table td.ao-up{color:var(--em) !important;font-weight:700}
     .ao-market-table td.ao-dn{color:var(--rd) !important;font-weight:700}
     .ao-market-table td.ao-fl{color:var(--mu) !important;font-weight:700}
+    @media(max-width:480px){
+        .ao-market-wrap{overflow-x:visible}
+        .ao-market-table{min-width:100% !important;table-layout:fixed;font-size:.7rem}
+        .ao-market-table th,.ao-market-table td{padding:.45rem .35rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .ao-market-table th:nth-child(2),
+        .ao-market-table th:nth-child(3),
+        .ao-market-table th:nth-child(4),
+        .ao-market-table th:nth-child(6),
+        .ao-market-table td:nth-child(2),
+        .ao-market-table td:nth-child(3),
+        .ao-market-table td:nth-child(4),
+        .ao-market-table td:nth-child(6){display:none}
+        .ao-market-table th:nth-child(1), .ao-market-table td:nth-child(1){width:40%}
+        .ao-market-table th:nth-child(5), .ao-market-table td:nth-child(5){width:20%;text-align:right}
+        .ao-market-table th:nth-child(7), .ao-market-table td:nth-child(7){width:20%;text-align:right}
+        .ao-market-table th:nth-child(8), .ao-market-table td:nth-child(8){width:20%;text-align:right}
+    }
+    @media(max-width:360px){
+        .ao-market-table{font-size:.64rem}
+        .ao-market-table th,.ao-market-table td{padding:.38rem .28rem}
+    }
 
     .ao-weather{background:linear-gradient(135deg,#1A1A2E,#16213E,#0F3460);color:#fff;border-radius:14px;overflow:hidden;margin-bottom:1rem;width:100%;max-width:100%}
     @media(max-width:768px){.ao-weather{border-radius:12px}}
@@ -219,8 +241,9 @@
     @media(max-width:480px){.ao-w-desc{font-size:.7rem}}
     @media(max-width:360px){.ao-w-desc{font-size:.6rem}}
     .ao-w-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;padding:.8rem 1rem;width:100%;max-width:100%}
-    @media(max-width:768px){.ao-w-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:480px){.ao-w-grid{grid-template-columns:1fr}}
+    @media(max-width:768px){.ao-w-grid{grid-template-columns:1fr 1fr;gap:.4rem;padding:.7rem .8rem}}
+    @media(max-width:420px){.ao-w-grid{grid-template-columns:1fr 1fr;gap:.35rem;padding:.6rem .7rem}}
+    @media(max-width:360px){.ao-w-grid{grid-template-columns:1fr}}
     .ao-w-box{background:rgba(255,255,255,.08);border-radius:8px;padding:.48rem .6rem}
     @media(max-width:480px){.ao-w-box{padding:.4rem .5rem;border-radius:6px}}
     @media(max-width:360px){.ao-w-box{padding:.35rem .45rem}}
@@ -243,9 +266,46 @@
     .ao-mini div:first-child{font-size:clamp(0.55rem,1.3vw,0.64rem);color:var(--mu);font-weight:700}
     .ao-mini div:nth-child(2){font-family:'DM Mono',monospace;font-size:clamp(0.7rem,1.8vw,0.84rem);font-weight:700;margin:clamp(0.05rem,0.5vw,0.1rem) 0}
     .ao-mini div:last-child{font-size:clamp(0.55rem,1.3vw,0.68rem);font-weight:700}
-    @media(max-width:640px){.ao-mini-grid{grid-template-columns:1fr;gap:0.3rem;padding:0.6rem}.ao-mini{padding:0.4rem 0.5rem}}
-    @media(max-width:480px){.ao-mini-grid{gap:0.25rem;padding:0.5rem}.ao-mini{padding:0.35rem 0.45rem}.ao-mini div:first-child{font-size:0.5rem}.ao-mini div:nth-child(2){font-size:0.7rem}.ao-mini div:last-child{font-size:0.5rem}}
-    @media(max-width:360px){.ao-mini-grid{padding:0.4rem}.ao-mini{padding:0.3rem 0.4rem}.ao-mini div:first-child{font-size:0.45rem}.ao-mini div:nth-child(2){font-size:0.6rem}.ao-mini div:last-child{font-size:0.45rem}}
+    @media(max-width:640px){.ao-mini-grid{grid-template-columns:1fr 1fr;gap:0.3rem;padding:0.6rem}.ao-mini{padding:0.4rem 0.5rem}}
+    @media(max-width:480px){.ao-mini-grid{grid-template-columns:1fr 1fr;gap:0.25rem;padding:0.5rem}.ao-mini{padding:0.35rem 0.45rem}.ao-mini div:first-child{font-size:0.5rem}.ao-mini div:nth-child(2){font-size:0.7rem}.ao-mini div:last-child{font-size:0.5rem}}
+    @media(max-width:360px){.ao-mini-grid{grid-template-columns:1fr;padding:0.4rem}.ao-mini{padding:0.3rem 0.4rem}.ao-mini div:first-child{font-size:0.45rem}.ao-mini div:nth-child(2){font-size:0.6rem}.ao-mini div:last-child{font-size:0.45rem}}
+
+    .ao-fx-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem 1rem;border-bottom:1px solid #F0E8DC;font-size:.82rem;gap:.5rem}
+    .ao-fx-code{font-weight:700;white-space:nowrap}
+    .ao-fx-val{font-family:'DM Mono',monospace;white-space:nowrap}
+    .ao-ind-row{display:flex;justify-content:space-between;align-items:center;padding:.72rem 1rem;border-bottom:1px solid #F0E8DC;gap:.5rem}
+    .ao-ind-name{font-weight:700;font-size:.84rem}
+    .ao-ind-right{text-align:right}
+    .ao-ind-price{font-family:'DM Mono',monospace;font-weight:700}
+    .ao-ind-change{font-size:.69rem;font-weight:700}
+    .ao-farm-ico{width:32px;height:32px;border-radius:8px;background:rgba(26,147,111,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .ao-farm-title{font-size:.82rem;font-weight:700}
+    .ao-farm-copy{font-size:.74rem;color:#6B7280;line-height:1.4}
+    .ao-soft-empty{padding:.8rem 1rem;color:#6B7280}
+    .ao-city-empty{grid-column:1/-1;color:#6B7280;padding:.8rem}
+    .ao-row-sub{font-size:.65rem;color:#6B7280}
+    .ao-mini-wide{grid-column:1/-1}
+    @media(max-width:480px){
+        .ao-fx-row{padding:.5rem .7rem;font-size:.72rem}
+        .ao-ind-row{padding:.55rem .7rem}
+        .ao-ind-name{font-size:.76rem}
+        .ao-ind-price{font-size:.74rem}
+        .ao-ind-change{font-size:.62rem}
+        .ao-farm-ico{width:28px;height:28px}
+        .ao-farm-title{font-size:.74rem}
+        .ao-farm-copy{font-size:.66rem}
+        .ao-soft-empty{padding:.65rem .75rem;font-size:.72rem}
+        .ao-row-sub{font-size:.58rem}
+    }
+    @media(max-width:360px){
+        .ao-fx-row{padding:.45rem .6rem;font-size:.68rem}
+        .ao-ind-row{padding:.5rem .6rem}
+        .ao-ind-name{font-size:.7rem}
+        .ao-ind-price{font-size:.68rem}
+        .ao-ind-change{font-size:.58rem}
+        .ao-soft-empty{padding:.55rem .65rem;font-size:.66rem}
+        .ao-row-sub{font-size:.52rem}
+    }
 
     .ao-city-overlay{position:fixed;inset:0;background:rgba(26,26,46,.55);display:none;align-items:flex-start;justify-content:center;padding-top:80px;z-index:999;overflow-y:auto}
     @media(max-width:768px){.ao-city-overlay{padding-top:60px}}
@@ -266,6 +326,7 @@
 </style>
 
 <div class="ao-home">
+    <div class="ao-inner">
     <div class="ao-rates">
         <div class="ao-rate"><div class="ao-rate-l" data-k="g24">24K Gold /g</div><div class="ao-rate-v" id="aoG24">—</div><div class="ao-rate-s" id="aoG24s">—</div></div>
         <div class="ao-rate"><div class="ao-rate-l" data-k="g22">22K Gold /g</div><div class="ao-rate-v" id="aoG22">—</div><div class="ao-rate-s" id="aoG22s">—</div></div>
@@ -286,7 +347,7 @@
 
             <div class="ao-card">
                 <div class="ao-card-h"><div class="ao-card-t" id="aoMandiTitle">Market Commodity Prices</div><span class="ao-badge ao-badge-live" id="aoLiveMandi">LIVE</span></div>
-                <div class="ao-table-h" id="aoMandiHeader"><div id="aoHc">Commodity</div><div style="text-align:right" id="aoHp">Price</div><div style="text-align:right" id="aoHch">Change</div><div style="text-align:right" id="aoHt">Trend</div></div>
+                <div class="ao-table-h" id="aoMandiHeader"><div id="aoHc">Commodity</div><div class="ao-p" id="aoHp">Price</div><div class="ao-c" id="aoHch">Change</div><div class="ao-c" id="aoHt">Trend</div></div>
                 <div id="aoMandi"></div>
             </div>
 
@@ -329,6 +390,7 @@
         </div>
     </div>
 </div>
+    </div>
 
 <div class="ao-city-overlay" id="aoCityOverlay" onclick="if(event.target===this) closeAoCity()">
     <div class="ao-city-modal">
@@ -410,7 +472,7 @@
         const list = CITY_DATA.filter(c => !q || c.name.toLowerCase().includes(q));
         grid.innerHTML = list.map(c => `
             <button type="button" class="ao-city-btn ${c.name===city.name?'on':''}" data-city="${esc(c.name)}">${esc(c.name)}</button>
-        `).join('') || `<div style="grid-column:1/-1;color:#6B7280;padding:.8rem">${esc(text('noCity'))}</div>`;
+        `).join('') || `<div class="ao-city-empty">${esc(text('noCity'))}</div>`;
 
         grid.querySelectorAll('.ao-city-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
@@ -803,7 +865,7 @@
             const pct = r.pv ? Math.abs((diff / r.pv) * 100).toFixed(1) : '0.0';
             const cls = diff > 0 ? 'ao-up' : diff < 0 ? 'ao-dn' : 'ao-fl';
             const trend = diff > 0 ? '▲' : diff < 0 ? '▼' : '—';
-            return `<div class="ao-row"><div><strong>${esc(r.n)}</strong><div style="font-size:.65rem;color:#6B7280">${esc(r.u || '')}${r.date ? ' · ' + esc(r.date) : ''}</div></div><div class="ao-p">${inr(r.p)}</div><div class="ao-c ${cls}">${diff === 0 ? '—' : (diff > 0 ? '+' : '') + inr(diff)}</div><div class="ao-c ${cls}">${trend} ${diff === 0 ? '0.0' : pct}%</div></div>`;
+            return `<div class="ao-row"><div><strong>${esc(r.n)}</strong><div class="ao-row-sub">${esc(r.u || '')}${r.date ? ' · ' + esc(r.date) : ''}</div></div><div class="ao-p">${inr(r.p)}</div><div class="ao-c ${cls}">${diff === 0 ? '—' : (diff > 0 ? '+' : '') + inr(diff)}</div><div class="ao-c ${cls}">${trend} ${diff === 0 ? '0.0' : pct}%</div></div>`;
         }).join('');
     }
 
@@ -821,7 +883,7 @@
                 return `<div class="ao-mini"><div>${symbol}</div><div>${p > 100 ? inr(p.toFixed(0)) : inr(p.toFixed(4))}</div><div class="${ch>=0?'ao-up':'ao-dn'}">${ch>=0?'▲':'▼'} ${Math.abs(ch).toFixed(2)}%</div></div>`;
             }).join('');
         } catch {
-            document.getElementById('aoCrypto').innerHTML = `<div class="ao-mini" style="grid-column:1/-1">${esc(text('cryptoUnavailable'))}</div>`;
+            document.getElementById('aoCrypto').innerHTML = `<div class="ao-mini ao-mini-wide">${esc(text('cryptoUnavailable'))}</div>`;
         }
     }
 
@@ -831,11 +893,11 @@
             const d = await res.json();
             const pairs = [['USD','🇺🇸'],['EUR','🇪🇺'],['GBP','🇬🇧'],['AED','🇦🇪'],['SAR','🇸🇦'],['JPY','🇯🇵'],['SGD','🇸🇬'],['CNY','🇨🇳']];
             document.getElementById('aoFx').innerHTML = pairs.map(([c,f]) => `
-                <div style="display:flex;justify-content:space-between;padding:.6rem 1rem;border-bottom:1px solid #F0E8DC;font-size:.82rem">
-                    <div><strong>${f} 1 ${c}</strong></div><div style="font-family:'DM Mono',monospace">${inr((1 / (d.rates[c] || 1)).toFixed(2))}</div>
+                <div class="ao-fx-row">
+                    <div class="ao-fx-code">${f} 1 ${c}</div><div class="ao-fx-val">${inr((1 / (d.rates[c] || 1)).toFixed(2))}</div>
                 </div>`).join('');
         } catch {
-            document.getElementById('aoFx').innerHTML = `<div style="padding:.8rem 1rem">${esc(text('forexUnavailable'))}</div>`;
+            document.getElementById('aoFx').innerHTML = `<div class="ao-soft-empty">${esc(text('forexUnavailable'))}</div>`;
         }
     }
 
@@ -872,13 +934,13 @@
 
     function renderIndianMarkets(indices){
         if (!indices || !indices.length) {
-            document.getElementById('aoIndia').innerHTML = `<div style="padding:.8rem 1rem">${esc(text('indiaUnavailable'))}</div>`;
+            document.getElementById('aoIndia').innerHTML = `<div class="ao-soft-empty">${esc(text('indiaUnavailable'))}</div>`;
             return;
         }
         document.getElementById('aoIndia').innerHTML = indices.map(r => `
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:.72rem 1rem;border-bottom:1px solid #F0E8DC">
-                <div style="font-weight:700;font-size:.84rem">${r.name}</div>
-                <div style="text-align:right"><div style="font-family:'DM Mono',monospace;font-weight:700">${Number(r.price).toLocaleString('en-IN',{maximumFractionDigits:2})}</div><div class="${r.change>=0?'ao-up':'ao-dn'}" style="font-size:.69rem;font-weight:700">${r.change>=0?'▲':'▼'} ${Math.abs(r.change).toFixed(2)}%</div></div>
+            <div class="ao-ind-row">
+                <div class="ao-ind-name">${r.name}</div>
+                <div class="ao-ind-right"><div class="ao-ind-price">${Number(r.price).toLocaleString('en-IN',{maximumFractionDigits:2})}</div><div class="ao-ind-change ${r.change>=0?'ao-up':'ao-dn'}">${r.change>=0?'▲':'▼'} ${Math.abs(r.change).toFixed(2)}%</div></div>
             </div>
         `).join('');
     }
@@ -890,8 +952,8 @@
         ];
         document.getElementById('aoFarm').innerHTML = items.slice(0, 6).map((f) => `
             <a class="ao-list-item" href="${esc(f.url || '#')}">
-                <div style="width:32px;height:32px;border-radius:8px;background:rgba(26,147,111,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">🌱</div>
-                <div><div style="font-size:.82rem;font-weight:700">${esc(f.title || '')}</div><div style="font-size:.74rem;color:#6B7280;line-height:1.4">${esc((f.content || '').slice(0, 140))}</div></div>
+                <div class="ao-farm-ico">🌱</div>
+                <div><div class="ao-farm-title">${esc(f.title || '')}</div><div class="ao-farm-copy">${esc((f.content || '').slice(0, 140))}</div></div>
             </a>
         `).join('');
     }
