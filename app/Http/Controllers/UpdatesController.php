@@ -8,7 +8,9 @@ use App\Models\Market;
 use App\Models\Update;
 use App\Services\IndianMarketsClient;
 use App\Services\NewsClient;
+use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class UpdatesController extends Controller
 {
@@ -68,6 +70,16 @@ class UpdatesController extends Controller
 
         $marketIndices = IndianMarketsClient::fetchIndices();
 
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            $this->translateUpdateCollection($updates, $locale);
+            $this->translateUpdateCollection($eventUpdates, $locale);
+            $this->translateUpdateCollection($offerUpdates, $locale);
+            $this->translateJobCollection($jobs, $locale);
+            $this->translateCityNewsItems($cityNews, $locale);
+            $this->translateMarketCollection($marketRows, $locale);
+        }
+
         return view('updates.index', compact(
             'updates',
             'cities',
@@ -125,5 +137,66 @@ class UpdatesController extends Controller
     {
         $update->delete();
         return redirect()->route('updates.index')->with('notice', 'Update removed.');
+    }
+
+    private function translateUpdateCollection(Collection $items, string $locale): void
+    {
+        $items->transform(function ($item) use ($locale) {
+            if (!empty($item->title)) {
+                $item->title = TextTranslationService::translate((string) $item->title, $locale);
+            }
+
+            if (!empty($item->content)) {
+                $item->content = TextTranslationService::translate((string) $item->content, $locale);
+            }
+
+            if (!empty($item->update_type)) {
+                $item->update_type = TextTranslationService::translate((string) $item->update_type, $locale);
+            }
+
+            return $item;
+        });
+    }
+
+    private function translateJobCollection(Collection $items, string $locale): void
+    {
+        $items->transform(function ($job) use ($locale) {
+            if (!empty($job->title)) {
+                $job->title = TextTranslationService::translate((string) $job->title, $locale);
+            }
+
+            if (!empty($job->description)) {
+                $job->description = TextTranslationService::translate((string) $job->description, $locale);
+            }
+
+            if (!empty($job->company)) {
+                $job->company = TextTranslationService::translate((string) $job->company, $locale);
+            }
+
+            if (!empty($job->category)) {
+                $job->category = TextTranslationService::translate((string) $job->category, $locale);
+            }
+
+            return $job;
+        });
+    }
+
+    private function translateCityNewsItems(array &$items, string $locale): void
+    {
+        foreach ($items as $index => $row) {
+            $items[$index]['title'] = TextTranslationService::translate((string) ($row['title'] ?? ''), $locale);
+            $items[$index]['source'] = TextTranslationService::translate((string) ($row['source'] ?? ''), $locale);
+        }
+    }
+
+    private function translateMarketCollection(Collection $items, string $locale): void
+    {
+        $items->transform(function ($market) use ($locale) {
+            if (!empty($market->commodity)) {
+                $market->commodity = TextTranslationService::translate((string) $market->commodity, $locale);
+            }
+
+            return $market;
+        });
     }
 }

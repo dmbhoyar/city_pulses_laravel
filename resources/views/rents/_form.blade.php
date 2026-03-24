@@ -71,7 +71,7 @@
           <select id="city_id" name="city_id">
             <option value="">Select city</option>
             @foreach(($cities ?? []) as $city)
-              <option value="{{ $city->id }}" {{ (string) old('city_id', $rent->city_id ?? '') === (string) $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+              <option value="{{ $city->id }}" {{ (string) old('city_id', $rent->city_id ?? '') === (string) $city->id ? 'selected' : '' }}>{{ city_display_name($city->name) }}</option>
             @endforeach
           </select>
           @error('city_id')<div style="color:#c34141;font-size:12px;margin-top:4px">{{ $message }}</div>@enderror

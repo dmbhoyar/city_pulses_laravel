@@ -13,7 +13,7 @@
         <label for="city_id">City</label>
         <select id="city_id" name="city_id">
           @foreach(\App\Models\City::all() as $city)
-            <option value="{{ $city->id }}" {{ old('city_id', $service->city_id ?? '') == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+            <option value="{{ $city->id }}" {{ old('city_id', $service->city_id ?? '') == $city->id ? 'selected' : '' }}>{{ city_display_name($city->name) }}</option>
           @endforeach
         </select>
       </div>

@@ -33,6 +33,7 @@
 
   /* SECTION */
   .section{padding:2rem;max-width:1280px;margin:0 auto}
+  .section-heading{font-size:1.3rem;color:#27344A;font-weight:800;letter-spacing:.2px;text-shadow:0 1px 0 rgba(255,255,255,0.45)}
 
   /* CATEGORY TABS */
   .cat-tabs{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
@@ -99,53 +100,89 @@
   @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   .listing-card:nth-child(1){animation-delay:.05s}.listing-card:nth-child(2){animation-delay:.1s}.listing-card:nth-child(3){animation-delay:.15s}.listing-card:nth-child(4){animation-delay:.2s}.listing-card:nth-child(5){animation-delay:.25s}.listing-card:nth-child(6){animation-delay:.3s}
 
+  @media(max-width:1024px){
+    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  }
+
   @media(max-width:768px){
     .form-row{grid-template-columns:1fr}
-    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+    .listing-card{animation-delay:0 !important}
     .detail-panel{width:100%}
     .hero-search{flex-direction:column}
     .hero-search select,.hero-search .search-btn{border-right:none;border-bottom:1px solid var(--border)}
+    .section{padding:1.25rem}
+    .section-heading{font-size:1.15rem}
+    .card-price{font-size:1rem}
+    .card-title{font-size:13px}
+  }
+
+  @media(max-width:640px){
+    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+    .card-img-wrapper{height:140px}
+    .card-body{padding:10px 12px}
+    .card-badge{padding:3px 8px;font-size:9px}
+    .card-meta{font-size:11px}
+  }
+
+  @media(max-width:480px){
+    .listings-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .card-img-wrapper{height:120px}
+    .card-title{font-size:12px;line-height:1.2}
+    .card-price{font-size:.95rem;margin-bottom:4px}
+    .card-body{padding:8px 10px}
+    .filter-bar{flex-direction:column;gap:6px}
+    .filter-chip{width:100%;justify-content:center}
+  }
+
+  @media(max-width:360px){
+    .listings-grid{grid-template-columns:1fr}
+    .card-img-wrapper{height:100px}
   }
 </style>
 
 <div class="hero">
-  <h1>Rental <span>Properties</span></h1>
-  <p>Find rental properties — houses, flats, shops, offices, and land across all cities.</p>
+  <h1>{{ __('ui.rent_title_prefix') }} <span>{{ __('ui.rent_title_suffix') }}</span></h1>
+  <p>{{ __('ui.rent_subtitle') }}</p>
   <div class="hero-search">
-    <select id="searchCategory" onchange="applyFilters()"><option value="">All Types</option><option value="house">🏠 Houses</option><option value="flat">🏢 Flats</option><option value="shop">🏪 Shops</option><option value="office">💼 Offices</option><option value="land">🌾 Land</option></select>
-    <input type="text" id="searchInput" placeholder="Search properties…" oninput="applyFilters()">
-    <button class="search-btn" onclick="applyFilters()">Search</button>
+    <select id="searchCategory" onchange="applyFilters()"><option value="">{{ __('ui.all_types') }}</option><option value="house">🏠 {{ __('ui.houses') }}</option><option value="flat">🏢 {{ __('ui.flats') }}</option><option value="shop">🏪 {{ __('ui.shops') }}</option><option value="office">💼 {{ __('ui.offices') }}</option><option value="land">🌾 {{ __('ui.land') }}</option></select>
+    <input type="text" id="searchInput" placeholder="{{ __('ui.search_properties') }}" oninput="applyFilters()">
+    <button class="search-btn" onclick="applyFilters()">{{ __('ui.search') }}</button>
   </div>
 </div>
 
 <div class="stats-strip">
-  <div class="stat-item"><div class="stat-num" id="totalListings">{{ $listings->total() }}</div><div class="stat-label">Active Properties</div></div>
-  <div class="stat-item"><div class="stat-num" id="cityListings">{{ $cityActive }}</div><div class="stat-label">{{ $selectedCityName ?: 'All Cities' }}</div></div>
-  <div class="stat-item"><div class="stat-num">✔ Verified</div><div class="stat-label">All Landlords</div></div>
-  <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Support</div></div>
+  <div class="stat-item"><div class="stat-num" id="totalListings">{{ $listings->total() }}</div><div class="stat-label">{{ __('ui.active_properties') }}</div></div>
+  <div class="stat-item"><div class="stat-num" id="cityListings">{{ $cityActive }}</div><div class="stat-label">{{ $selectedCityName ? city_display_name($selectedCityName) : __('ui.all_cities') }}</div></div>
 </div>
 
 <div class="section">
+  @php
+    $rentPostUrl = \Illuminate\Support\Facades\Route::has('rents.new')
+      ? route('rents.new')
+      : route('rents.create');
+  @endphp
+
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:1rem">
-    <h2 style="font-size:1.3rem;color:var(--text)">Browse Properties</h2>
+    <h2 class="section-heading">{{ __('ui.browse_properties') }}</h2>
     @auth
       @if(auth()->user()->isSeller() || auth()->user()->isSuperadmin())
-        <a class="btn-primary" href="{{ route('rents.new') }}">+ Post Rental</a>
+        <a class="btn-primary" href="{{ $rentPostUrl }}">+ {{ __('ui.post_rental') }}</a>
       @else
-        <a class="btn-primary" href="{{ route('register', ['role' => 'seller', 'redirect_to' => route('rents.new')]) }}">+ Post Rental</a>
+        <a class="btn-primary" href="{{ route('register', ['role' => 'seller', 'redirect_to' => $rentPostUrl]) }}">+ {{ __('ui.post_rental') }}</a>
       @endif
     @else
-      <a class="btn-primary" href="{{ route('login', ['redirect_to' => route('rents.new')]) }}">+ Post Rental</a>
+      <a class="btn-primary" href="{{ route('login', ['redirect_to' => $rentPostUrl]) }}">+ {{ __('ui.post_rental') }}</a>
     @endauth
   </div>
 
   <div class="cat-tabs">
-    <div class="cat-tab active" onclick="filterByCat('',this)" data-cat="">🔥 All</div>
-    <div class="cat-tab" onclick="filterByCat('house',this)" data-cat="house">🏠 Houses</div>
-    <div class="cat-tab" onclick="filterByCat('flat',this)" data-cat="flat">🏢 Flats</div>
-    <div class="cat-tab" onclick="filterByCat('shop',this)" data-cat="shop">🏪 Shops</div>
-    <div class="cat-tab" onclick="filterByCat('office',this)" data-cat="office">💼 Offices</div>
-    <div class="cat-tab" onclick="filterByCat('land',this)" data-cat="land">🌾 Land</div>
+    <div class="cat-tab active" onclick="filterByCat('',this)" data-cat="">🔥 {{ __('ui.all') }}</div>
+    <div class="cat-tab" onclick="filterByCat('house',this)" data-cat="house">🏠 {{ __('ui.houses') }}</div>
+    <div class="cat-tab" onclick="filterByCat('flat',this)" data-cat="flat">🏢 {{ __('ui.flats') }}</div>
+    <div class="cat-tab" onclick="filterByCat('shop',this)" data-cat="shop">🏪 {{ __('ui.shops') }}</div>
+    <div class="cat-tab" onclick="filterByCat('office',this)" data-cat="office">💼 {{ __('ui.offices') }}</div>
+    <div class="cat-tab" onclick="filterByCat('land',this)" data-cat="land">🌾 {{ __('ui.land') }}</div>
   </div>
 
   <form method="GET" action="{{ route('rents.index') }}" class="filter-bar" id="filterForm" style="margin-top:1rem">
@@ -153,9 +190,9 @@
     <input type="hidden" id="cityIdFilter" name="city_id" value="{{ $selectedCityId ?? '' }}">
     <input type="hidden" id="searchFilter" name="q" value="{{ $search ?? '' }}">
     <select name="city_id_select" id="citySelect" onchange="document.getElementById('cityIdFilter').value=this.value;document.getElementById('filterForm').submit()" class="filter-chip" style="margin-left:auto">
-      <option value="">All Cities</option>
+      <option value="">{{ __('ui.all_cities') }}</option>
       @foreach($cities as $city)
-        <option value="{{ $city->id }}" {{ (int)($selectedCityId ?? 0) === (int)$city->id ? 'selected' : '' }}>📍 {{ $city->name }}</option>
+        <option value="{{ $city->id }}" {{ (int)($selectedCityId ?? 0) === (int)$city->id ? 'selected' : '' }}>📍 {{ city_display_name($city->name) }}</option>
       @endforeach
     </select>
   </form>
@@ -171,7 +208,7 @@
           'title' => $item->title,
           'price' => $item->price,
           'description' => $item->description,
-          'city' => $item->city?->name ?: 'City not set',
+          'city' => $item->city?->name ?: __('ui.city_not_set'),
           'subcategory' => $item->subcategory,
           'photo' => $firstPhotoUrl,
           'call' => $callDigits,
@@ -193,21 +230,21 @@
             {{ $emoji }}
           @endif
         </div>
-        <div class="card-badge badge-rent">RENT</div>
+        <div class="card-badge badge-rent">{{ __('ui.rent_badge') }}</div>
         <button class="card-fav" onclick="event.stopPropagation()">♥</button>
         <div class="card-body">
           <div class="card-title">{{ $item->title }}</div>
-          <div class="card-price">{{ $item->price ? '₹' . number_format((float)$item->price, 0) . '/mo' : 'Contact' }} <span>Monthly Rent</span></div>
+          <div class="card-price">{{ $item->price ? '₹' . number_format((float)$item->price, 0) . '/mo' : __('ui.contact') }} <span>{{ __('ui.monthly_rent') }}</span></div>
           <div class="card-meta">
-            <span>📍 {{ $item->city?->name ?: 'City not set' }}</span>
-            <span>⭐ Verified</span>
+            <span>📍 {{ $item->city?->name ?: __('ui.city_not_set') }}</span>
+            <span>⭐ {{ __('ui.verified') }}</span>
           </div>
         </div>
       </div>
     @empty
       <div class="no-results show" style="grid-column:1/-1">
         <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
-        <p>No properties found. Try a different search or <button class="btn-outline" onclick="window.location.href='{{ route('rents.index') }}'">View All</button></p>
+        <p>{{ __('ui.no_properties') }} <button class="btn-outline" onclick="window.location.href='{{ route('rents.index') }}'">{{ __('ui.view_all') }}</button></p>
       </div>
     @endforelse
   </div>
@@ -224,11 +261,11 @@
 <div class="detail-panel" id="detailPanel">
   <div class="panel-hdr">
     <button class="panel-cls" onclick="closePanel()">✕</button>
-    <span style="font-size:14px;color:var(--text-muted)">Property Detail</span>
+    <span style="font-size:14px;color:var(--text-muted)">{{ __('ui.property_detail') }}</span>
   </div>
   <div class="panel-body">
     <div class="panel-media">
-      <img id="panelPhoto" alt="Rental photo">
+      <img id="panelPhoto" alt="{{ __('ui.rental_photo_alt') }}">
       <div class="panel-placeholder" id="panelIcon">🏠</div>
     </div>
     <div class="panel-price" id="panelPrice"></div>
@@ -236,8 +273,8 @@
     <div class="panel-desc" id="panelDesc"></div>
     <div class="panel-specs" id="panelSpecs"></div>
     <div class="panel-actions" style="flex-wrap:wrap">
-      <a class="btn-primary" id="panelCallLink" href="#" style="text-decoration:none;text-align:center;flex:1">📞 Call Landlord</a>
-      <a class="btn-outline" id="panelViewLink" href="#" style="text-decoration:none;text-align:center">View Details</a>
+      <a class="btn-primary" id="panelCallLink" href="#" style="text-decoration:none;text-align:center;flex:1">📞 {{ __('ui.call_landlord') }}</a>
+      <a class="btn-outline" id="panelViewLink" href="#" style="text-decoration:none;text-align:center">{{ __('ui.view_details') }}</a>
     </div>
   </div>
 </div>
@@ -245,6 +282,16 @@
 <div class="toast" id="toast"><span>✅</span><span id="toastMsg"></span></div>
 
 <script>
+const rentsI18n = {
+  rentalProperty: @json(__('ui.rental_property')),
+  contact: @json(__('ui.contact')),
+  noDescription: @json(__('ui.no_description_available')),
+  location: @json(__('ui.location')),
+  type: @json(__('ui.type')),
+  general: @json(__('ui.general')),
+  cityNotSet: @json(__('ui.city_not_set')),
+};
+
 function applyFilters(){
   const search = document.getElementById('searchInput').value;
   const cat = document.getElementById('searchCategory').value;
@@ -268,10 +315,10 @@ function openPanel(payload){
   const panelCallLink = document.getElementById('panelCallLink');
   const panelViewLink = document.getElementById('panelViewLink');
 
-  document.getElementById('panelTitle').textContent = payload.title || 'Rental Property';
-  document.getElementById('panelPrice').textContent = payload.price ? '₹' + Number(payload.price).toLocaleString('en-IN') + '/mo' : 'Contact';
-  document.getElementById('panelDesc').textContent = payload.description || 'No description provided.';
-  document.getElementById('panelSpecs').innerHTML = `<div class="spec-row"><span class="spec-k">Location</span><span class="spec-v">${payload.city || 'City not set'}</span></div><div class="spec-row"><span class="spec-k">Type</span><span class="spec-v">${(payload.subcategory || 'General').toString()}</span></div>`;
+  document.getElementById('panelTitle').textContent = payload.title || rentsI18n.rentalProperty;
+  document.getElementById('panelPrice').textContent = payload.price ? '₹' + Number(payload.price).toLocaleString('en-IN') + '/mo' : rentsI18n.contact;
+  document.getElementById('panelDesc').textContent = payload.description || rentsI18n.noDescription;
+  document.getElementById('panelSpecs').innerHTML = `<div class="spec-row"><span class="spec-k">${rentsI18n.location}</span><span class="spec-v">${payload.city || rentsI18n.cityNotSet}</span></div><div class="spec-row"><span class="spec-k">${rentsI18n.type}</span><span class="spec-v">${(payload.subcategory || rentsI18n.general).toString()}</span></div>`;
 
   if(payload.photo){
     panelPhoto.src = payload.photo;

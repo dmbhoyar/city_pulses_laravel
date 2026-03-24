@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdminSetting;
 use App\Models\City;
 use App\Models\Listing;
+use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -60,6 +61,29 @@ class RentsController extends Controller
             : $totalActive;
 
         $selectedCityName = optional($cities->firstWhere('id', $selectedCityId))->name;
+
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            $listings->getCollection()->transform(function ($item) use ($locale) {
+                if (is_string($item->title) && trim($item->title) !== '') {
+                    $item->title = TextTranslationService::translate($item->title, $locale);
+                }
+
+                if (is_string($item->description) && trim($item->description) !== '') {
+                    $item->description = TextTranslationService::translate($item->description, $locale);
+                }
+
+                if (is_string($item->location) && trim($item->location) !== '') {
+                    $item->location = TextTranslationService::translate($item->location, $locale);
+                }
+
+                if (is_string($item->subcategory) && trim($item->subcategory) !== '') {
+                    $item->subcategory = TextTranslationService::translate($item->subcategory, $locale);
+                }
+
+                return $item;
+            });
+        }
 
         return view('rents.index', compact('listings', 'cities', 'selectedCityId', 'selectedCityName', 'search', 'subcategory', 'totalActive', 'cityActive'));
     }

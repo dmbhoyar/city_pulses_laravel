@@ -30,7 +30,7 @@
         <select id="city_id" name="city_id" required>
           <option value="">Select city</option>
           @foreach($cities as $city)
-            <option value="{{ $city->id }}" {{ (int) old('city_id', $farming->city_id ?? 0) === (int) $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+            <option value="{{ $city->id }}" {{ (int) old('city_id', $farming->city_id ?? 0) === (int) $city->id ? 'selected' : '' }}>{{ city_display_name($city->name) }}</option>
           @endforeach
         </select>
       </div>

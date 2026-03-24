@@ -33,6 +33,7 @@
 
   /* SECTION */
   .section{padding:2rem;max-width:1280px;margin:0 auto}
+  .section-heading{font-size:1.3rem;color:#27344A;font-weight:800;letter-spacing:.2px;text-shadow:0 1px 0 rgba(255,255,255,0.45)}
 
   /* CATEGORY TABS */
   .cat-tabs{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
@@ -115,54 +116,86 @@
   @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   .listing-card:nth-child(1){animation-delay:.05s}.listing-card:nth-child(2){animation-delay:.1s}.listing-card:nth-child(3){animation-delay:.15s}.listing-card:nth-child(4){animation-delay:.2s}.listing-card:nth-child(5){animation-delay:.25s}.listing-card:nth-child(6){animation-delay:.3s}
 
+  @media(max-width:1024px){
+    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  }
+
   @media(max-width:768px){
     .form-row{grid-template-columns:1fr}
-    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+    .listing-card{animation-delay:0 !important}
     .detail-panel{width:100%}
     .hero-search{flex-direction:column}
     .hero-search select,.hero-search .search-btn{border-right:none;border-bottom:1px solid var(--border)}
+    .section{padding:1.25rem}
+    .section-heading{font-size:1.15rem}
+    .card-price{font-size:1rem}
+    .card-title{font-size:13px}
+  }
+
+  @media(max-width:640px){
+    .listings-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+    .card-img-wrapper{height:140px}
+    .card-body{padding:10px 12px}
+    .card-badge{padding:3px 8px;font-size:9px}
+    .card-meta{font-size:11px}
+  }
+
+  @media(max-width:480px){
+    .listings-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .card-img-wrapper{height:120px}
+    .card-title{font-size:12px;line-height:1.2}
+    .card-price{font-size:.95rem;margin-bottom:4px}
+    .card-body{padding:8px 10px}
+    .filter-bar{flex-direction:column;gap:6px}
+    .filter-chip{width:100%;justify-content:center}
+  }
+
+  @media(max-width:360px){
+    .listings-grid{grid-template-columns:1fr}
+    .card-img-wrapper{height:100px}
   }
 </style>
 
 <div class="hero">
-  <h1>Buy & Sell <span>Marketplace</span></h1>
-  <p>Find trusted deals on vehicles, land, electronics — or reach thousands of buyers instantly.</p>
+  <h1>{{ __('ui.buy_sell') }} <span>{{ __('ui.marketplace') }}</span></h1>
+  <p>{{ __('ui.buy_intro') }}</p>
   <div class="hero-search">
-    <select id="searchCategory" onchange="applyFilters()"><option value="">All Categories</option><option value="vehicles">🚗 Vehicles</option><option value="bikes">🏍️ Bikes</option><option value="land">🌾 Land</option><option value="mobile">📱 Mobiles</option><option value="farm">🚜 Farm Equip</option><option value="electronics">💻 Electronics</option></select>
-    <input type="text" id="searchInput" value="{{ $search ?? '' }}" placeholder="Search listings…" oninput="applyFilters()">
-    <button class="search-btn" onclick="applyFilters()">Search</button>
+    <select id="searchCategory" onchange="applyFilters()"><option value="">{{ __('ui.all_categories') }}</option><option value="vehicles">🚗 {{ __('ui.vehicles') }}</option><option value="bikes">🏍️ {{ __('ui.bikes') }}</option><option value="land">🌾 {{ __('ui.land') }}</option><option value="mobile">📱 {{ __('ui.mobile_phones') }}</option><option value="farm">🚜 {{ __('ui.farm_equip') }}</option><option value="electronics">💻 {{ __('ui.electronics') }}</option></select>
+    <input type="text" id="searchInput" value="{{ $search ?? '' }}" placeholder="{{ __('ui.search_listings') }}" oninput="applyFilters()">
+    <button class="search-btn" onclick="applyFilters()">{{ __('ui.search') }}</button>
   </div>
 </div>
 
 <div class="stats-strip">
-  <div class="stat-item"><div class="stat-num" id="totalListings">{{ $listings->total() }}</div><div class="stat-label">Active Listings</div></div>
-  <div class="stat-item"><div class="stat-num" id="cityListings">{{ $cityActive }}</div><div class="stat-label">{{ $selectedCityName ?: 'All Cities' }}</div></div>
-  <div class="stat-item"><div class="stat-num">99%</div><div class="stat-label">Safe Transactions</div></div>
-  <div class="stat-item"><div class="stat-num">24Cr+</div><div class="stat-label">Deals Closed</div></div>
+  <div class="stat-item"><div class="stat-num" id="totalListings">{{ $listings->total() }}</div><div class="stat-label">{{ __('ui.active_listings') }}</div></div>
+  <div class="stat-item"><div class="stat-num" id="cityListings">{{ $cityActive }}</div><div class="stat-label">{{ $selectedCityName ? city_display_name($selectedCityName) : __('ui.all_cities') }}</div></div>
+  <div class="stat-item"><div class="stat-num">99%</div><div class="stat-label">{{ __('ui.safe_transactions') }}</div></div>
+  <div class="stat-item"><div class="stat-num">24Cr+</div><div class="stat-label">{{ __('ui.deals_closed') }}</div></div>
 </div>
 
 <div class="section">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:1rem">
-    <h2 style="font-size:1.3rem;color:var(--text)">Browse Listings</h2>
+    <h2 class="section-heading">{{ __('ui.browse_listings') }}</h2>
     @auth
       @if(auth()->user()->isSeller() || auth()->user()->isSuperadmin())
-        <a class="btn-primary" href="{{ route('buy.new') }}" style="text-decoration:none;display:inline-flex;align-items:center">+ Post Listing</a>
+        <a class="btn-primary" href="{{ route('buy.new') }}" style="text-decoration:none;display:inline-flex;align-items:center">+ {{ __('ui.post_listing') }}</a>
       @else
-        <span class="btn-outline" title="Only seller role can post Buy & Sell listings">Seller role required</span>
+        <span class="btn-outline" title="{{ __('ui.seller_role_required_title') }}">{{ __('ui.seller_role_required') }}</span>
       @endif
     @else
-      <a class="btn-primary" href="{{ route('login', ['seller' => 1, 'redirect_to' => route('buy.new')]) }}" style="text-decoration:none;display:inline-flex;align-items:center">+ Post Listing</a>
+      <a class="btn-primary" href="{{ route('login', ['seller' => 1, 'redirect_to' => route('buy.new')]) }}" style="text-decoration:none;display:inline-flex;align-items:center">+ {{ __('ui.post_listing') }}</a>
     @endauth
   </div>
 
   <div class="cat-tabs">
-    <div class="cat-tab active" onclick="filterByCat('',this)" data-cat="">🔥 All</div>
-    <div class="cat-tab" onclick="filterByCat('vehicles',this)" data-cat="vehicles">🚗 Vehicles</div>
-    <div class="cat-tab" onclick="filterByCat('bikes',this)" data-cat="bikes">🏍️ Bikes</div>
-    <div class="cat-tab" onclick="filterByCat('land',this)" data-cat="land">🌾 Land</div>
-    <div class="cat-tab" onclick="filterByCat('mobile',this)" data-cat="mobile">📱 Mobiles</div>
-    <div class="cat-tab" onclick="filterByCat('farm',this)" data-cat="farm">🚜 Farm Equip</div>
-    <div class="cat-tab" onclick="filterByCat('electronics',this)" data-cat="electronics">💻 Electronics</div>
+    <div class="cat-tab active" onclick="filterByCat('',this)" data-cat="">🔥 {{ __('ui.all') }}</div>
+    <div class="cat-tab" onclick="filterByCat('vehicles',this)" data-cat="vehicles">🚗 {{ __('ui.vehicles') }}</div>
+    <div class="cat-tab" onclick="filterByCat('bikes',this)" data-cat="bikes">🏍️ {{ __('ui.bikes') }}</div>
+    <div class="cat-tab" onclick="filterByCat('land',this)" data-cat="land">🌾 {{ __('ui.land') }}</div>
+    <div class="cat-tab" onclick="filterByCat('mobile',this)" data-cat="mobile">📱 {{ __('ui.mobile_phones') }}</div>
+    <div class="cat-tab" onclick="filterByCat('farm',this)" data-cat="farm">🚜 {{ __('ui.farm_equip') }}</div>
+    <div class="cat-tab" onclick="filterByCat('electronics',this)" data-cat="electronics">💻 {{ __('ui.electronics') }}</div>
   </div>
 
   <form method="GET" action="{{ route('buy.index') }}" class="filter-bar" id="filterForm" style="margin-top:1rem">
@@ -170,9 +203,9 @@
     <input type="hidden" id="cityIdFilter" name="city_id" value="{{ $selectedCityId ?? '' }}">
     <input type="hidden" id="searchFilter" name="q" value="{{ $search ?? '' }}">
     <select name="city_id_select" id="citySelect" onchange="document.getElementById('cityIdFilter').value=this.value;document.getElementById('filterForm').submit()" class="filter-chip" style="margin-left:auto">
-      <option value="">All Cities</option>
+      <option value="">{{ __('ui.all_cities') }}</option>
       @foreach($cities as $city)
-        <option value="{{ $city->id }}" {{ (int)($selectedCityId ?? 0) === (int)$city->id ? 'selected' : '' }}>📍 {{ $city->name }}</option>
+        <option value="{{ $city->id }}" {{ (int)($selectedCityId ?? 0) === (int)$city->id ? 'selected' : '' }}>📍 {{ city_display_name($city->name) }}</option>
       @endforeach
     </select>
   </form>
@@ -189,7 +222,7 @@
         $firstPhotoPath = is_array($item->photos ?? null) && !empty($item->photos[0]) ? $item->photos[0] : '';
         $firstPhotoUrl = $firstPhotoPath !== '' ? \Illuminate\Support\Facades\Storage::url($firstPhotoPath) : '';
       @endphp
-      <div class="listing-card" onclick="openPanel({{ $item->id }}, '{{ addslashes($item->title) }}', {{ $item->price ?? 0 }}, '{{ addslashes($item->description ?? '') }}', '{{ $item->city?->name ?: 'City not set' }}', '{{ addslashes($firstPhotoUrl) }}', '{{ addslashes($emoji) }}', '{{ addslashes((string)($item->contact_number ?? '')) }}')">
+      <div class="listing-card" onclick="openPanel({{ $item->id }}, '{{ addslashes($item->title) }}', {{ $item->price ?? 0 }}, '{{ addslashes($item->description ?? '') }}', '{{ $item->city?->name ?: __('ui.city_not_set') }}', '{{ addslashes($firstPhotoUrl) }}', '{{ addslashes($emoji) }}', '{{ addslashes((string)($item->contact_number ?? '')) }}')">
         <div class="card-img-wrapper">
           @if($firstPhotoUrl !== '')
             <img src="{{ $firstPhotoUrl }}" alt="{{ $item->title }}">
@@ -197,21 +230,21 @@
             {{ $emoji }}
           @endif
         </div>
-        <div class="card-badge badge-sell">SELL</div>
+        <div class="card-badge badge-sell">{{ __('ui.sell_badge') }}</div>
         <button class="card-fav" onclick="event.stopPropagation()">♥</button>
         <div class="card-body">
           <div class="card-title">{{ $item->title }}</div>
-          <div class="card-price">{{ $item->price ? '₹' . number_format((float)$item->price, 0) : 'Contact' }} <span>Asking Price</span></div>
+          <div class="card-price">{{ $item->price ? '₹' . number_format((float)$item->price, 0) : __('ui.contact') }} <span>{{ __('ui.asking_price') }}</span></div>
           <div class="card-meta">
-            <span>📍 {{ $item->city?->name ?: 'City not set' }}</span>
-            <span>⭐ Verified</span>
+            <span>📍 {{ $item->city?->name ?: __('ui.city_not_set') }}</span>
+            <span>⭐ {{ __('ui.verified') }}</span>
           </div>
         </div>
       </div>
     @empty
       <div class="no-results show" style="grid-column:1/-1">
         <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
-        <p>No listings found. Try a different search or <button class="btn-outline" onclick="window.location.href='{{ route('buy.index') }}'">View All</button></p>
+        <p>{{ __('ui.no_listings_found_try_search') }} <button class="btn-outline" onclick="window.location.href='{{ route('buy.index') }}'">{{ __('ui.view_all') }}</button></p>
       </div>
     @endforelse
   </div>
@@ -228,7 +261,7 @@
 <div class="detail-panel" id="detailPanel">
   <div class="panel-hdr">
     <button class="panel-cls" onclick="closePanel()">✕</button>
-    <span style="font-size:14px;color:var(--text-muted)">Listing Detail</span>
+    <span style="font-size:14px;color:var(--text-muted)">{{ __('ui.listing_detail') }}</span>
   </div>
   <div class="panel-body">
     <div class="panel-placeholder" id="panelIcon"></div>
@@ -237,7 +270,7 @@
     <div class="panel-desc" id="panelDesc"></div>
     <div class="panel-specs" id="panelSpecs"></div>
     <div class="panel-actions">
-      <a id="panelCallBtn" class="btn-primary" href="#" style="flex:1;text-align:center;text-decoration:none;padding:12px">📞 Call Seller</a>
+      <a id="panelCallBtn" class="btn-primary" href="#" style="flex:1;text-align:center;text-decoration:none;padding:12px">📞 {{ __('ui.call_seller') }}</a>
     </div>
   </div>
 </div>
@@ -263,9 +296,9 @@ function filterByCat(cat, el){
 
 function openPanel(id, title, price, desc, city, photoUrl, fallbackEmoji, contactNumber){
   document.getElementById('panelTitle').textContent = title;
-  document.getElementById('panelPrice').textContent = price ? '₹' + price.toLocaleString('en-IN') : 'Contact';
-  document.getElementById('panelDesc').textContent = desc || 'No description provided.';
-  document.getElementById('panelSpecs').innerHTML = `<div class="spec-row"><span class="spec-k">Location</span><span class="spec-v">${city}</span></div>`;
+  document.getElementById('panelPrice').textContent = price ? '₹' + price.toLocaleString('en-IN') : @json(__('ui.contact'));
+  document.getElementById('panelDesc').textContent = desc || @json(__('ui.no_description_available'));
+  document.getElementById('panelSpecs').innerHTML = `<div class="spec-row"><span class="spec-k">${@json(__('ui.location'))}</span><span class="spec-v">${city}</span></div>`;
   const panelIcon = document.getElementById('panelIcon');
   if (photoUrl) {
     panelIcon.innerHTML = `<img src="${photoUrl}" alt="${title}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;

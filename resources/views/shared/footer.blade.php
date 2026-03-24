@@ -9,68 +9,59 @@
         @include('shared.brand_logo', ['className' => 'footer-logo-svg', 'title' => 'AajchaOffer logo'])
         <span class="footer-logo-name">Aajcha<span class="footer-logo-accent">Offer</span></span>
       </div>
-      <p class="footer-tagline">Aajcha bhav, aajcha offer.<br>Daily rates, jobs, rentals &amp; local services in one place.</p>
+      <p class="footer-tagline">Aajcha bhav, aajcha offer.<br>{{ __('ui.footer_tagline_line2') }}</p>
       <div class="footer-social">
-        <a href="#" class="social-btn" aria-label="Facebook" title="Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        </a>
-        <a href="#" class="social-btn" aria-label="Twitter / X" title="Twitter / X">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-        </a>
-        <a href="#" class="social-btn" aria-label="Instagram" title="Instagram">
+        <a href="https://www.instagram.com/aajchaoffer?igsh=YW51dTNrMXJicDNh" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Instagram" title="Instagram">
           <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="#1a1a2e"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="#1a1a2e" stroke-width="2"/></svg>
         </a>
         <a href="#" class="social-btn" aria-label="YouTube" title="YouTube">
           <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#1a1a2e"/></svg>
-        </a>
-        <a href="#" class="social-btn" aria-label="WhatsApp" title="WhatsApp">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         </a>
       </div>
     </div>
 
     <!-- Our Services -->
     <div class="footer-col">
-      <h4 class="footer-heading"><span class="footer-heading-dot"></span>Our Services</h4>
+      <h4 class="footer-heading"><span class="footer-heading-dot"></span>{{ __('ui.footer_our_services') }}</h4>
       <ul class="footer-links">
-        <li><a href="{{ route('home') }}"><span class="fl-icon">&#127968;</span> Home &amp; City Feed</a></li>
-        <li><a href="{{ route('updates.index') }}"><span class="fl-icon">&#128240;</span> News &amp; Updates</a></li>
-        <li><a href="{{ route('jobs.index') }}"><span class="fl-icon">&#128188;</span> Jobs Board</a></li>
-        <li><a href="{{ route('farming.index') }}"><span class="fl-icon">&#127807;</span> Farming &amp; Market Rates</a></li>
-        <li><a href="{{ route('rents.index') }}"><span class="fl-icon">&#127968;</span> Rental Listings</a></li>
-        <li><a href="{{ route('buy.index') }}"><span class="fl-icon">&#128722;</span> Buy &amp; Sell</a></li>
-        <li><a href="{{ route('services.index') }}"><span class="fl-icon">&#128295;</span> Local Services</a></li>
-        <li><a href="{{ route('shops.index') }}"><span class="fl-icon">&#127978;</span> Local Shops</a></li>
-        <li><a href="{{ route('offers') }}"><span class="fl-icon">&#127881;</span> Offers &amp; Benefits</a></li>
+        <li><a href="{{ route('home') }}"><span class="fl-icon">&#127968;</span> {{ __('ui.footer_home_city_feed') }}</a></li>
+        <li><a href="{{ route('updates.index') }}"><span class="fl-icon">&#128240;</span> {{ __('ui.footer_news_updates') }}</a></li>
+        <li><a href="{{ route('jobs.index') }}"><span class="fl-icon">&#128188;</span> {{ __('ui.footer_jobs_board') }}</a></li>
+        <li><a href="{{ route('farming.index') }}"><span class="fl-icon">&#127807;</span> {{ __('ui.footer_farming_market_rates') }}</a></li>
+        <li><a href="{{ route('rents.index') }}"><span class="fl-icon">&#127968;</span> {{ __('ui.footer_rental_listings') }}</a></li>
+        <li><a href="{{ route('buy.index') }}"><span class="fl-icon">&#128722;</span> {{ __('ui.buy_sell') }}</a></li>
+        <li><a href="{{ route('services.index') }}"><span class="fl-icon">&#128295;</span> {{ __('ui.footer_local_services') }}</a></li>
+        <li><a href="{{ route('shops.index') }}"><span class="fl-icon">&#127978;</span> {{ __('ui.footer_local_shops') }}</a></li>
+        <li><a href="{{ route('offers') }}"><span class="fl-icon">&#127881;</span> {{ __('ui.offers_benefits') }}</a></li>
       </ul>
     </div>
 
     <!-- Quick Links -->
     <div class="footer-col">
-      <h4 class="footer-heading"><span class="footer-heading-dot"></span>Quick Links</h4>
+      <h4 class="footer-heading"><span class="footer-heading-dot"></span>{{ __('ui.footer_quick_links') }}</h4>
       <ul class="footer-links">
-        <li><a href="#"><span class="fl-icon">&#10003;</span> About AajchaOffer</a></li>
-        <li><a href="#"><span class="fl-icon">&#10003;</span> How It Works</a></li>
-        <li><a href="#"><span class="fl-icon">&#10003;</span> Advertise With Us</a></li>
-        <li><a href="#"><span class="fl-icon">&#10003;</span> List Your Shop</a></li>
-        <li><a href="#"><span class="fl-icon">&#10003;</span> Post a Job</a></li>
-        <li><a href="#"><span class="fl-icon">&#10003;</span> Become a Partner</a></li>
-        <li><a href="#"><span class="fl-icon">&#10003;</span> Blog &amp; Articles</a></li>
-        <li><a href="#"><span class="fl-icon">&#10003;</span> Sitemap</a></li>
+        <li><a href="{{ route('about') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_about_aajchaoffer') }}</a></li>
+        <li><a href="{{ route('about') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_how_it_works') }}</a></li>
+        <li><a href="{{ route('offers') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_advertise_with_us') }}</a></li>
+        <li><a href="{{ route('shops.create') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_list_your_shop') }}</a></li>
+        <li><a href="{{ route('jobs.create') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_post_a_job') }}</a></li>
+        <li><a href="{{ route('register') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_become_partner') }}</a></li>
+        <li><a href="{{ route('updates.index') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_blog_articles') }}</a></li>
+        <li><a href="{{ route('sitemap') }}"><span class="fl-icon">&#10003;</span> {{ __('ui.footer_sitemap') }}</a></li>
       </ul>
     </div>
 
     <!-- Support & Legal -->
     <div class="footer-col">
-      <h4 class="footer-heading"><span class="footer-heading-dot"></span>Support &amp; Legal</h4>
+      <h4 class="footer-heading"><span class="footer-heading-dot"></span>{{ __('ui.footer_support_legal') }}</h4>
       <ul class="footer-links">
-        <li><a href="#"><span class="fl-icon">&#128241;</span> Contact Us</a></li>
-        <li><a href="#"><span class="fl-icon">&#128222;</span> Help &amp; FAQ</a></li>
-        <li><a href="#"><span class="fl-icon">&#128276;</span> Report an Issue</a></li>
-        <li><a href="#"><span class="fl-icon">&#128274;</span> Privacy Policy</a></li>
-        <li><a href="#"><span class="fl-icon">&#128203;</span> Terms of Service</a></li>
-        <li><a href="#"><span class="fl-icon">&#127381;</span> Cookie Policy</a></li>
-        <li><a href="#"><span class="fl-icon">&#127381;</span> Disclaimer</a></li>
+        <li><a href="mailto:contact@aajchaoffer.com"><span class="fl-icon">&#128241;</span> {{ __('ui.footer_contact_us') }}</a></li>
+        <li><a href="{{ route('about') }}"><span class="fl-icon">&#128222;</span> {{ __('ui.footer_help_faq') }}</a></li>
+        <li><a href="mailto:contact@aajchaoffer.com?subject=Issue%20Report"><span class="fl-icon">&#128276;</span> {{ __('ui.footer_report_issue') }}</a></li>
+        <li><a href="{{ route('about') }}"><span class="fl-icon">&#128274;</span> {{ __('ui.footer_privacy_policy') }}</a></li>
+        <li><a href="{{ route('about') }}"><span class="fl-icon">&#128203;</span> {{ __('ui.footer_terms_service') }}</a></li>
+        <li><a href="{{ route('about') }}"><span class="fl-icon">&#127381;</span> {{ __('ui.footer_cookie_policy') }}</a></li>
+        <li><a href="{{ route('about') }}"><span class="fl-icon">&#127381;</span> {{ __('ui.footer_disclaimer') }}</a></li>
       </ul>
     </div>
 
@@ -80,8 +71,8 @@
   <div class="footer-newsletter">
     <div class="footer-newsletter-inner">
       <div class="footer-newsletter-text">
-        <strong>Stay in the pulse!</strong>
-        <span>Get hyperlocal news, job alerts &amp; market prices straight to your inbox.</span>
+        <strong>{{ __('ui.footer_stay_in_pulse') }}</strong>
+        <span>{{ __('ui.footer_newsletter_copy') }}</span>
       </div>
     </div>
   </div>
@@ -89,12 +80,12 @@
   <!-- Bottom bar -->
   <div class="footer-bottom">
     <div class="footer-bottom-inner">
-      <span class="footer-copy">&copy; {{ date('Y') }} AajchaOffer. All rights reserved. Made with &#10084; for local communities.</span>
+      <span class="footer-copy">&copy; {{ date('Y') }} AajchaOffer. {{ __('ui.footer_rights_reserved') }} {{ __('ui.footer_made_for_local') }}</span>
       <div class="footer-bottom-links">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Cookies</a>
-        <a href="#">Accessibility</a>
+        <a href="{{ route('about') }}">{{ __('ui.privacy') }}</a>
+        <a href="{{ route('about') }}">{{ __('ui.terms') }}</a>
+        <a href="{{ route('about') }}">{{ __('ui.cookies') }}</a>
+        <a href="{{ route('about') }}">{{ __('ui.accessibility') }}</a>
       </div>
     </div>
   </div>

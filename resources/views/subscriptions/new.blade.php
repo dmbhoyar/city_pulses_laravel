@@ -133,14 +133,14 @@
     $entityLabel = $entityLabel ?? 'Service';
     $dashboardLabel = $dashboardLabel ?? 'MyService';
     $websiteLabel = $websiteLabel ?? 'Public service website';
-    $profileLabel = $entityLabel === 'Shop' ? 'Shop Owner Profile' : 'Service Provider Profile';
+    $profileLabel = $entityLabel === 'Shop' ? 'दुकान मालक प्रोफाइल' : 'सेवा प्रदाता प्रोफाइल';
     $profileTc = $shop->page_config['template_content'] ?? [];
-    $profileDefaultName = auth()->user()->full_name ?: ($entityLabel === 'Shop' ? 'Shop Owner' : 'Service Provider');
-    $profileDefaultTitle = $entityLabel === 'Shop' ? 'Founder & Lead Shop Expert' : 'Founder & Lead Service Expert';
+    $profileDefaultName = auth()->user()->full_name ?: ($entityLabel === 'Shop' ? 'दुकान मालक' : 'सेवा प्रदाता');
+    $profileDefaultTitle = $entityLabel === 'Shop' ? 'संस्थापक आणि प्रमुख दुकान तज्ञ' : 'संस्थापक आणि प्रमुख सेवा तज्ञ';
     $profileDefaultContact = $shop->phone ?: (auth()->user()->mobile_number ?? '');
     $profileDefaultBio = $entityLabel === 'Shop'
-      ? 'Trusted local shop owner focused on reliable products and customer-friendly support.'
-      : 'Experienced local professional dedicated to reliable and customer-friendly service.';
+      ? 'विश्वासार्ह उत्पादने आणि ग्राहकाभिमुख सेवेसाठी समर्पित स्थानिक दुकान मालक.'
+      : 'अनुभवी स्थानिक तज्ञ, विश्वासार्ह आणि ग्राहकाभिमुख सेवेसाठी समर्पित.';
   @endphp
 
   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
@@ -373,23 +373,23 @@
     $configuredServices = is_array($shop->page_config['services'] ?? null) ? $shop->page_config['services'] : [];
     $serviceGroups = is_array($tc['service_groups'] ?? null) ? $tc['service_groups'] : [];
 
-    $serviceName = $shop->name ?: 'Your Service Name';
-    $heroTitle = trim((string)($tc['hero_title'] ?? 'Professional Service For Your Needs'));
-    $heroDesc = trim((string)($tc['hero_description'] ?? 'Fast, reliable, and affordable service from experienced professionals.'));
-    $providerName = trim((string)($tc['provider_name'] ?? (auth()->user()->full_name ?: 'Service Provider')));
-    $providerContact = trim((string)($tc['provider_contact'] ?? ($shop->phone ?: (auth()->user()->mobile_number ?? 'Not set'))));
+    $serviceName = $shop->name ?: 'तुमच्या सेवेचे नाव';
+    $heroTitle = trim((string)($tc['hero_title'] ?? 'तुमच्या गरजांसाठी व्यावसायिक सेवा'));
+    $heroDesc = trim((string)($tc['hero_description'] ?? 'अनुभवी तज्ञांकडून जलद, विश्वासार्ह आणि परवडणारी सेवा.'));
+    $providerName = trim((string)($tc['provider_name'] ?? (auth()->user()->full_name ?: 'सेवा प्रदाता')));
+    $providerContact = trim((string)($tc['provider_contact'] ?? ($shop->phone ?: (auth()->user()->mobile_number ?? 'सेट नाही'))));
 
-    $heroBadge = trim((string)($tc['hero_badge'] ?? 'Trusted Local Service'));
-    $primaryCta = trim((string)($tc['primary_cta'] ?? 'Book Service'));
-    $secondaryCta = trim((string)($tc['secondary_cta'] ?? 'Get Free Quote'));
-    $servicesLabel = trim((string)($tc['services_label'] ?? 'Our Services'));
-    $servicesTitle = trim((string)($tc['services_title'] ?? 'Services We Offer'));
-    $servicesSubtitle = trim((string)($tc['services_subtitle'] ?? 'Choose from our most popular services.'));
-    $ctaTitle = trim((string)($tc['cta_title'] ?? 'Need Help Today?'));
-    $ctaDescription = trim((string)($tc['cta_description'] ?? 'Contact now and get quick support from a trusted local expert.'));
-    $ctaButton = trim((string)($tc['cta_button'] ?? 'Contact Now'));
-    $footerBrand = trim((string)($tc['footer_brand'] ?? ($shop->name ?: 'My Service Brand')));
-    $footerTagline = trim((string)($tc['footer_tagline'] ?? 'Trusted · Fast · Professional'));
+    $heroBadge = trim((string)($tc['hero_badge'] ?? 'विश्वासार्ह स्थानिक सेवा'));
+    $primaryCta = trim((string)($tc['primary_cta'] ?? 'सेवा बुक करा'));
+    $secondaryCta = trim((string)($tc['secondary_cta'] ?? 'मोफत कोट घ्या'));
+    $servicesLabel = trim((string)($tc['services_label'] ?? 'आमच्या सेवा'));
+    $servicesTitle = trim((string)($tc['services_title'] ?? 'आम्ही देत असलेल्या सेवा'));
+    $servicesSubtitle = trim((string)($tc['services_subtitle'] ?? 'आमच्या लोकप्रिय सेवांमधून निवडा.'));
+    $ctaTitle = trim((string)($tc['cta_title'] ?? 'आज मदत हवी आहे?'));
+    $ctaDescription = trim((string)($tc['cta_description'] ?? 'आत्ताच संपर्क करा आणि विश्वासार्ह स्थानिक तज्ञाकडून त्वरित मदत मिळवा.'));
+    $ctaButton = trim((string)($tc['cta_button'] ?? 'आत्ता संपर्क करा'));
+    $footerBrand = trim((string)($tc['footer_brand'] ?? ($shop->name ?: 'माझा सेवा ब्रँड')));
+    $footerTagline = trim((string)($tc['footer_tagline'] ?? 'विश्वासार्ह · जलद · व्यावसायिक'));
 
     $dynamicPreviewItems = array_slice(array_values(array_filter(array_map(function($svc){
       $name = trim((string)($svc['name'] ?? ''));

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Update;
+use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
 
 class OffersController extends Controller
@@ -52,6 +53,33 @@ class OffersController extends Controller
         }
 
         $offers = $offersQuery->latest()->get();
+
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            $offers->transform(function ($offer) use ($locale) {
+                if (is_string($offer->title) && trim($offer->title) !== '') {
+                    $offer->title = TextTranslationService::translate($offer->title, $locale);
+                }
+
+                if (is_string($offer->content) && trim($offer->content) !== '') {
+                    $offer->content = TextTranslationService::translate($offer->content, $locale);
+                }
+
+                return $offer;
+            });
+
+            $events->transform(function ($event) use ($locale) {
+                if (is_string($event->title) && trim($event->title) !== '') {
+                    $event->title = TextTranslationService::translate($event->title, $locale);
+                }
+
+                if (is_string($event->content) && trim($event->content) !== '') {
+                    $event->content = TextTranslationService::translate($event->content, $locale);
+                }
+
+                return $event;
+            });
+        }
 
         return view('offers.index', compact('city', 'offers', 'events', 'today'));
     }

@@ -68,50 +68,143 @@
   .panel-actions{display:flex;gap:10px;flex-wrap:wrap}
   .no-results{text-align:center;padding:3rem;color:var(--text-muted)}
 
+  @media(max-width:1024px){
+    .jobs-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .section{padding:1.5rem}
+  }
+
   @media(max-width:768px){
-    .jobs-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
-    .detail-panel{width:100%}
-    .hero-search{flex-direction:column}
-    .hero-search select,.hero-search .search-btn{border-right:none;border-bottom:1px solid var(--border)}
+    .hero{padding:2rem 1.5rem}
+    .hero h1{font-size:clamp(1.5rem,5vw,2.5rem);margin-bottom:.8rem}
+    .hero p{font-size:.95rem;margin-bottom:1.5rem}
+    .hero-search{flex-direction:column;border-radius:8px}
+    .hero-search select,.hero-search .search-btn{border-right:none;border-bottom:1px solid var(--border);width:100%;text-align:left}
+    .hero-search select{min-width:auto}
+    .hero-search .search-btn{padding:11px 14px}
+    .stats-strip{flex-wrap:wrap;overflow:visible}
+    .stat-item{padding:.8rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .stat-item:nth-child(even){border-right:none}
+    .stat-num{font-size:1.3rem}
+    .stat-label{font-size:11px}
+    .section{padding:1.25rem 1rem}
+    .cat-tabs{gap:8px;margin-bottom:10px}
+    .cat-tab{padding:6px 12px;font-size:12px}
+    .jobs-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:.8rem}
+    .job-card-head{padding:12px 14px}
+    .job-card-title{font-size:14px;margin-bottom:4px}
+    .job-card-company{font-size:12px}
+    .job-card-body{padding:12px 14px}
+    .job-card-meta{gap:6px;margin-bottom:8px}
+    .job-chip{font-size:10px;padding:3px 7px}
+    .job-card-desc{font-size:12px;min-height:50px}
+    .job-card-actions{gap:6px;margin-top:10px}
+    .btn-primary,.btn-outline{padding:8px 14px;font-size:12px}
+    .detail-panel{width:100%;max-width:100%}
+  }
+
+  @media(max-width:640px){
+    .hero{padding:1.5rem 1rem}
+    .hero h1{font-size:clamp(1.25rem,4vw,1.8rem);margin-bottom:6px}
+    .hero p{font-size:.9rem;margin-bottom:1.2rem}
+    .hero-search input{padding:10px 12px;font-size:13px}
+    .hero-search select{padding:10px 12px}
+    .stats-strip{gap:0;border-bottom:none}
+    .stat-item{flex:1;padding:.6rem 1rem;border-right:1px solid var(--border);border-bottom:none;font-size:12px}
+    .stat-item:nth-child(odd){border-bottom:1px solid var(--border)}
+    .stat-item:nth-child(3n){border-right:none}
+    .stat-num{font-size:1.15rem}
+    .stat-label{font-size:10px;margin-top:1px}
+    .section{padding:1rem 8px}
+    .cat-tabs{gap:6px;padding-bottom:2px;scroll-behavior:smooth}
+    .cat-tab{padding:5px 10px;font-size:11px}
+    .jobs-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+    .job-card{border-radius:10px}
+    .job-card-head{padding:10px 12px}
+    .job-card-title{font-size:13px;margin-bottom:3px}
+    .job-card-company{font-size:11px}
+    .job-card-body{padding:10px 12px}
+    .job-chip{font-size:9px;padding:2px 6px}
+    .job-card-desc{font-size:11px;line-height:1.4;min-height:40px}
+    .job-card-actions{flex-direction:column;gap:4px}
+    .btn-primary,.btn-outline{width:100%;padding:7px 10px;font-size:11px;text-align:center}
+    .detail-panel{width:100%;right:auto;left:0}
+  }
+
+  @media(max-width:480px){
+    .hero{padding:1.2rem 10px}
+    .hero h1{font-size:clamp(1.1rem,3vw,1.4rem);margin-bottom:4px;letter-spacing:0}
+    .hero p{font-size:.85rem;margin-bottom:1rem}
+    .hero-search{border-radius:6px}
+    .hero-search select,.hero-search .search-btn{border-bottom:1px solid var(--border);padding:9px 10px;font-size:12px}
+    .hero-search input{padding:9px 10px;font-size:12px}
+    .stats-strip{gap:0}
+    .stat-item{padding:.5rem .8rem;border-right:none;border-bottom:1px solid var(--border);text-align:center;flex:1 1 50%}
+    .stat-item:nth-child(2n){border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .stat-item:last-child{border-right:0;border-bottom:0}
+    .stat-num{font-size:1rem}
+    .stat-label{font-size:9px}
+    .section{padding:.8rem 6px}
+    .cat-tabs{gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .cat-tab{padding:4px 8px;font-size:10px;border-radius:6px}
+    .filter-bar{flex-direction:column;gap:8px;margin-top:.8rem}
+    .filter-chip{width:auto}
+    .jobs-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+    .job-card-head{padding:8px 10px}
+    .job-card-title{font-size:12px;margin-bottom:2px;line-height:1.2}
+    .job-card-company{font-size:10px}
+    .job-card-body{padding:8px 10px}
+    .job-card-meta{gap:4px;margin-bottom:6px}
+    .job-chip{font-size:8px;padding:2px 5px}
+    .job-card-desc{display:none}
+    .job-card-actions{display:none}
+  }
+
+  @media(max-width:360px){
+    .hero h1{font-size:clamp(1rem,2.5vw,1.2rem)}
+    .hero p{font-size:.8rem}
+    .stat-item{padding:.4rem .6rem;font-size:10px}
+    .stat-num{font-size:.9rem}
+    .stat-label{font-size:8px}
+    .jobs-grid{grid-template-columns:1fr}
   }
 </style>
 
 <div class="hero">
-  <h1>City <span>Jobs</span></h1>
-  <p>Find jobs by city and category. Jobs posted by service and shop providers are listed here under their city.</p>
+  <h1>{{ __('ui.city_label') }} <span>{{ __('ui.jobs') }}</span></h1>
+  <p>{{ __('ui.jobs_intro') }}</p>
   <div class="hero-search">
     <select id="searchCategory" onchange="applyFilters()">
-      <option value="">All Categories</option>
+      <option value="">{{ __('ui.all_categories') }}</option>
       @foreach($categories as $cat)
-        <option value="{{ $cat }}" {{ ($category ?? '') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+        <option value="{{ $cat }}" {{ ($category ?? '') === $cat ? 'selected' : '' }}>{{ $categoryLabels[$cat] ?? $cat }}</option>
       @endforeach
     </select>
-    <input type="text" id="searchInput" value="{{ $q ?? '' }}" placeholder="Search title, description, category..." oninput="applyFilters()">
-    <button class="search-btn" onclick="applyFilters()">Search</button>
+    <input type="text" id="searchInput" value="{{ $q ?? '' }}" placeholder="{{ __('ui.jobs_search_placeholder') }}" oninput="applyFilters()">
+    <button class="search-btn" onclick="applyFilters()">{{ __('ui.search') }}</button>
   </div>
 </div>
 
 <div class="stats-strip">
-  <div class="stat-item"><div class="stat-num">{{ $jobs->total() }}</div><div class="stat-label">Filtered Jobs</div></div>
-  <div class="stat-item"><div class="stat-num">{{ $cityJobs }}</div><div class="stat-label">{{ $selectedCityName ?: 'All Cities' }}</div></div>
-  <div class="stat-item"><div class="stat-num">{{ $totalJobs }}</div><div class="stat-label">Total Jobs</div></div>
-  <div class="stat-item"><div class="stat-num">Live</div><div class="stat-label">Updated Daily</div></div>
+  <div class="stat-item"><div class="stat-num">{{ $jobs->total() }}</div><div class="stat-label">{{ __('ui.filtered_jobs') }}</div></div>
+  <div class="stat-item"><div class="stat-num">{{ $cityJobs }}</div><div class="stat-label">{{ $selectedCityName ? city_display_name($selectedCityName) : __('ui.all_cities') }}</div></div>
+  <div class="stat-item"><div class="stat-num">{{ $totalJobs }}</div><div class="stat-label">{{ __('ui.total_jobs') }}</div></div>
+  <div class="stat-item"><div class="stat-num">{{ __('ui.live') }}</div><div class="stat-label">{{ __('ui.updated_daily') }}</div></div>
 </div>
 
 <div class="section">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:1rem">
-    <h2 style="font-size:1.3rem;color:#0D0D0D;margin:0">Browse Jobs</h2>
+    <h2 style="font-size:1.3rem;color:#0D0D0D;margin:0">{{ __('ui.browse_jobs') }}</h2>
     @auth
       @if(auth()->user()->isSuperadmin())
-        <a class="btn-primary" href="{{ route('jobs.create') }}">+ Add Job</a>
+        <a class="btn-primary" href="{{ route('jobs.create') }}">+ {{ __('ui.add_job') }}</a>
       @endif
     @endauth
   </div>
 
   <div class="cat-tabs">
-    <div class="cat-tab {{ ($category ?? '') === '' ? 'active' : '' }}" onclick="filterByCat('',this)">🔥 All</div>
+    <div class="cat-tab {{ ($category ?? '') === '' ? 'active' : '' }}" onclick="filterByCat('',this)">🔥 {{ __('ui.all') }}</div>
     @foreach($categories->take(8) as $cat)
-      <div class="cat-tab {{ ($category ?? '') === $cat ? 'active' : '' }}" onclick="filterByCat(@js($cat),this)">{{ $cat }}</div>
+      <div class="cat-tab {{ ($category ?? '') === $cat ? 'active' : '' }}" onclick="filterByCat(@js($cat),this)">{{ $categoryLabels[$cat] ?? $cat }}</div>
     @endforeach
   </div>
 
@@ -120,9 +213,9 @@
     <input type="hidden" id="cityIdFilter" name="city_id" value="{{ $selectedCityId ?? '' }}">
     <input type="hidden" id="searchFilter" name="q" value="{{ $q ?? '' }}">
     <select id="citySelect" onchange="document.getElementById('cityIdFilter').value=this.value;document.getElementById('filterForm').submit()" class="filter-chip" style="margin-left:auto">
-      <option value="">All Cities</option>
+      <option value="">{{ __('ui.all_cities') }}</option>
       @foreach($cities as $city)
-        <option value="{{ $city->id }}" {{ (int) ($selectedCityId ?? 0) === (int) $city->id ? 'selected' : '' }}>📍 {{ $city->name }}</option>
+        <option value="{{ $city->id }}" {{ (int) ($selectedCityId ?? 0) === (int) $city->id ? 'selected' : '' }}>📍 {{ city_display_name($city->name) }}</option>
       @endforeach
     </select>
   </form>
@@ -145,26 +238,26 @@
       <div class="job-card" onclick='openPanel({!! $jobPayload !!})'>
         <div class="job-card-head">
           <div class="job-card-title">{{ $job->title }}</div>
-          <div class="job-card-company">{{ $job->company ?: 'Company not specified' }}</div>
+          <div class="job-card-company">{{ $job->company ?: __('ui.company_not_specified') }}</div>
         </div>
         <div class="job-card-body">
           <div class="job-card-meta">
-            <span class="job-chip">📍 {{ $job->city?->name ?: ($job->location ?: 'City not set') }}</span>
+            <span class="job-chip">📍 {{ $job->city?->name ?: ($job->location ?: __('ui.city_not_set')) }}</span>
             @if($job->category)
               <span class="job-chip">🏷 {{ $job->category }}</span>
             @endif
           </div>
-          <div class="job-card-desc">{{ \Illuminate\Support\Str::limit(strip_tags($job->description ?: 'Open this job for complete details.'), 140) }}</div>
+          <div class="job-card-desc">{{ \Illuminate\Support\Str::limit(strip_tags($job->description ?: __('ui.open_job_for_complete_details')), 140) }}</div>
           <div class="job-card-actions">
-            <a class="btn-outline" href="{{ route('jobs.show', $job) }}" onclick="event.stopPropagation()">View</a>
-            <a class="btn-primary" href="{{ route('jobs.apply', $job) }}" onclick="event.stopPropagation()">Apply</a>
+            <a class="btn-outline" href="{{ route('jobs.show', $job) }}" onclick="event.stopPropagation()">{{ __('ui.view') }}</a>
+            <a class="btn-primary" href="{{ route('jobs.apply', $job) }}" onclick="event.stopPropagation()">{{ __('ui.apply') }}</a>
           </div>
         </div>
       </div>
     @empty
       <div class="no-results" style="grid-column:1/-1">
         <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
-        <p>No jobs found for this filter.</p>
+        <p>{{ __('ui.no_jobs_found_filter') }}</p>
       </div>
     @endforelse
   </div>
@@ -179,7 +272,7 @@
 <div class="detail-panel" id="detailPanel">
   <div class="panel-hdr">
     <button class="panel-cls" onclick="closePanel()">✕</button>
-    <span style="font-size:14px;color:var(--text-muted)">Job Detail</span>
+    <span style="font-size:14px;color:var(--text-muted)">{{ __('ui.job_detail') }}</span>
   </div>
   <div class="panel-body">
     <div class="panel-title" id="panelTitle"></div>
@@ -187,13 +280,25 @@
     <div class="panel-desc" id="panelDesc"></div>
     <div class="panel-specs" id="panelSpecs"></div>
     <div class="panel-actions">
-      <a class="btn-outline" id="panelViewLink" href="#">View Job</a>
-      <a class="btn-primary" id="panelApplyLink" href="#">Apply Now</a>
+      <a class="btn-outline" id="panelViewLink" href="#">{{ __('ui.view_job') }}</a>
+      <a class="btn-primary" id="panelApplyLink" href="#">{{ __('ui.apply_now') }}</a>
     </div>
   </div>
 </div>
 
 <script>
+const jobsI18n = {
+  job: @json(__('ui.job')),
+  companyNotSpecified: @json(__('ui.company_not_specified')),
+  locationNotSet: @json(__('ui.location_not_set')),
+  noDescriptionAvailable: @json(__('ui.no_description_available')),
+  category: @json(__('ui.category')),
+  location: @json(__('ui.location')),
+  published: @json(__('ui.published')),
+  general: @json(__('ui.general')),
+  dash: @json(__('ui.dash')),
+};
+
 function applyFilters(){
   const search = document.getElementById('searchInput').value;
   const category = document.getElementById('searchCategory').value;
@@ -211,13 +316,13 @@ function filterByCat(cat, el){
 }
 
 function openPanel(payload){
-  document.getElementById('panelTitle').textContent = payload.title || 'Job';
-  document.getElementById('panelSub').textContent = (payload.company || 'Company not specified') + ' · ' + (payload.city || payload.location || 'Location not set');
-  document.getElementById('panelDesc').textContent = payload.description || 'No description available.';
+  document.getElementById('panelTitle').textContent = payload.title || jobsI18n.job;
+  document.getElementById('panelSub').textContent = (payload.company || jobsI18n.companyNotSpecified) + ' · ' + (payload.city || payload.location || jobsI18n.locationNotSet);
+  document.getElementById('panelDesc').textContent = payload.description || jobsI18n.noDescriptionAvailable;
   document.getElementById('panelSpecs').innerHTML =
-    `<div class="spec-row"><span class="spec-k">Category</span><span class="spec-v">${payload.category || 'General'}</span></div>` +
-    `<div class="spec-row"><span class="spec-k">Location</span><span class="spec-v">${payload.location || payload.city || '—'}</span></div>` +
-    `<div class="spec-row"><span class="spec-k">Published</span><span class="spec-v">${payload.publishedAt || '—'}</span></div>`;
+    `<div class="spec-row"><span class="spec-k">${jobsI18n.category}</span><span class="spec-v">${payload.category || jobsI18n.general}</span></div>` +
+    `<div class="spec-row"><span class="spec-k">${jobsI18n.location}</span><span class="spec-v">${payload.location || payload.city || jobsI18n.dash}</span></div>` +
+    `<div class="spec-row"><span class="spec-k">${jobsI18n.published}</span><span class="spec-v">${payload.publishedAt || jobsI18n.dash}</span></div>`;
 
   document.getElementById('panelViewLink').href = payload.showUrl || '#';
   document.getElementById('panelApplyLink').href = payload.applyUrl || '#';

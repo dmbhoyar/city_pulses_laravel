@@ -18,7 +18,7 @@
   .su-auth-links .su-signup{background:linear-gradient(135deg,#2f4e74,#4a90d9);color:#fff;border:none}
 </style>
 
-<div class="sidebar-user" role="navigation" aria-label="User">
+<div class="sidebar-user" role="navigation" aria-label="{{ __('ui.user_menu') }}">
   @auth
     @php
       $user = auth()->user();
@@ -42,16 +42,16 @@
     @if($showMyService || $showMyShop || $showDashboard)
     <div class="su-links">
       @if($showMyService)
-        <a href="{{ route('myservice') }}" class="ws-btn">My Service</a>
+        <a href="{{ route('myservice') }}" class="ws-btn">{{ __('ui.my_service') }}</a>
       @endif
       @if($showMyShop)
-        <a href="{{ route('myshop') }}" class="ws-btn">My Shop</a>
+        <a href="{{ route('myshop') }}" class="ws-btn">{{ __('ui.my_shop') }}</a>
       @endif
       @if($showDashboard)
-        <a href="{{ route('shop_dashboard') }}">📊 Dashboard</a>
+        <a href="{{ route('shop_dashboard') }}">📊 {{ __('ui.dashboard') }}</a>
       @endif
       @if(Route::has('profile.edit'))
-        <a href="{{ route('profile.edit') }}">Profile</a>
+        <a href="{{ route('profile.edit') }}">{{ __('ui.profile') }}</a>
       @endif
     </div>
     @endif
@@ -59,12 +59,12 @@
     {{-- Logout --}}
     <form action="{{ route('logout') }}" method="POST" style="margin:0">
       @csrf
-      <button type="submit" class="su-logout">↩ Logout</button>
+      <button type="submit" class="su-logout">↩ {{ __('ui.logout') }}</button>
     </form>
   @else
     <div class="su-auth-links">
-      <a href="{{ route('login') }}" class="su-login">Login</a>
-      <a href="{{ route('register') }}" class="su-signup">Sign Up</a>
+      <a href="{{ route('login') }}" class="su-login">{{ __('ui.log_in') }}</a>
+      <a href="{{ route('register') }}" class="su-signup">{{ __('ui.sign_up') }}</a>
     </div>
   @endauth
 </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Job;
 use App\Models\JobApplication;
+use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
 
 class JobsController extends Controller
@@ -49,6 +50,39 @@ class JobsController extends Controller
             ->orderBy('category')
             ->pluck('category');
 
+        $categoryLabels = [];
+
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            $jobs->getCollection()->transform(function ($job) use ($locale) {
+                if (is_string($job->title) && trim($job->title) !== '') {
+                    $job->title = TextTranslationService::translate($job->title, $locale);
+                }
+
+                if (is_string($job->description) && trim($job->description) !== '') {
+                    $job->description = TextTranslationService::translate($job->description, $locale);
+                }
+
+                if (is_string($job->company) && trim($job->company) !== '') {
+                    $job->company = TextTranslationService::translate($job->company, $locale);
+                }
+
+                if (is_string($job->location) && trim($job->location) !== '') {
+                    $job->location = TextTranslationService::translate($job->location, $locale);
+                }
+
+                if (is_string($job->category) && trim($job->category) !== '') {
+                    $job->category = TextTranslationService::translate($job->category, $locale);
+                }
+
+                return $job;
+            });
+
+            foreach ($categories as $categoryName) {
+                $categoryLabels[$categoryName] = TextTranslationService::translate((string) $categoryName, $locale);
+            }
+        }
+
         $totalJobs = Job::query()->count();
         $cityJobs = $selectedCityId
             ? Job::query()->where('city_id', $selectedCityId)->count()
@@ -64,7 +98,8 @@ class JobsController extends Controller
             'selectedCityId',
             'selectedCityName',
             'totalJobs',
-            'cityJobs'
+            'cityJobs',
+            'categoryLabels'
         ));
     }
 

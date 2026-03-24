@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="panel">
-  <h1 style="margin:0;text-align:center">AajchaOffer - {{ isset($city) ? $city->name : 'All Cities' }} Newspaper</h1>
+  <h1 style="margin:0;text-align:center">AajchaOffer - {{ isset($city) ? city_display_name($city->name) : __('ui.all_cities') }} Newspaper</h1>
   <div style="margin-top:12px">
     @foreach($updates as $u)
       <div class="card">

@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\ServiceReview;
 use App\Models\Shop;
 use App\Models\Subscription;
+use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -46,6 +47,31 @@ class ServicesController extends Controller
         $services = (clone $baseQuery)
             ->latest('id')
             ->paginate(18);
+
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            $services->getCollection()->transform(function ($service) use ($locale) {
+                if (is_string($service->name) && trim($service->name) !== '') {
+                    $service->name = TextTranslationService::translate($service->name, $locale);
+                }
+
+                $cfg = is_array($service->page_config) ? $service->page_config : [];
+                if (isset($cfg['provider_name']) && is_string($cfg['provider_name']) && trim($cfg['provider_name']) !== '') {
+                    $cfg['provider_name'] = TextTranslationService::translate($cfg['provider_name'], $locale);
+                }
+                if (isset($cfg['template_content']) && is_array($cfg['template_content'])) {
+                    if (isset($cfg['template_content']['hero_title']) && is_string($cfg['template_content']['hero_title']) && trim($cfg['template_content']['hero_title']) !== '') {
+                        $cfg['template_content']['hero_title'] = TextTranslationService::translate($cfg['template_content']['hero_title'], $locale);
+                    }
+                    if (isset($cfg['template_content']['hero_description']) && is_string($cfg['template_content']['hero_description']) && trim($cfg['template_content']['hero_description']) !== '') {
+                        $cfg['template_content']['hero_description'] = TextTranslationService::translate($cfg['template_content']['hero_description'], $locale);
+                    }
+                }
+                $service->page_config = $cfg;
+
+                return $service;
+            });
+        }
 
         return view('services.index', compact('services', 'city'));
     }

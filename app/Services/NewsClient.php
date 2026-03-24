@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use SimpleXMLElement;
 
 class NewsClient
 {
@@ -12,18 +11,26 @@ class NewsClient
      * Fetch news items for a city from Google News RSS
      * Returns array of hashes: { title, link, pubDate, source }
      */
-    public static function fetchCityNews(string $cityName, string $country = 'India', int $limit = 4): array
+    public static function fetchCityNews(string $cityName, string $country = 'India', int $limit = 4, ?string $locale = null): array
     {
         if (empty(trim($cityName))) {
             return [];
         }
 
+        $activeLocale = strtolower((string) ($locale ?: app()->getLocale() ?: 'en'));
+        $localeMap = [
+            'en' => ['hl' => 'en-IN', 'ceid' => 'IN:en'],
+            'mr' => ['hl' => 'mr-IN', 'ceid' => 'IN:mr'],
+            'hi' => ['hl' => 'hi-IN', 'ceid' => 'IN:hi'],
+        ];
+        $langConfig = $localeMap[$activeLocale] ?? $localeMap['en'];
+
         $query = "{$cityName} {$country}";
         $url = 'https://news.google.com/rss/search?' . http_build_query([
             'q' => $query,
-            'hl' => 'en-IN',
+            'hl' => $langConfig['hl'],
             'gl' => 'IN',
-            'ceid' => 'IN:en'
+            'ceid' => $langConfig['ceid']
         ]);
 
         Log::info("NewsClient: fetching news URL: {$url}");
@@ -78,6 +85,13 @@ class NewsClient
                     ];
 
                     $count++;
+                }
+            }
+
+            if ($activeLocale !== 'en' && !empty($items)) {
+                foreach ($items as $index => $row) {
+                    $items[$index]['title'] = TextTranslationService::translate((string) ($row['title'] ?? ''), $activeLocale);
+                    $items[$index]['source'] = TextTranslationService::translate((string) ($row['source'] ?? ''), $activeLocale);
                 }
             }
 

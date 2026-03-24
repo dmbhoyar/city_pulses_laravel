@@ -9,7 +9,9 @@ use App\Models\Job;
 use App\Models\Farming;
 use App\Services\NewsClient;
 use App\Services\IndianMarketsClient;
+use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -52,12 +54,14 @@ class HomeController extends Controller
         $ratesToday = collect();
         $ratesYesterday = collect();
         $ratesTomorrow = collect();
+        $marketSource = 'database';
 
         if ($city) {
             // Try AgMarkNet API first
             $rows = $this->fetchAgmarknetRates($city);
 
             if (!empty($rows)) {
+                $marketSource = 'agmarknet';
                 foreach ($rows as $r) {
                     $market = trim($r['Market'] ?? '');
                     $commodity = trim($r['Commodity'] ?? '');
@@ -75,9 +79,11 @@ class HomeController extends Controller
             } else {
                 // DB fallback
                 [$ratesToday, $ratesYesterday, $ratesTomorrow] = $this->fallbackMarketRates($city);
+                $marketSource = 'database';
             }
         } else {
             [$ratesToday, $ratesYesterday, $ratesTomorrow] = $this->fallbackMarketRates(null);
+            $marketSource = 'database';
         }
 
         // Metals prices
@@ -164,12 +170,21 @@ class HomeController extends Controller
 
         // Cities list for selector
         $cities = City::orderBy('name')->pluck('name');
-        $cityRecords = City::orderBy('name')->get(['id', 'name', 'latitude', 'longitude']);
+        $cityRecords = City::orderBy('name')->get(['id', 'name', 'latitude', 'longitude', 'agmarknet_district']);
+
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            $this->translateCityNewsItems($cityNews, $locale);
+            $this->translateMarketRatesArray($marketRates, $locale);
+            $this->translateMarketCollection($ratesToday, $locale);
+            $this->translateMarketCollection($ratesYesterday, $locale);
+            $this->translateMarketCollection($ratesTomorrow, $locale);
+        }
 
         $viewData = compact(
             'city', 'cities', 'marketRates', 'ratesToday', 'ratesYesterday', 'ratesTomorrow',
             'metals', 'metalsMeta', 'goldPrices', 'silverPrices',
-            'cityNews', 'indianMarkets', 'offers', 'weather', 'updates', 'jobs', 'farmings', 'cityRecords'
+            'cityNews', 'indianMarkets', 'offers', 'weather', 'updates', 'jobs', 'farmings', 'cityRecords', 'marketSource'
         );
 
         // Ensure expected blade variables exist (avoid undefined variable notices)
@@ -212,12 +227,27 @@ class HomeController extends Controller
         return redirect()->route('home')->with('alert', 'City not found');
     }
 
+    public function setLanguage(Request $request)
+    {
+        $validated = $request->validate([
+            'locale' => 'required|in:en,mr,hi',
+        ]);
+
+        $locale = (string) $validated['locale'];
+        $request->session()->put('locale', $locale);
+        app()->setLocale($locale);
+
+        return back();
+    }
+
     // -----------------------------------------------------------------------
     // Private helpers
     // -----------------------------------------------------------------------
 
     private function fetchAgmarknetRates(City $city): array
     {
+        $cacheKey = 'agmarknet_rates_city_' . $city->id;
+        $staleCacheKey = 'agmarknet_rates_city_stale_' . $city->id;
         $apiKey = env('DATA_GOV_API_KEY')
             ?: env('AGMARKNET_API_KEY')
             ?: '579b464db66ec23bdd000001c20c0593c63b4ae97757e11d2e3f369e';
@@ -225,12 +255,18 @@ class HomeController extends Controller
         $resourceId = env('DATA_GOV_RESOURCE_ID', '35985678-0d79-46b4-9ed6-6f13308a1d24');
         $baseUrl = sprintf('https://api.data.gov.in/resource/%s', $resourceId);
 
-        $districtCandidates = array_values(array_unique(array_filter([
-            ucfirst(strtolower((string) $city->agmarknet_district)),
-            ucfirst(strtolower((string) $city->name)),
-            $city->agmarknet_district,
-            $city->name,
-        ], fn ($value) => filled($value))));
+        $districtCandidates = [];
+        if (filled($city->agmarknet_district)) {
+            $districtCandidates = array_values(array_unique(array_filter([
+                ucfirst(strtolower((string) $city->agmarknet_district)),
+                $city->agmarknet_district,
+            ], fn ($value) => filled($value))));
+        } elseif (filled($city->name)) {
+            $districtCandidates = array_values(array_unique(array_filter([
+                ucfirst(strtolower((string) $city->name)),
+                $city->name,
+            ], fn ($value) => filled($value))));
+        }
 
         $stateCandidates = array_values(array_unique(array_filter([
             $city->agmarknet_state,
@@ -254,7 +290,7 @@ class HomeController extends Controller
                     ];
 
                     $response = Http::timeout(12)
-                        ->retry(1, 300)
+                        ->retry(2, 500)
                         ->acceptJson()
                         ->withHeaders([
                             'User-Agent' => 'AajchaOffer/1.0',
@@ -303,6 +339,9 @@ class HomeController extends Controller
                         ->all();
 
                     if (!empty($normalized)) {
+                        Cache::put($cacheKey, $normalized, now()->addMinutes(45));
+                        Cache::put($staleCacheKey, $normalized, now()->addDay());
+
                         Log::info('[HomeController] Agmarknet data fetched', [
                             'city' => $city->name,
                             'state' => $state,
@@ -320,6 +359,24 @@ class HomeController extends Controller
                     ]);
                 }
             }
+        }
+
+        $cachedRows = Cache::get($cacheKey, []);
+        if (is_array($cachedRows) && !empty($cachedRows)) {
+            Log::info('[HomeController] Agmarknet cache fallback used', [
+                'city' => $city->name,
+                'records' => count($cachedRows),
+            ]);
+            return $cachedRows;
+        }
+
+        $staleCachedRows = Cache::get($staleCacheKey, []);
+        if (is_array($staleCachedRows) && !empty($staleCachedRows)) {
+            Log::info('[HomeController] Agmarknet stale cache fallback used', [
+                'city' => $city->name,
+                'records' => count($staleCachedRows),
+            ]);
+            return $staleCachedRows;
         }
 
         return [];
@@ -746,5 +803,64 @@ class HomeController extends Controller
             'silver_per_kg_spot'    => round($silverG * 1000.0),
             'silver_per_kg_retail'  => $retail10g * 100,
         ];
+    }
+
+    private function translateCityNewsItems(array &$items, string $locale): void
+    {
+        foreach ($items as $index => $row) {
+            if (!empty($row['title'])) {
+                $items[$index]['title'] = TextTranslationService::translate((string) $row['title'], $locale);
+            }
+
+            if (!empty($row['source'])) {
+                $items[$index]['source'] = TextTranslationService::translate((string) $row['source'], $locale);
+            }
+        }
+    }
+
+    private function translateMarketRatesArray(array &$marketRates, string $locale): void
+    {
+        $translated = [];
+
+        foreach ($marketRates as $market => $commodities) {
+            $translatedMarket = TextTranslationService::translate((string) $market, $locale);
+            $translated[$translatedMarket] = [];
+
+            foreach ($commodities as $commodity => $rows) {
+                $translatedCommodity = TextTranslationService::translate((string) $commodity, $locale);
+                $translated[$translatedMarket][$translatedCommodity] = collect($rows)->map(function ($row) use ($locale) {
+                    if (!empty($row['variety']) && $row['variety'] !== '-') {
+                        $row['variety'] = TextTranslationService::translate((string) $row['variety'], $locale);
+                    }
+
+                    if (!empty($row['grade'])) {
+                        $row['grade'] = TextTranslationService::translate((string) $row['grade'], $locale);
+                    }
+
+                    return $row;
+                })->values()->all();
+            }
+        }
+
+        $marketRates = $translated;
+    }
+
+    private function translateMarketCollection(Collection $items, string $locale): void
+    {
+        $items->transform(function ($market) use ($locale) {
+            if (!empty($market->commodity)) {
+                $market->commodity = TextTranslationService::translate((string) $market->commodity, $locale);
+            }
+
+            if (!empty($market->city)) {
+                $market->city = TextTranslationService::translate((string) $market->city, $locale);
+            }
+
+            if (!empty($market->district)) {
+                $market->district = TextTranslationService::translate((string) $market->district, $locale);
+            }
+
+            return $market;
+        });
     }
 }

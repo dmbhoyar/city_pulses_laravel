@@ -6,8 +6,8 @@
   $tc = $cfg['template_content'] ?? [];
   $services = $cfg['services'] ?? [];
   $owner = $shop->user;
-  $providerName = trim((string)($tc['provider_name'] ?? optional($owner)->full_name ?? 'Service Provider'));
-  $providerTitle = trim((string)($tc['provider_title'] ?? 'Founder & Lead Service Expert'));
+  $providerName = trim((string)($tc['provider_name'] ?? optional($owner)->full_name ?? 'सेवा प्रदाता'));
+  $providerTitle = trim((string)($tc['provider_title'] ?? 'संस्थापक आणि प्रमुख सेवा तज्ञ'));
   $providerEmail = trim((string)($tc['provider_email'] ?? optional($owner)->email ?? ''));
   $providerContact = trim((string)($tc['provider_contact'] ?? $shop->phone ?? optional($owner)->mobile_number ?? ''));
   $providerContactDigits = preg_replace('/\D+/', '', $providerContact);
@@ -21,10 +21,10 @@
           ? $providerPhoto
           : \Illuminate\Support\Facades\Storage::url($providerPhoto);
   }
-  $providerBio = trim((string)($tc['provider_bio'] ?? 'Experienced local professional dedicated to reliable and customer-friendly service.'));
-  $providerExperience = trim((string)($tc['provider_experience'] ?? '5+ Years Experience'));
-  $pageTitle = trim(($shop->name ?: 'Service') . ' | ' . $providerName);
-  $pageDescription = trim(($shop->description ?: 'Professional local service page') . ' — Provider: ' . $providerName);
+  $providerBio = trim((string)($tc['provider_bio'] ?? 'अनुभवी स्थानिक तज्ञ, विश्वासार्ह आणि ग्राहकाभिमुख सेवेसाठी समर्पित.'));
+  $providerExperience = trim((string)($tc['provider_experience'] ?? '५+ वर्षांचा अनुभव'));
+  $pageTitle = trim(($shop->name ?: 'सेवा') . ' | ' . $providerName);
+  $pageDescription = trim(($shop->description ?: 'व्यावसायिक स्थानिक सेवा पेज') . ' — प्रदाता: ' . $providerName);
   $currentPageUrl = route('shops.public', ['publicSlug' => $shop->public_page_slug]);
   $ownerCanManagePage = auth()->check()
       && auth()->id() === $shop->user_id
@@ -171,11 +171,26 @@
   .cta-inline-form input::placeholder{color:rgba(255,255,255,.7)}
   footer { background: var(--primary); color: rgba(255,255,255,0.55); padding: 32px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; }
   .footer-brand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #fff; }
+  @media (max-width: 1024px){
+    .provider-details{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .services-grid,.why-grid,.testimonials-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+  }
+
   @media (max-width: 900px){
     .provider-card{max-width:100%;min-height:auto}
     .provider-details{grid-template-columns:repeat(2,minmax(0,1fr))}
     .provider-detail.email,.provider-detail.area,.provider-detail.contact{grid-column:1/-1}
+    .services-grid,.why-grid,.testimonials-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
   }
+
+  @media (max-width: 768px){
+    section{padding:40px 14px}
+    .services-grid,.why-grid,.testimonials-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+    .service-card,.why-card,.testi-card{padding:16px}
+    .hero h1{font-size:clamp(28px,7vw,36px)}
+    .hero p{font-size:14px}
+  }
+
   @media (max-width: 680px){
     .page-shell{padding:0}
     .client-page{margin:0;border-radius:0}
@@ -187,25 +202,38 @@
     .hero{padding:58px 12px 42px}
     .hero-content{max-width:100%}
     .hero-badge{max-width:100%;white-space:normal;line-height:1.45}
-    .hero h1{font-size:clamp(28px,9vw,40px);line-height:1.1;overflow-wrap:anywhere;word-break:break-word}
-    .hero p{max-width:100%;font-size:15px}
+    .hero h1{font-size:clamp(24px,8vw,32px);line-height:1.1;overflow-wrap:anywhere;word-break:break-word}
+    .hero p{max-width:100%;font-size:14px}
     .hero-btns{gap:8px}
     .btn-primary,.btn-outline{width:100%;text-align:center;padding:12px 14px}
     .hero-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:28px;padding-top:18px}
-    section{padding:48px 12px}
-    .section-sub{max-width:100%;font-size:15px}
+    section{padding:36px 12px}
+    .section-sub{max-width:100%;font-size:14px}
     .services-grid,.why-grid,.testimonials-grid{grid-template-columns:1fr;gap:12px}
-    .service-card,.why-card,.testi-card{padding:18px 14px}
-    .cta-section{padding:54px 12px}
+    .service-card,.why-card,.testi-card{padding:14px 12px}
+    .cta-section{padding:48px 12px}
     .cta-inline-form{flex-direction:column;align-items:stretch}
     .cta-inline-form input{min-width:0;width:100%}
   }
+
   @media (max-width: 560px){
     .provider-top{grid-template-columns:72px 1fr}
     .provider-photo,.provider-fallback{width:72px;height:72px;border-radius:18px}
-    .provider-name{font-size:18px}
+    .provider-name{font-size:16px}
     .provider-details{grid-template-columns:1fr}
     .provider-detail.email,.provider-detail.area,.provider-detail.contact{grid-column:auto}
+    .hero h1{font-size:clamp(20px,6vw,28px)}
+  }
+
+  @media (max-width: 480px){
+    .hero{padding:40px 10px 32px}
+    .hero h1{font-size:clamp(18px,5vw,24px)}
+    .hero p{font-size:13px}
+    .hero-stats{gap:10px;padding-top:14px}
+    section{padding:24px 10px}
+    .cta-section{padding:36px 10px}
+    .cta-section h2{font-size:clamp(22px,5vw,32px)}
+    .cta-section p{font-size:13px}
   }
   @media print {
     body{background:#fff}
@@ -394,11 +422,11 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('hero').style.background = `linear-gradient(135deg, ${current.color} 0%, ${current.accent} 55%, ${current.color} 100%)`;
     document.getElementById('ctaSection').style.background = `linear-gradient(135deg, ${current.color}, ${current.accent})`;
 
-    document.getElementById('heroBadge').textContent = tc.hero_badge || 'Trusted Local Service';
+    document.getElementById('heroBadge').textContent = tc.hero_badge || 'विश्वासार्ह स्थानिक सेवा';
     document.getElementById('heroTitle').innerHTML = (tc.hero_title || (current.name + ' by {{ addslashes($providerName) }}')).replace(/\n/g, '<br>');
-    document.getElementById('heroDesc').textContent = current.description || tc.hero_description || 'Fast, reliable and professional service.';
-    document.getElementById('heroBtn1').textContent = tc.primary_cta || 'Book Now';
-    document.getElementById('heroBtn2').textContent = tc.secondary_cta || 'Get Free Quote';
+    document.getElementById('heroDesc').textContent = current.description || tc.hero_description || 'जलद, विश्वासार्ह आणि व्यावसायिक सेवा.';
+    document.getElementById('heroBtn1').textContent = tc.primary_cta || 'आत्ता बुक करा';
+    document.getElementById('heroBtn2').textContent = tc.secondary_cta || 'मोफत कोट घ्या';
     document.getElementById('heroBtn1').href = phone ? ('tel:' + String(phone).replace(/\D+/g,'')) : (current.url || '#');
     document.getElementById('heroBtn2').href = current.url || '#';
 
@@ -406,20 +434,20 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('statCities').textContent = String(serviceCitiesCount || 1) + '+';
     document.getElementById('statContact').textContent = phone ? 'Direct' : 'Online';
 
-    document.getElementById('servicesLabel').textContent = tc.services_label || 'Our Services';
-    document.getElementById('servicesTitle').textContent = tc.services_title || 'Services We Offer';
-    document.getElementById('servicesSub').textContent = tc.services_subtitle || 'Choose from our most popular services.';
+    document.getElementById('servicesLabel').textContent = tc.services_label || 'आमच्या सेवा';
+    document.getElementById('servicesTitle').textContent = tc.services_title || 'आम्ही देत असलेल्या सेवा';
+    document.getElementById('servicesSub').textContent = tc.services_subtitle || 'आमच्या लोकप्रिय सेवांमधून निवडा.';
     document.getElementById('servicesGrid').innerHTML = services.map(card => `
       <a class="service-card" href="${card.url || '#'}" target="_blank" rel="noopener">
         <div class="service-icon">${card.icon || '🛠️'}</div>
         <h3>${card.name}</h3>
-        <p>${card.description || 'Professional service by experienced team.'}</p>
-        <div class="service-price">${card.price || 'Contact for pricing'}</div>
+        <p>${card.description || 'अनुभवी टीमकडून व्यावसायिक सेवा.'}</p>
+        <div class="service-price">${card.price || 'किंमतीसाठी संपर्क करा'}</div>
       </a>
     `).join('');
 
-    document.getElementById('whyTitle').textContent = tc.why_title || 'Why Choose Us';
-    document.getElementById('whySub').textContent = tc.why_subtitle || 'Quality work, transparent pricing, and quick response.';
+    document.getElementById('whyTitle').textContent = tc.why_title || 'आम्हालाच का निवडाल?';
+    document.getElementById('whySub').textContent = tc.why_subtitle || 'दर्जेदार काम, पारदर्शक किंमत आणि जलद प्रतिसाद.';
     document.getElementById('whyGrid').innerHTML = [
       ['⚡','Fast Response','Quick support and on-time service delivery.'],
       ['🏅','Experienced Team','Skilled professionals with practical experience.'],
@@ -433,10 +461,10 @@ document.addEventListener('DOMContentLoaded', function(){
       'Great experience from booking to completion.'
     ].map(text => `<div class="testi-card">★★★★★<p style="margin-top:12px;color:#4b5563;line-height:1.8">"${text}"</p></div>`).join('');
 
-    document.getElementById('ctaTitle').textContent = tc.cta_title || 'Need Help Today?';
-    document.getElementById('ctaDesc').textContent = tc.cta_description || 'Contact us now and we will reach out quickly.';
-    document.getElementById('ctaBtn').textContent = tc.cta_button || 'Contact Now';
-    document.getElementById('footerBrand').textContent = tc.footer_brand || @json($shop->name ?: 'My Service');
+    document.getElementById('ctaTitle').textContent = tc.cta_title || 'आज मदत हवी आहे?';
+    document.getElementById('ctaDesc').textContent = tc.cta_description || 'आत्ताच संपर्क करा, आम्ही लवकरच प्रतिसाद देऊ.';
+    document.getElementById('ctaBtn').textContent = tc.cta_button || 'आत्ता संपर्क करा';
+    document.getElementById('footerBrand').textContent = tc.footer_brand || @json($shop->name ?: 'माझी सेवा');
     document.getElementById('footerTagline').textContent = tc.footer_tagline || ('Provider: {{ addslashes($providerName) }}');
 
     document.querySelectorAll('.sw-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.key === key));

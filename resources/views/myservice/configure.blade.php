@@ -250,7 +250,7 @@
               <label>
                 <input type="checkbox" name="service_cities[]" value="{{ $city->id }}"
                        {{ in_array($city->id, (array)$savedCities) ? 'checked' : '' }}>
-                {{ $city->name }}
+                {{ city_display_name($city->name) }}
               </label>
             </div>
           @endforeach

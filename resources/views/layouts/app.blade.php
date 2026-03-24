@@ -53,7 +53,7 @@
       .panel-list li.active-item .label,.panel-list li.active-item .label a{color:#2f4e74;font-weight:700}
     .global-brand{display:flex;align-items:center;gap:.6rem;min-width:0}
     .global-badge{display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .global-logo{width:36px;height:36px;display:block}
+    .global-logo{width:36px;height:36px;min-width:36px;min-height:36px;display:block;flex:0 0 auto}
     .global-copy strong{display:block;font-size:1.04rem;line-height:1.1}
     .global-wordmark{font-weight:800;letter-spacing:.1px}
     .global-wordmark .aajcha{color:#2e4a6f}
@@ -114,6 +114,7 @@
     .guide-focus{outline:3px solid rgba(255,107,0,.6)!important;outline-offset:3px;border-radius:10px;animation:guidePulse 1.2s ease 2}
     @keyframes guidePulse{0%{box-shadow:0 0 0 0 rgba(255,107,0,.45)}100%{box-shadow:0 0 0 14px rgba(255,107,0,0)}}
     @media(max-width:700px){
+      .global-logo{width:32px;height:32px;min-width:32px;min-height:32px}
       .global-copy small{max-width:150px}
       .global-time{display:none}
       .global-city-form{display:none}
@@ -174,41 +175,49 @@
           <a href="{{ route('home') }}" class="icon-square" title="Home">
             <img src="{{ asset('images/icons/home.png') }}" alt="Home" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.home') }}</span>
         </li>
         <li class="icon-item {{ request()->routeIs('updates.*') ? 'selected' : '' }}" data-key="updates">
           <a href="{{ route('updates.index') }}" class="icon-square" title="Updates">
             <img src="{{ asset('images/icons/updates.png') }}" alt="Updates" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.updates') }}</span>
         </li>
         <li class="icon-item {{ request()->routeIs('jobs.*') ? 'selected' : '' }}" data-key="jobs">
           <a href="{{ route('jobs.index') }}" class="icon-square" title="Jobs">
             <img src="{{ asset('images/icons/jobs.jpeg') }}" alt="Jobs" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.jobs') }}</span>
         </li>
         <li class="icon-item {{ request()->routeIs('farming.*') ? 'selected' : '' }}" data-key="farming">
           <a href="{{ route('farming.index') }}" class="icon-square" title="Farming">
             <img src="{{ asset('images/icons/farming.png') }}" alt="Farming" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.farming') }}</span>
         </li>
         <li class="icon-item {{ request()->routeIs('rents.*') ? 'selected' : '' }}" data-key="rents">
           <a href="{{ route('rents.index') }}" class="icon-square" title="Rents">
             <img src="{{ asset('images/icons/rent.png') }}" alt="Rents" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.rents') }}</span>
         </li>
         <li class="icon-item {{ request()->routeIs('buy.*') ? 'selected' : '' }}" data-key="buy">
           <a href="{{ route('buy.index') }}" class="icon-square" title="Buy &amp; Sell">
             <img src="{{ asset('images/icons/buy.png') }}" alt="Buy & Sell" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.buy') }}</span>
         </li>
         <li class="icon-item {{ request()->routeIs('services.*') ? 'selected' : '' }}" data-key="services">
           <a href="{{ route('services.index') }}" class="icon-square" title="Services">
             <img src="{{ asset('images/icons/services.png') }}" alt="Services" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.services') }}</span>
         </li>
         <li class="icon-item {{ request()->routeIs('about') ? 'selected' : '' }}" data-key="about">
           <a href="{{ route('about') }}" class="icon-square" title="About Us">
             <img src="{{ asset('images/icons/about.svg') }}" alt="About Us" width="24" height="24">
           </a>
+          <span class="icon-name">{{ __('ui.about_us') }}</span>
         </li>
       </ul>
     </nav>
@@ -230,23 +239,23 @@
     <div class="mobile-sidebar-head">
       <div class="mobile-sidebar-brand">
         @include('shared.brand_logo', ['className' => 'mobile-logo', 'title' => 'AajchaOffer logo'])
-        <span class="mobile-title">Menu</span>
+        <span class="mobile-title">{{ __('ui.menu') }}</span>
       </div>
-      <button type="button" id="mobile-menu-close" aria-label="Close menu">✕</button>
+      <button type="button" id="mobile-menu-close" aria-label="{{ __('ui.close_menu') }}">✕</button>
     </div>
     <div class="panel-search">
-      <input type="text" placeholder="Search menu..." />
+      <input type="text" placeholder="{{ __('ui.search_menu') }}" />
     </div>
 
-    <div class="mobile-sections" aria-label="All sections">
-      <a href="{{ route('home') }}" class="mobile-sec-link {{ request()->routeIs('home') ? 'active' : '' }}">🏠 Home</a>
-      <a href="{{ route('updates.index') }}" class="mobile-sec-link {{ request()->routeIs('updates.*') ? 'active' : '' }}">📰 Updates</a>
-      <a href="{{ route('jobs.index') }}" class="mobile-sec-link {{ request()->routeIs('jobs.*') ? 'active' : '' }}">💼 Jobs</a>
-      <a href="{{ route('farming.index') }}" class="mobile-sec-link {{ request()->routeIs('farming.*') ? 'active' : '' }}">🌾 Farming</a>
-      <a href="{{ route('rents.index') }}" class="mobile-sec-link {{ request()->routeIs('rents.*') ? 'active' : '' }}">🏘️ Rents</a>
-      <a href="{{ route('buy.index') }}" class="mobile-sec-link {{ request()->routeIs('buy.*') ? 'active' : '' }}">🛒 Buy</a>
-      <a href="{{ route('services.index') }}" class="mobile-sec-link {{ request()->routeIs('services.*') ? 'active' : '' }}">🛠️ Services</a>
-      <a href="{{ route('about') }}" class="mobile-sec-link {{ request()->routeIs('about') ? 'active' : '' }}">ℹ️ About Us</a>
+    <div class="mobile-sections" aria-label="{{ __('ui.all_sections') }}">
+      <a href="{{ route('home') }}" class="mobile-sec-link {{ request()->routeIs('home') ? 'active' : '' }}">🏠 {{ __('ui.home') }}</a>
+      <a href="{{ route('updates.index') }}" class="mobile-sec-link {{ request()->routeIs('updates.*') ? 'active' : '' }}">📰 {{ __('ui.updates') }}</a>
+      <a href="{{ route('jobs.index') }}" class="mobile-sec-link {{ request()->routeIs('jobs.*') ? 'active' : '' }}">💼 {{ __('ui.jobs') }}</a>
+      <a href="{{ route('farming.index') }}" class="mobile-sec-link {{ request()->routeIs('farming.*') ? 'active' : '' }}">🌾 {{ __('ui.farming') }}</a>
+      <a href="{{ route('rents.index') }}" class="mobile-sec-link {{ request()->routeIs('rents.*') ? 'active' : '' }}">🏘️ {{ __('ui.rents') }}</a>
+      <a href="{{ route('buy.index') }}" class="mobile-sec-link {{ request()->routeIs('buy.*') ? 'active' : '' }}">🛒 {{ __('ui.buy') }}</a>
+      <a href="{{ route('services.index') }}" class="mobile-sec-link {{ request()->routeIs('services.*') ? 'active' : '' }}">🛠️ {{ __('ui.services') }}</a>
+      <a href="{{ route('about') }}" class="mobile-sec-link {{ request()->routeIs('about') ? 'active' : '' }}">ℹ️ {{ __('ui.about_us') }}</a>
     </div>
 
     <div class="sidebar-content">
@@ -299,97 +308,97 @@
         $myServiceTelegramShareUrl = "https://t.me/share/url?url={$myServiceUrlEncoded}&text={$myServiceShareTextEncoded}";
       @endphp
       <div class="panel-title {{ request()->routeIs('home') || $isMyService || $isMyShop || $panelIsSuperadmin ? 'active' : '' }}">
-        {{ request()->routeIs('about') ? 'About Us' : ($panelIsSuperadmin ? 'Admin Panel' : ($isMyService ? 'My Service' : ($isMyShop ? 'My Shop' : 'Home'))) }}
+        {{ request()->routeIs('about') ? __('ui.about_us') : ($panelIsSuperadmin ? __('ui.admin_panel') : ($isMyService ? __('ui.my_service') : ($isMyShop ? __('ui.my_shop') : __('ui.home')))) }}
       </div>
       <ul class="panel-list">
         @if(request()->routeIs('about'))
-          <li><a href="{{ route('about') }}" class="panel-link">Our Story</a></li>
-          <li><a href="{{ route('about') }}#contact" class="panel-link">Contact</a></li>
+          <li><a href="{{ route('about') }}" class="panel-link">{{ __('ui.our_story') }}</a></li>
+          <li><a href="{{ route('about') }}#contact" class="panel-link">{{ __('ui.contact') }}</a></li>
         @elseif($panelIsSuperadmin)
-          <li><a href="{{ route('admin.dashboard') }}" class="panel-link">Dashboard</a></li>
-          <li><a href="{{ route('admin.users.index') }}" class="panel-link">Users</a></li>
-          <li><a href="{{ route('admin.shops.index') }}" class="panel-link">Shops</a></li>
-          <li><a href="{{ route('admin.subscriptions.index') }}" class="panel-link">Subscriptions</a></li>
-          <li><a href="{{ route('admin.settings.index') }}" class="panel-link">Settings</a></li>
+          <li><a href="{{ route('admin.dashboard') }}" class="panel-link">{{ __('ui.dashboard') }}</a></li>
+          <li><a href="{{ route('admin.users.index') }}" class="panel-link">{{ __('ui.users') }}</a></li>
+          <li><a href="{{ route('admin.shops.index') }}" class="panel-link">{{ __('ui.shops') }}</a></li>
+          <li><a href="{{ route('admin.subscriptions.index') }}" class="panel-link">{{ __('ui.subscriptions') }}</a></li>
+          <li><a href="{{ route('admin.settings.index') }}" class="panel-link">{{ __('ui.settings') }}</a></li>
         @elseif($isMyService)
-          <li><a href="{{ $myServicePageUrl }}" class="panel-link">My Page</a></li>
-          <li><a href="{{ route('configure_myservice') }}" class="panel-link">Configure Service</a></li>
-          <li><a href="{{ route('workers_myservice') }}" class="panel-link">Workers</a></li>
-          <li><a href="{{ route('myservice_offer_new') }}" class="panel-link">Offers</a></li>
-          <li><a href="{{ route('myservice_requests') }}" class="panel-link">Client Requests</a></li>
-          <li><a href="{{ route('myservice_experience') }}" class="panel-link">Experience Letter</a></li>
-          <li><a href="{{ route('myservice_idcard') }}" class="panel-link">ID Card</a></li>
-          <li><a href="{{ route('subscriptions.new') }}" class="panel-link">Subscription</a></li>
-          <li><a href="{{ route('shop_dashboard') }}" class="panel-link">Dashboard</a></li>
+          <li><a href="{{ $myServicePageUrl }}" class="panel-link">{{ __('ui.my_page') }}</a></li>
+          <li><a href="{{ route('configure_myservice') }}" class="panel-link">{{ __('ui.configure_service') }}</a></li>
+          <li><a href="{{ route('workers_myservice') }}" class="panel-link">{{ __('ui.workers') }}</a></li>
+          <li><a href="{{ route('myservice_offer_new') }}" class="panel-link">{{ __('ui.offers') }}</a></li>
+          <li><a href="{{ route('myservice_requests') }}" class="panel-link">{{ __('ui.client_requests') }}</a></li>
+          <li><a href="{{ route('myservice_experience') }}" class="panel-link">{{ __('ui.experience_letter') }}</a></li>
+          <li><a href="{{ route('myservice_idcard') }}" class="panel-link">{{ __('ui.id_card') }}</a></li>
+          <li><a href="{{ route('subscriptions.new') }}" class="panel-link">{{ __('ui.subscription') }}</a></li>
+          <li><a href="{{ route('shop_dashboard') }}" class="panel-link">{{ __('ui.dashboard') }}</a></li>
         @elseif($isMyShop)
-          <li><a href="{{ route('myshop') }}" class="panel-link">Shop Home</a></li>
-          <li><a href="{{ route('configure_myshop') }}" class="panel-link">Configure Shop</a></li>
-          <li><a href="{{ route('workers_myshop') }}" class="panel-link">Workers</a></li>
-          <li><a href="{{ route('myshop_offer_new') }}" class="panel-link">Offers</a></li>
-          <li><a href="{{ route('myshop_requests') }}" class="panel-link">Client Requests</a></li>
-          <li><a href="{{ route('myshop_experience') }}" class="panel-link">Experience Letter</a></li>
-          <li><a href="{{ route('myshop_idcard') }}" class="panel-link">ID Card</a></li>
-          <li><a href="{{ route('subscriptions.new') }}" class="panel-link">Subscription</a></li>
+          <li><a href="{{ route('myshop') }}" class="panel-link">{{ __('ui.shop_home') }}</a></li>
+          <li><a href="{{ route('configure_myshop') }}" class="panel-link">{{ __('ui.configure_shop') }}</a></li>
+          <li><a href="{{ route('workers_myshop') }}" class="panel-link">{{ __('ui.workers') }}</a></li>
+          <li><a href="{{ route('myshop_offer_new') }}" class="panel-link">{{ __('ui.offers') }}</a></li>
+          <li><a href="{{ route('myshop_requests') }}" class="panel-link">{{ __('ui.client_requests') }}</a></li>
+          <li><a href="{{ route('myshop_experience') }}" class="panel-link">{{ __('ui.experience_letter') }}</a></li>
+          <li><a href="{{ route('myshop_idcard') }}" class="panel-link">{{ __('ui.id_card') }}</a></li>
+          <li><a href="{{ route('subscriptions.new') }}" class="panel-link">{{ __('ui.subscription') }}</a></li>
         @elseif(str_contains($ctrl, 'Home'))
-          <li><a href="{{ route('home') }}" class="panel-link">Today's Pulses</a></li>
-          <li><a href="{{ route('offers') }}" class="panel-link">Offers &amp; Benefits</a></li>
+          <li><a href="{{ route('home') }}" class="panel-link">{{ __('ui.todays_pulses') }}</a></li>
+          <li><a href="{{ route('offers') }}" class="panel-link">{{ __('ui.offers_benefits') }}</a></li>
         @elseif(str_contains($ctrl, 'Updates'))
-          <li><a href="{{ route('updates.index') }}" class="panel-link">Front Page</a></li>
-          <li><a href="{{ route('updates.index') }}#news" class="panel-link">Latest News</a></li>
-          <li><a href="{{ route('updates.index') }}#events" class="panel-link">Events</a></li>
-          <li><a href="{{ route('updates.index') }}#jobs" class="panel-link">Jobs Feed</a></li>
-          <li><a href="{{ route('updates.index') }}#markets" class="panel-link">Markets</a></li>
-          <li><a href="{{ route('updates.index') }}#opinion" class="panel-link">Opinion</a></li>
+          <li><a href="{{ route('updates.index') }}" class="panel-link">{{ __('ui.front_page') }}</a></li>
+          <li><a href="{{ route('updates.index') }}#news" class="panel-link">{{ __('ui.latest_news') }}</a></li>
+          <li><a href="{{ route('updates.index') }}#events" class="panel-link">{{ __('ui.events') }}</a></li>
+          <li><a href="{{ route('updates.index') }}#jobs" class="panel-link">{{ __('ui.jobs_feed') }}</a></li>
+          <li><a href="{{ route('updates.index') }}#markets" class="panel-link">{{ __('ui.markets') }}</a></li>
+          <li><a href="{{ route('updates.index') }}#opinion" class="panel-link">{{ __('ui.opinion') }}</a></li>
           @auth
             @if(auth()->user()->isSuperadmin())
-              <li><a href="{{ route('updates.create') }}" class="panel-link">Publish Update</a></li>
+              <li><a href="{{ route('updates.create') }}" class="panel-link">{{ __('ui.publish_update') }}</a></li>
             @endif
           @endauth
         @elseif(str_contains($ctrl, 'Jobs'))
-          <li><a href="{{ route('jobs.index') }}" class="panel-link">All Jobs</a></li>
-          <li><a href="{{ route('jobs.index', ['category' => 'IT']) }}" class="panel-link">IT Jobs</a></li>
-          <li><a href="{{ route('jobs.index', ['category' => 'Government']) }}" class="panel-link">Government Jobs</a></li>
-          <li><a href="{{ route('jobs.index', ['category' => 'Sales']) }}" class="panel-link">Sales Jobs</a></li>
+          <li><a href="{{ route('jobs.index') }}" class="panel-link">{{ __('ui.all_jobs') }}</a></li>
+          <li><a href="{{ route('jobs.index', ['category' => 'IT']) }}" class="panel-link">{{ __('ui.it_jobs') }}</a></li>
+          <li><a href="{{ route('jobs.index', ['category' => 'Government']) }}" class="panel-link">{{ __('ui.government_jobs') }}</a></li>
+          <li><a href="{{ route('jobs.index', ['category' => 'Sales']) }}" class="panel-link">{{ __('ui.sales_jobs') }}</a></li>
           @auth
             @if(auth()->user()->isSuperadmin())
-              <li><a href="{{ route('jobs.create') }}" class="panel-link">Add Job</a></li>
+              <li><a href="{{ route('jobs.create') }}" class="panel-link">{{ __('ui.add_job') }}</a></li>
             @endif
           @endauth
         @elseif(str_contains($ctrl, 'Farming'))
-          <li><a href="{{ route('farming.index') }}#articles" class="panel-link">City Articles</a></li>
-          <li><a href="{{ route('farming.index') }}#mandi" class="panel-link">Mandi Prices</a></li>
-          <li><a href="{{ route('farming.index') }}#schemes" class="panel-link">Govt Schemes</a></li>
-          <li><a href="{{ route('farming.index') }}#jobs" class="panel-link">Agri Jobs</a></li>
-          <li><a href="{{ route('farming.index') }}#calendar" class="panel-link">Crop Calendar</a></li>
-          <li><a href="{{ route('farming.index') }}#weather" class="panel-link">Weather</a></li>
-          <li><a href="{{ route('farming.create') }}" class="panel-link">Share Blog</a></li>
+          <li><a href="{{ route('farming.index') }}#articles" class="panel-link">{{ __('ui.city_articles') }}</a></li>
+          <li><a href="{{ route('farming.index') }}#mandi" class="panel-link">{{ __('ui.mandi_prices') }}</a></li>
+          <li><a href="{{ route('farming.index') }}#schemes" class="panel-link">{{ __('ui.govt_schemes') }}</a></li>
+          <li><a href="{{ route('farming.index') }}#jobs" class="panel-link">{{ __('ui.agri_jobs') }}</a></li>
+          <li><a href="{{ route('farming.index') }}#calendar" class="panel-link">{{ __('ui.crop_calendar') }}</a></li>
+          <li><a href="{{ route('farming.index') }}#weather" class="panel-link">{{ __('ui.weather') }}</a></li>
+          <li><a href="{{ route('farming.create') }}" class="panel-link">{{ __('ui.share_blog') }}</a></li>
         @elseif(str_contains($ctrl, 'Rents'))
-          <li><a href="{{ route('rents.index') }}" class="panel-link">🏠 Houses</a></li>
-          <li><a href="{{ route('rents.index', ['subcategory' => 'flat']) }}" class="panel-link">🏢 Flats</a></li>
-          <li><a href="{{ route('rents.index', ['subcategory' => 'shop']) }}" class="panel-link">🏪 Shops</a></li>
-          <li><a href="{{ route('rents.index', ['subcategory' => 'office']) }}" class="panel-link">💼 Offices</a></li>
-          <li><a href="{{ route('rents.index', ['subcategory' => 'land']) }}" class="panel-link">🌾 Land</a></li>
+          <li><a href="{{ route('rents.index') }}" class="panel-link">🏠 {{ __('ui.houses') }}</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'flat']) }}" class="panel-link">🏢 {{ __('ui.flats') }}</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'shop']) }}" class="panel-link">🏪 {{ __('ui.shops') }}</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'office']) }}" class="panel-link">💼 {{ __('ui.offices') }}</a></li>
+          <li><a href="{{ route('rents.index', ['subcategory' => 'land']) }}" class="panel-link">🌾 {{ __('ui.land') }}</a></li>
         @elseif(str_contains($ctrl, 'Buy'))
-          <li><a href="{{ route('buy.index') }}" class="panel-link">🛒 All Items</a></li>
-          <li><a href="{{ route('buy.index', ['subcategory' => 'vehicles']) }}" class="panel-link">🚗 Vehicles</a></li>
-          <li><a href="{{ route('buy.index', ['subcategory' => 'electronics']) }}" class="panel-link">💻 Electronics</a></li>
-          <li><a href="{{ route('buy.index', ['subcategory' => 'mobile']) }}" class="panel-link">📱 Mobile Phones</a></li>
-          <li><a href="{{ route('buy.index', ['subcategory' => 'bikes']) }}" class="panel-link">🏍️ Bikes</a></li>
-          <li><a href="{{ route('buy.index', ['subcategory' => 'farm']) }}" class="panel-link">🚜 Farm Equip</a></li>
-          <li><a href="{{ route('buy.index', ['subcategory' => 'land']) }}" class="panel-link">🌾 Land</a></li>
+          <li><a href="{{ route('buy.index') }}" class="panel-link">🛒 {{ __('ui.all_items') }}</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'vehicles']) }}" class="panel-link">🚗 {{ __('ui.vehicles') }}</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'electronics']) }}" class="panel-link">💻 {{ __('ui.electronics') }}</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'mobile']) }}" class="panel-link">📱 {{ __('ui.mobile_phones') }}</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'bikes']) }}" class="panel-link">🏍️ {{ __('ui.bikes') }}</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'farm']) }}" class="panel-link">🚜 {{ __('ui.farm_equip') }}</a></li>
+          <li><a href="{{ route('buy.index', ['subcategory' => 'land']) }}" class="panel-link">🌾 {{ __('ui.land') }}</a></li>
         @elseif(str_contains($ctrl, 'Services'))
-          <li><a href="{{ route('services.index') }}" class="panel-link">Service ID Cards</a></li>
+          <li><a href="{{ route('services.index') }}" class="panel-link">{{ __('ui.service_id_cards') }}</a></li>
         @else
-          <li><a href="{{ route('home') }}" class="panel-link">Today's Pulses</a></li>
-          <li><a href="{{ route('offers') }}" class="panel-link">Offers &amp; Benefits</a></li>
+          <li><a href="{{ route('home') }}" class="panel-link">{{ __('ui.todays_pulses') }}</a></li>
+          <li><a href="{{ route('offers') }}" class="panel-link">{{ __('ui.offers_benefits') }}</a></li>
         @endif
       </ul>
       <div class="panel-details">
-        <h4>{{ $panelIsSuperadmin || $isMyService || $isMyShop ? 'Workspace' : 'Recommended' }}</h4>
+        <h4>{{ $panelIsSuperadmin || $isMyService || $isMyShop ? __('ui.workspace') : __('ui.recommended') }}</h4>
         <ul class="recommendations">
           @if($panelIsSuperadmin)
-            <li>Manage platform users and business pages</li>
-            <li>Review subscriptions and unlock requests</li>
+            <li>{{ __('ui.rec_manage_platform') }}</li>
+            <li>{{ __('ui.rec_review_subscriptions') }}</li>
           @elseif($isMyService)
             @php
               $sideShop = auth()->check() ? auth()->user()->shops()->first() : null;
@@ -398,31 +407,31 @@
                 ? \App\Models\Update::offers()->where('city_id', $sideShop->city_id)->count()
                 : 0;
             @endphp
-            <li>Total workers: {{ $sideWorkersCount }}</li>
-            <li>Active city offers: {{ $sideOffersCount }}</li>
+            <li>{{ __('ui.total_workers') }}: {{ $sideWorkersCount }}</li>
+            <li>{{ __('ui.active_city_offers') }}: {{ $sideOffersCount }}</li>
           @elseif($isMyShop)
             @php
               $sideShop = auth()->check() ? auth()->user()->shops()->first() : null;
               $sideWorkersCount = $sideShop ? \App\Models\User::where('shop_id', $sideShop->id)->count() : 0;
             @endphp
-            <li>Total workers: {{ $sideWorkersCount }}</li>
-            <li>Use Configure to update shop details</li>
+            <li>{{ __('ui.total_workers') }}: {{ $sideWorkersCount }}</li>
+            <li>{{ __('ui.rec_update_shop') }}</li>
           @elseif(str_contains($ctrl, 'Services'))
-            <li>Verified service provider ID cards</li>
-            <li>Open card to view details and reviews</li>
+            <li>{{ __('ui.rec_verified_cards') }}</li>
+            <li>{{ __('ui.rec_open_card') }}</li>
           @elseif(str_contains($ctrl, 'Jobs'))
-            <li>City-based jobs include shop/service provider listings</li>
-            <li>Only superadmin can add jobs from Jobs module</li>
+            <li>{{ __('ui.rec_city_jobs') }}</li>
+            <li>{{ __('ui.rec_superadmin_jobs') }}</li>
           @elseif(str_contains($ctrl, 'Updates'))
-            <li>Open newspaper sections from the same edition page</li>
-            <li>Use city filter to switch the local edition</li>
+            <li>{{ __('ui.rec_updates_sections') }}</li>
+            <li>{{ __('ui.rec_city_filter') }}</li>
           @elseif(str_contains($ctrl, 'Farming'))
-            <li>All farming sections are city-wise with selected city context</li>
-            <li>Anyone can share blog with rich editor (name + photos + formatting)</li>
-            <li>Use mandi, weather and crop calendar for local planning</li>
+            <li>{{ __('ui.rec_farming_citywise') }}</li>
+            <li>{{ __('ui.rec_farming_blog') }}</li>
+            <li>{{ __('ui.rec_farming_planning') }}</li>
           @else
-            <li>See today's top stories</li>
-            <li>Nearby events</li>
+            <li>{{ __('ui.rec_top_stories') }}</li>
+            <li>{{ __('ui.rec_nearby_events') }}</li>
           @endif
         </ul>
       </div>
@@ -441,11 +450,12 @@
       $currentCityId = session('city_id') ?: $defaultCity?->id;
       $currentCity = $currentCityId ? \App\Models\City::find($currentCityId) : null;
       $currentCityName = $currentCity?->name;
+      $currentCityLabel = city_display_name($currentCityName);
       $cityOptions = \App\Models\City::orderBy('name')->get(['id', 'name']);
     @endphp
     <header class="global-top">
       <div class="global-brand">
-        <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">☰</button>
+        <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" aria-label="{{ __('ui.open_menu') }}">☰</button>
         <div class="global-badge">
           @include('shared.brand_logo', ['className' => 'global-logo', 'title' => 'AajchaOffer logo'])
         </div>
@@ -456,35 +466,37 @@
       </div>
 
       <div class="global-right">
-        <div class="global-lang" aria-label="Language switcher">
-          <button type="button" class="on">EN</button>
-          <button type="button">मर</button>
-          <button type="button">हि</button>
-        </div>
+        @php($activeLocale = app()->getLocale())
+        <form action="{{ route('set_language') }}" method="POST" class="global-lang" aria-label="Language switcher">
+          @csrf
+          <button type="submit" name="locale" value="en" class="{{ $activeLocale === 'en' ? 'on' : '' }}">EN</button>
+          <button type="submit" name="locale" value="mr" class="{{ $activeLocale === 'mr' ? 'on' : '' }}">मर</button>
+          <button type="submit" name="locale" value="hi" class="{{ $activeLocale === 'hi' ? 'on' : '' }}">हि</button>
+        </form>
 
         <form action="{{ route('set_city') }}" method="POST" class="global-city-form">
           @csrf
           <select name="city_id" class="global-city" onchange="this.form.submit()">
-            <option value="">Select city</option>
+            <option value="">{{ __('ui.select_city') }}</option>
             @foreach($cityOptions as $c)
               <option value="{{ $c->id }}" {{ (int)$currentCityId === (int)$c->id || (!$currentCityId && $currentCityName === $c->name) ? 'selected' : '' }}>
-                📍 {{ $c->name }}
+                📍 {{ city_display_name($c->name) }}
               </option>
             @endforeach
           </select>
         </form>
 
-        <button type="button" class="mobile-city-btn" id="mobile-city-btn">📍 {{ $currentCityName ?: 'Select city' }}</button>
+        <button type="button" class="mobile-city-btn" id="mobile-city-btn">📍 {{ $currentCityLabel ?: __('ui.select_city') }}</button>
 
         <div class="global-time" id="globalTime">--:--</div>
       </div>
     </header>
 
     <div class="mobile-city-modal" id="mobile-city-modal" aria-hidden="true">
-      <div class="mobile-city-sheet" role="dialog" aria-label="Select city" onclick="event.stopPropagation()">
+      <div class="mobile-city-sheet" role="dialog" aria-label="{{ __('ui.select_city') }}" onclick="event.stopPropagation()">
         <div class="mobile-city-head">
-          <input type="text" id="mobile-city-search" placeholder="Search city...">
-          <button type="button" class="mobile-city-close" id="mobile-city-close" aria-label="Close city picker">✕</button>
+          <input type="text" id="mobile-city-search" placeholder="{{ __('ui.search_city') }}">
+          <button type="button" class="mobile-city-close" id="mobile-city-close" aria-label="{{ __('ui.close') }}">✕</button>
         </div>
         <div class="mobile-city-list" id="mobile-city-list"></div>
         <form id="mobile-city-form" action="{{ route('set_city') }}" method="POST" style="display:none">
@@ -525,33 +537,33 @@
 </div>
 
 <div class="guide-bot" id="guide-bot">
-  <div class="guide-card" id="guide-card" role="dialog" aria-label="Quick guide">
+  <div class="guide-card" id="guide-card" role="dialog" aria-label="{{ __('ui.quick_guide') }}">
     <div class="guide-head">
-      <strong>Welcome to AajchaOffer 👋</strong>
-      <button type="button" class="guide-close" id="guide-close" aria-label="Close guide">✕</button>
+      <strong>{{ __('ui.welcome_title') }}</strong>
+      <button type="button" class="guide-close" id="guide-close" aria-label="{{ __('ui.close') }}">✕</button>
     </div>
-    <p class="guide-copy">First time here? Use this guide to quickly learn where to select city and how to navigate tabs.</p>
+    <p class="guide-copy">{{ __('ui.welcome_copy') }}</p>
     <ul class="guide-list">
       <li>
-        <span>Select your city from the top-right city selector.</span>
-        <button type="button" class="guide-focus-btn" data-focus="#mobile-city-btn, .global-city">Show</button>
+        <span>{{ __('ui.guide_city') }}</span>
+        <button type="button" class="guide-focus-btn" data-focus="#mobile-city-btn, .global-city">{{ __('ui.show') }}</button>
       </li>
       <li>
-        <span>Browse main tabs from left icons (Home, Updates, Jobs, Farming, Rents, Buy, Services, About).</span>
-        <button type="button" class="guide-focus-btn" data-focus=".iconbar, .mobile-menu-btn">Show</button>
+        <span>{{ __('ui.guide_tabs') }}</span>
+        <button type="button" class="guide-focus-btn" data-focus=".iconbar, .mobile-menu-btn">{{ __('ui.show') }}</button>
       </li>
       <li>
-        <span>Use side menu links for section shortcuts and details.</span>
-        <button type="button" class="guide-focus-btn" data-focus=".sidebar-panel, .mobile-sections">Show</button>
+        <span>{{ __('ui.guide_side') }}</span>
+        <button type="button" class="guide-focus-btn" data-focus=".sidebar-panel, .mobile-sections">{{ __('ui.show') }}</button>
       </li>
     </ul>
     <div class="guide-actions">
-      <button type="button" class="guide-secondary" id="guide-later">Later</button>
-      <button type="button" class="guide-primary" id="guide-done">Got it</button>
+      <button type="button" class="guide-secondary" id="guide-later">{{ __('ui.later') }}</button>
+      <button type="button" class="guide-primary" id="guide-done">{{ __('ui.got_it') }}</button>
     </div>
   </div>
-  <button type="button" class="guide-toggle" id="guide-toggle" aria-label="Open quick guide">
-    <img class="guide-toggle-icon" src="{{ asset('images/icons/guide-robot.svg') }}" alt="Guide robot" width="36" height="36">
+  <button type="button" class="guide-toggle" id="guide-toggle" aria-label="{{ __('ui.open_quick_guide') }}">
+    <img class="guide-toggle-icon" src="{{ asset('images/icons/guide-robot.svg') }}" alt="{{ __('ui.guide_robot') }}" width="36" height="36">
     <span class="guide-toggle-dot one" aria-hidden="true"></span>
     <span class="guide-toggle-dot two" aria-hidden="true"></span>
     <span class="guide-toggle-dot three" aria-hidden="true"></span>
@@ -582,16 +594,16 @@
 
     if (!mobileCityBtn || !mobileCityModal || !mobileCityList || !mobileCityId || !mobileCityForm) return;
 
-    const cities = @json($cityOptions->map(fn($c) => ['id' => $c->id, 'name' => $c->name])->values());
+    const cities = @json($cityOptions->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'label' => city_display_name($c->name)])->values());
     const selectedId = {{ (int)($currentCityId ?? 0) }};
 
     function renderCities(query = '') {
       const q = String(query || '').toLowerCase().trim();
-      const filtered = cities.filter(c => !q || c.name.toLowerCase().includes(q));
+      const filtered = cities.filter(c => !q || c.name.toLowerCase().includes(q) || String(c.label || '').toLowerCase().includes(q));
       mobileCityList.innerHTML = filtered.map(c => {
         const active = Number(c.id) === Number(selectedId) ? 'active' : '';
-        return `<button type="button" class="mobile-city-item ${active}" data-id="${c.id}" data-name="${String(c.name).replace(/"/g, '&quot;')}"><span>📍 ${c.name}</span><span>›</span></button>`;
-      }).join('') || '<div style="padding:10px;color:#64748b">No city found.</div>';
+        return `<button type="button" class="mobile-city-item ${active}" data-id="${c.id}" data-name="${String(c.name).replace(/"/g, '&quot;')}"><span>📍 ${String(c.label || c.name)}</span><span>›</span></button>`;
+      }).join('') || '<div style="padding:10px;color:#64748b">{{ __('ui.no_city_found') }}</div>';
 
       mobileCityList.querySelectorAll('.mobile-city-item').forEach(btn => {
         btn.addEventListener('click', function(){
@@ -636,139 +648,139 @@
 
     const mapping = {
       home: {
-        title: "Home",
-        items: [['U',"Today's Pulses","{{ route('home') }}"],['O',"Offers & Benefits","{{ route('offers') }}"]],
-        rec: ["See today's top stories","Nearby events","City offers & benefits"],
+        title: @json(__('ui.home')),
+        items: [['U',@json(__('ui.todays_pulses')),"{{ route('home') }}"],['O',@json(__('ui.offers_benefits')),"{{ route('offers') }}"]],
+        rec: [@json(__('ui.rec_top_stories')),@json(__('ui.rec_nearby_events')),@json(__('ui.rec_city_offers'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#a10b0b" xmlns="http://www.w3.org/2000/svg"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8.5z"/></svg>',
         color: '#a10b0b'
       },
       updates: {
-        title: "Updates",
+        title: @json(__('ui.updates')),
         items: [
-          ['📰',"Front Page","{{ route('updates.index') }}"],
-          ['N',"Latest News","{{ route('updates.index') }}#news"],
-          ['E',"Events","{{ route('updates.index') }}#events"],
-          ['J',"Jobs Feed","{{ route('updates.index') }}#jobs"],
-          ['M',"Markets","{{ route('updates.index') }}#markets"],
-          ['O',"Opinion","{{ route('updates.index') }}#opinion"],
+          ['📰',@json(__('ui.front_page')),"{{ route('updates.index') }}"],
+          ['N',@json(__('ui.latest_news')),"{{ route('updates.index') }}#news"],
+          ['E',@json(__('ui.events')),"{{ route('updates.index') }}#events"],
+          ['J',@json(__('ui.jobs_feed')),"{{ route('updates.index') }}#jobs"],
+          ['M',@json(__('ui.markets')),"{{ route('updates.index') }}#markets"],
+          ['O',@json(__('ui.opinion')),"{{ route('updates.index') }}#opinion"],
           @auth
             @if(auth()->user()->isSuperadmin())
-              ['+',"Publish Update","{{ route('updates.create') }}"],
+              ['+',@json(__('ui.publish_update')),"{{ route('updates.create') }}"],
             @endif
           @endauth
         ],
-        rec: ["Open each edition section from /updates","Use city filter for local edition","Download today’s newspaper view"],
+        rec: [@json(__('ui.rec_updates_sections')),@json(__('ui.rec_city_filter')),@json(__('ui.rec_download_newspaper'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#0b5ed7" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v2H3zM3 11h12v2H3zM3 17h18v2H3z"/></svg>',
         color: '#0b5ed7'
       },
       jobs: {
-        title: "Jobs",
+        title: @json(__('ui.jobs')),
         items: [
-          ['💼',"All Jobs","{{ route('jobs.index') }}"],
-          ['IT',"IT Jobs","{{ route('jobs.index', ['category' => 'IT']) }}"],
-          ['G',"Government","{{ route('jobs.index', ['category' => 'Government']) }}"],
-          ['S',"Sales","{{ route('jobs.index', ['category' => 'Sales']) }}"],
+          ['💼',@json(__('ui.all_jobs')),"{{ route('jobs.index') }}"],
+          ['IT',@json(__('ui.it_jobs')),"{{ route('jobs.index', ['category' => 'IT']) }}"],
+          ['G',@json(__('ui.government_jobs')),"{{ route('jobs.index', ['category' => 'Government']) }}"],
+          ['S',@json(__('ui.sales_jobs')),"{{ route('jobs.index', ['category' => 'Sales']) }}"],
           @auth
             @if(auth()->user()->isSuperadmin())
-              ['+',"Add Job","{{ route('jobs.create') }}"],
+              ['+',@json(__('ui.add_job')),"{{ route('jobs.create') }}"],
             @endif
           @endauth
         ],
-        rec: ["Jobs are listed city-wise","Shop/service provider job entries appear here","Only superadmin can add jobs here"],
+        rec: [@json(__('ui.rec_city_jobs')),@json(__('ui.rec_shop_service_jobs')),@json(__('ui.rec_superadmin_jobs'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#1761a0" xmlns="http://www.w3.org/2000/svg"><path d="M6 7h12v2H6zM6 11h12v6H6z"/></svg>',
         color: '#1761a0'
       },
       farming: {
-        title: "Farming",
+        title: @json(__('ui.farming')),
         items: [
-          ['🌾',"Articles","{{ route('farming.index') }}#articles"],
-          ['💰',"Mandi","{{ route('farming.index') }}#mandi"],
-          ['🏛',"Schemes","{{ route('farming.index') }}#schemes"],
-          ['💼',"Agri Jobs","{{ route('farming.index') }}#jobs"],
-          ['📅',"Calendar","{{ route('farming.index') }}#calendar"],
-          ['🌦',"Weather","{{ route('farming.index') }}#weather"],
-          ['+',"Share Blog","{{ route('farming.create') }}"],
+          ['🌾',@json(__('ui.city_articles')),"{{ route('farming.index') }}#articles"],
+          ['💰',@json(__('ui.mandi_prices')),"{{ route('farming.index') }}#mandi"],
+          ['🏛',@json(__('ui.govt_schemes')),"{{ route('farming.index') }}#schemes"],
+          ['💼',@json(__('ui.agri_jobs')),"{{ route('farming.index') }}#jobs"],
+          ['📅',@json(__('ui.crop_calendar')),"{{ route('farming.index') }}#calendar"],
+          ['🌦',@json(__('ui.weather')),"{{ route('farming.index') }}#weather"],
+          ['+',@json(__('ui.share_blog')),"{{ route('farming.create') }}"],
         ],
-        rec: ["City-wise farming data","Anyone can publish blog with rich editor","Live weather/mandi/news APIs"],
+        rec: [@json(__('ui.rec_farming_citywise')),@json(__('ui.rec_farming_blog_short')),@json(__('ui.rec_farming_live_api'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2e7d32" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 7h-6l3-7zM6 12h12v8H6z"/></svg>',
         color: '#2e7d32'
       },
       rents: {
-        title: "Rents",
-        items: [['R',"Houses","{{ route('rents.index') }}"],['F',"Flats","{{ route('rents.index') }}"]],
-        rec: ["New listings","Saved searches"],
+        title: @json(__('ui.rents')),
+        items: [['R',@json(__('ui.houses')),"{{ route('rents.index') }}"],['F',@json(__('ui.flats')),"{{ route('rents.index') }}"]],
+        rec: [@json(__('ui.rec_new_listings')),@json(__('ui.rec_saved_searches'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#ff8f00" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l9 7h-3v8h-12v-8H3l9-7z"/></svg>',
         color: '#ff8f00'
       },
       buy: {
-        title: "Buy & Sell",
+        title: @json(__('ui.buy_sell')),
         items: [
-          ['🛒',"All Items","{{ route('buy.index') }}"],
-          ['🚗',"Vehicles","{{ route('buy.index', ['subcategory' => 'vehicles']) }}"],
-          ['🏍',"Bikes","{{ route('buy.index', ['subcategory' => 'bikes']) }}"],
-          ['📱',"Mobile Phones","{{ route('buy.index', ['subcategory' => 'mobile']) }}"],
-          ['💻',"Electronics","{{ route('buy.index', ['subcategory' => 'electronics']) }}"],
-          ['🚜',"Farm Equip","{{ route('buy.index', ['subcategory' => 'farm']) }}"],
-          ['🌾',"Land","{{ route('buy.index', ['subcategory' => 'land']) }}"],
+          ['🛒',@json(__('ui.all_items')),"{{ route('buy.index') }}"],
+          ['🚗',@json(__('ui.vehicles')),"{{ route('buy.index', ['subcategory' => 'vehicles']) }}"],
+          ['🏍',@json(__('ui.bikes')),"{{ route('buy.index', ['subcategory' => 'bikes']) }}"],
+          ['📱',@json(__('ui.mobile_phones')),"{{ route('buy.index', ['subcategory' => 'mobile']) }}"],
+          ['💻',@json(__('ui.electronics')),"{{ route('buy.index', ['subcategory' => 'electronics']) }}"],
+          ['🚜',@json(__('ui.farm_equip')),"{{ route('buy.index', ['subcategory' => 'farm']) }}"],
+          ['🌾',@json(__('ui.land')),"{{ route('buy.index', ['subcategory' => 'land']) }}"],
         ],
-        rec: ["Post listing with payment proof","Filter by city and category"],
+        rec: [@json(__('ui.rec_post_listing')),@json(__('ui.rec_filter_city_category'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#6f42c1" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zM7 10h10v8H7z"/></svg>',
         color: '#6f42c1'
       },
       services: {
-        title: "Services",
-        items: [['S',"Service ID Cards","{{ route('services.index') }}"]],
-        rec: ["Top rated providers","Verified profiles"],
+        title: @json(__('ui.services')),
+        items: [['S',@json(__('ui.service_id_cards')),"{{ route('services.index') }}"]],
+        rec: [@json(__('ui.rec_top_rated')),@json(__('ui.rec_verified_profiles'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#0d6efd" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4zM4 10h16v8H4z"/></svg>',
         color: '#0d6efd'
       },
       admin: {
-        title: "Admin Panel",
+        title: @json(__('ui.admin_panel')),
         items: [
-          ['🏠',"Dashboard",      "{{ route('admin.dashboard') }}"],
-          ['👤',"Users",          "{{ route('admin.users.index') }}"],
-          ['🏬',"Shops",          "{{ route('admin.shops.index') }}"],
-          ['🏙',"Cities",         "{{ route('admin.cities.index') }}"],
-          ['💼',"Jobs",           "{{ route('admin.jobs.index') }}"],
-          ['🏷',"Offers",         "{{ route('admin.offers.index') }}"],
-          ['💳',"Subscriptions",  "{{ route('admin.subscriptions.index') }}"],
-          ['⚙',"Settings",       "{{ route('admin.settings.index') }}"],
+          ['🏠',@json(__('ui.dashboard')),      "{{ route('admin.dashboard') }}"],
+          ['👤',@json(__('ui.users')),          "{{ route('admin.users.index') }}"],
+          ['🏬',@json(__('ui.shops')),          "{{ route('admin.shops.index') }}"],
+          ['🏙',@json(__('ui.cities')),         "{{ route('admin.cities.index') }}"],
+          ['💼',@json(__('ui.jobs')),           "{{ route('admin.jobs.index') }}"],
+          ['🏷',@json(__('ui.offers')),         "{{ route('admin.offers.index') }}"],
+          ['💳',@json(__('ui.subscriptions')),  "{{ route('admin.subscriptions.index') }}"],
+          ['⚙',@json(__('ui.settings')),       "{{ route('admin.settings.index') }}"],
         ],
-        rec: ["Manage platform modules","Review unlock/subscription queue","Keep data updated and clean"],
+        rec: [@json(__('ui.rec_manage_modules')),@json(__('ui.rec_unlock_queue')),@json(__('ui.rec_keep_data_clean'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l9 4v6c0 5-3.5 9.5-9 10-5.5-.5-9-5-9-10V6l9-4zm0 3.2L6 7.7v4.2c0 3.9 2.6 7.3 6 7.9 3.4-.6 6-4 6-7.9V7.7l-6-2.5z"/></svg>',
         color: '#2f4e74'
       },
       myservice: {
-        title: "My Service",
+        title: @json(__('ui.my_service')),
         items: [
-          ['🌐',"My Page",          myServicePageUrl],
-          ['⚙',"Configure",       "{{ route('configure_myservice') }}"],
-          ['👥',"Workers",         "{{ route('workers_myservice') }}"],
-          ['🏷',"Add Offer",       "{{ route('myservice_offer_new') }}"],
-          ['📞',"Client Requests", "{{ route('myservice_requests') }}"],
-          ['📋',"Experience",      "{{ route('myservice_experience') }}"],
-          ['🪪',"ID Card",         "{{ route('myservice_idcard') }}"],
-          ['⭐',"Subscription",    "{{ route('subscriptions.new') }}"],
-          ['📊',"Dashboard",       "{{ route('shop_dashboard') }}"],
+          ['🌐',@json(__('ui.my_page')),          myServicePageUrl],
+          ['⚙',@json(__('ui.configure')),       "{{ route('configure_myservice') }}"],
+          ['👥',@json(__('ui.workers')),         "{{ route('workers_myservice') }}"],
+          ['🏷',@json(__('ui.add_offer')),       "{{ route('myservice_offer_new') }}"],
+          ['📞',@json(__('ui.client_requests')), "{{ route('myservice_requests') }}"],
+          ['📋',@json(__('ui.experience')),      "{{ route('myservice_experience') }}"],
+          ['🪪',@json(__('ui.id_card')),         "{{ route('myservice_idcard') }}"],
+          ['⭐',@json(__('ui.subscription')),    "{{ route('subscriptions.new') }}"],
+          ['📊',@json(__('ui.dashboard')),       "{{ route('shop_dashboard') }}"],
         ],
-        rec: ["Manage your service team","Handle client requests quickly","Share your ID card"],
+        rec: [@json(__('ui.rec_manage_service_team')),@json(__('ui.rec_handle_requests')),@json(__('ui.rec_share_id_card'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>',
         color: '#2f4e74'
       },
       myshop: {
-        title: "My Shop",
+        title: @json(__('ui.my_shop')),
         items: [
-          ['🏠',"Shop Home",       "{{ route('myshop') }}"],
-          ['⚙',"Configure",       "{{ route('configure_myshop') }}"],
-          ['👥',"Workers",         "{{ route('workers_myshop') }}"],
-          ['🏷',"Add Offer",       "{{ route('myshop_offer_new') }}"],
-          ['📞',"Client Requests", "{{ route('myshop_requests') }}"],
-          ['📋',"Experience",      "{{ route('myshop_experience') }}"],
-          ['🪪',"ID Card",         "{{ route('myshop_idcard') }}"],
-          ['⭐',"Subscription",    "{{ route('subscriptions.new') }}"],
-          ['📊',"Dashboard",       "{{ route('shop_dashboard') }}"],
+          ['🏠',@json(__('ui.shop_home')),       "{{ route('myshop') }}"],
+          ['⚙',@json(__('ui.configure')),       "{{ route('configure_myshop') }}"],
+          ['👥',@json(__('ui.workers')),         "{{ route('workers_myshop') }}"],
+          ['🏷',@json(__('ui.add_offer')),       "{{ route('myshop_offer_new') }}"],
+          ['📞',@json(__('ui.client_requests')), "{{ route('myshop_requests') }}"],
+          ['📋',@json(__('ui.experience')),      "{{ route('myshop_experience') }}"],
+          ['🪪',@json(__('ui.id_card')),         "{{ route('myshop_idcard') }}"],
+          ['⭐',@json(__('ui.subscription')),    "{{ route('subscriptions.new') }}"],
+          ['📊',@json(__('ui.dashboard')),       "{{ route('shop_dashboard') }}"],
         ],
-        rec: ["Manage your shop team","Handle client requests quickly","Share your ID card"],
+        rec: [@json(__('ui.rec_manage_shop_team')),@json(__('ui.rec_handle_requests')),@json(__('ui.rec_share_id_card'))],
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 12H7v-2h8v2zm0-4H7v-2h8v2zm5-5H4V6h16v1z"/></svg>',
         color: '#253a5a'
       }
@@ -840,10 +852,10 @@
         try {
           await navigator.clipboard.writeText(url);
           const prev = actionLink.textContent;
-          actionLink.textContent = 'Copied ✓';
+          actionLink.textContent = @json(__('ui.copied'));
           setTimeout(() => actionLink.textContent = prev, 1300);
         } catch (err) {
-          window.prompt('Copy this link:', url);
+          window.prompt(@json(__('ui.copy_this_link')), url);
         }
       }
 

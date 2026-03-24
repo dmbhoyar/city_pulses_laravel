@@ -8,6 +8,7 @@
             'name' => $c->name,
             'lat' => $c->latitude ? (float) $c->latitude : null,
             'lon' => $c->longitude ? (float) $c->longitude : null,
+            'district' => $c->agmarknet_district ?: $c->name,
         ];
     })->values();
 
@@ -116,46 +117,83 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
 
-    .ao-home{--sf:#FF6B00;--gd:#D4A017;--em:#1A936F;--cr:#FFF8F0;--ink:#1A1A2E;--mu:#6B7280;--cd:#FFFFFF;--bd:#F0E8DC;--rd:#E53E3E;--bl:#2B6CB0;font-family:'DM Sans','Noto Sans Devanagari',sans-serif;color:var(--ink)}
+    .ao-home{--sf:#FF6B00;--gd:#D4A017;--em:#1A936F;--cr:#FFF8F0;--ink:#1A1A2E;--mu:#6B7280;--cd:#FFFFFF;--bd:#F0E8DC;--rd:#E53E3E;--bl:#2B6CB0;font-family:'DM Sans','Noto Sans Devanagari',sans-serif;color:var(--ink);max-width:100%;overflow-x:hidden;margin:0 auto;padding:1rem;width:100%}
     .ao-home *{box-sizing:border-box}
+    @media(max-width:768px){.ao-home{padding:0.75rem}}
+    @media(max-width:640px){.ao-home{padding:0.5rem}}
+    @media(max-width:480px){.ao-home{padding:0.5rem;font-size:0.95rem}}
+    @media(max-width:360px){.ao-home{padding:0.375rem}}
     .ao-city-pill{border:1.4px solid var(--sf);background:#fff;color:var(--sf);border-radius:18px;padding:.26rem .62rem;font-weight:700;font-size:.79rem;cursor:pointer}
 
-    .ao-rates{display:grid;grid-template-columns:repeat(6,1fr);gap:.58rem;margin-bottom:1rem}
-    .ao-rate{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:.72rem .82rem;position:relative}
+    .ao-rates{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0.58rem;margin:0 0 1rem;width:100%}
+    @media(max-width:1024px){.ao-rates{grid-template-columns:repeat(4,minmax(0,1fr));gap:0.5rem}}
+    @media(max-width:768px){.ao-rates{grid-template-columns:repeat(3,minmax(0,1fr));gap:0.45rem}}
+    @media(max-width:640px){.ao-rates{grid-template-columns:repeat(2,minmax(0,1fr));gap:0.4rem}.ao-rate{padding:0.6rem}}
+    @media(max-width:480px){.ao-rates{grid-template-columns:repeat(2,minmax(0,1fr));gap:0.3rem}.ao-rate{padding:0.5rem}}
+    @media(max-width:360px){.ao-rates{grid-template-columns:repeat(2,minmax(0,1fr));gap:0.25rem}.ao-rate{padding:0.4rem}}
+    .ao-rate{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:0.72rem 0.82rem;position:relative;min-width:0;flex-shrink:0;display:flex;flex-direction:column;justify-content:space-between}
     .ao-rate:before{content:'';position:absolute;left:0;right:0;top:0;height:3px;border-radius:12px 12px 0 0;background:linear-gradient(90deg,var(--sf),var(--gd))}
-    .ao-rate-l{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);font-weight:700}
-    .ao-rate-v{font-family:'Playfair Display',serif;font-size:1.16rem;font-weight:700;margin:.25rem 0}
-    .ao-rate-s{font-size:.64rem;color:var(--mu);font-family:'DM Mono',monospace}
+    .ao-rate-l{font-size:clamp(0.55rem,1.5vw,0.64rem);text-transform:uppercase;letter-spacing:0.08em;color:var(--mu);font-weight:700;line-height:1.2}
+    .ao-rate-v{font-family:'Playfair Display',serif;font-size:clamp(0.9rem,2vw,1.16rem);font-weight:700;margin:0.2rem 0;line-height:1.1}
+    .ao-rate-s{font-size:clamp(0.5rem,1.2vw,0.64rem);color:var(--mu);font-family:'DM Mono',monospace}
+    @media(max-width:480px){.ao-rate{padding:0.5rem 0.6rem}.ao-rate-l{font-size:0.5rem}.ao-rate-v{font-size:0.85rem}.ao-rate-s{font-size:0.45rem}}
+    @media(max-width:360px){.ao-rate{padding:0.4rem 0.5rem}.ao-rate-l{font-size:0.45rem}.ao-rate-v{font-size:0.75rem}.ao-rate-s{font-size:0.4rem}}
 
-    .ao-ticker{background:var(--ink);color:#fff;border-radius:10px;overflow:hidden;padding:.34rem 0;margin-bottom:1rem}
-    .ao-ticker-track{display:flex;gap:1.6rem;white-space:nowrap;animation:ao-ticker 38s linear infinite;padding:0 .5rem}
+    .ao-ticker{background:var(--ink);color:#fff;border-radius:10px;overflow:hidden;padding:.34rem 0;margin-bottom:1rem;width:100%;max-width:100%}
+    .ao-ticker-track{display:flex;gap:1.6rem;white-space:nowrap;animation:ao-ticker 38s linear infinite;padding:0 .5rem;min-width:100%}
+    @media(max-width:480px){.ao-ticker-track{gap:1rem;padding:0 .35rem}}
+    @media(max-width:360px){.ao-ticker-track{gap:0.8rem;padding:0 .25rem}}
     @keyframes ao-ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
     .ao-ti{font-size:.75rem}
     .ao-ti b{font-family:'DM Mono',monospace}
 
-    .ao-grid{display:grid;grid-template-columns:1fr 300px;gap:1rem}
-    .ao-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:1rem}
-    .ao-card-h{display:flex;align-items:center;justify-content:space-between;padding:.92rem 1rem;border-bottom:1px solid var(--bd)}
-    .ao-card-t{font-family:'Playfair Display',serif;font-weight:700;font-size:.95rem}
-    .ao-badge{font-size:.62rem;padding:.16rem .5rem;border-radius:8px;background:rgba(255,107,0,.1);color:var(--sf);font-weight:700}
-    .ao-list-item{display:flex;gap:.65rem;padding:.75rem 1rem;border-bottom:1px solid var(--bd);text-decoration:none;color:inherit}
+    .ao-grid{display:grid;grid-template-columns:1fr 300px;gap:clamp(0.75rem,2vw,1rem);align-items:start;width:100%;max-width:100%;margin:0 auto}
+    @media(max-width:1024px){.ao-grid{grid-template-columns:1fr 260px;gap:0.85rem}}
+    @media(max-width:900px){.ao-grid{grid-template-columns:1fr 240px;gap:0.75rem}}
+    @media(max-width:768px){.ao-grid{grid-template-columns:1fr;gap:0.75rem}}
+    @media(max-width:640px){.ao-grid{gap:0.6rem}}
+    @media(max-width:480px){.ao-grid{gap:0.5rem}}
+    @media(max-width:360px){.ao-grid{gap:0.4rem}}
+    .ao-card{background:#fff;border:1px solid var(--bd);border-radius:clamp(10px,2vw,14px);overflow:hidden;margin-bottom:clamp(0.75rem,2vw,1rem);min-width:0;width:100%;max-width:100%}
+    @media(max-width:640px){.ao-card{border-radius:12px;margin-bottom:0.8rem}}
+    @media(max-width:480px){.ao-card{border-radius:10px;margin-bottom:0.65rem}}
+    @media(max-width:360px){.ao-card{border-radius:8px;margin-bottom:0.5rem}}
+    .ao-card-h{display:flex;align-items:center;justify-content:space-between;padding:clamp(0.65rem,2vw,0.92rem) clamp(0.75rem,2vw,1rem);border-bottom:1px solid var(--bd);gap:0.5rem;flex-wrap:wrap}
+    .ao-card-t{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(0.85rem,2vw,0.95rem);line-height:1.25}
+    .ao-badge{font-size:clamp(0.5rem,1.2vw,0.62rem);padding:clamp(0.1rem,0.5vw,0.16rem) clamp(0.35rem,1vw,0.5rem);border-radius:8px;background:rgba(255,107,0,.1);color:var(--sf);font-weight:700}
+    @media(max-width:640px){.ao-card-h{padding:0.7rem 0.8rem}.ao-card-t{font-size:0.8rem}.ao-badge{font-size:0.5rem;padding:0.12rem 0.35rem}}
+    @media(max-width:480px){.ao-card-h{padding:0.6rem 0.65rem}.ao-card-t{font-size:0.75rem}.ao-badge{font-size:0.45rem;padding:0.1rem 0.3rem}}
+    @media(max-width:360px){.ao-card-h{padding:0.5rem 0.55rem}.ao-card-t{font-size:0.7rem}.ao-badge{font-size:0.4rem;padding:0.08rem 0.25rem}}
+    .ao-list-item{display:flex;gap:clamp(0.5rem,1.5vw,0.65rem);padding:clamp(0.55rem,1.5vw,0.75rem) clamp(0.75rem,2vw,1rem);border-bottom:1px solid var(--bd);text-decoration:none;color:inherit}
     .ao-list-item:last-child{border-bottom:0}
     .ao-list-item:hover{background:rgba(255,107,0,.04)}
-    .ao-nno{font-family:'Playfair Display',serif;color:#dfd6cc;font-size:1.2rem;font-weight:900;line-height:1}
-    .ao-nt{font-size:.82rem;font-weight:600;line-height:1.4}
-    .ao-nm{font-size:.66rem;color:var(--mu);margin-top:.2rem}
+    .ao-nno{font-family:'Playfair Display',serif;color:#dfd6cc;font-size:clamp(0.95rem,2vw,1.2rem);font-weight:900;line-height:1}
+    .ao-nt{font-size:clamp(0.7rem,1.8vw,0.82rem);font-weight:600;line-height:1.4}
+    .ao-nm{font-size:clamp(0.55rem,1.3vw,0.66rem);color:var(--mu);margin-top:0.2rem}
+    @media(max-width:640px){.ao-list-item{padding:0.6rem 0.8rem}.ao-nt{font-size:0.75rem}.ao-nm{font-size:0.55rem}}
+    @media(max-width:480px){.ao-list-item{padding:0.5rem 0.65rem;gap:0.4rem}.ao-nt{font-size:0.7rem}.ao-nno{font-size:0.95rem}.ao-nm{font-size:0.5rem}}
+    @media(max-width:360px){.ao-list-item{padding:0.45rem 0.55rem;gap:0.3rem}.ao-nt{font-size:0.65rem}.ao-nno{font-size:0.85rem}.ao-nm{font-size:0.45rem}}
 
     .ao-table-h,.ao-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:.5rem;padding:.62rem 1rem;align-items:center}
     .ao-table-h{font-size:.64rem;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--bd)}
     .ao-row{font-size:.81rem;border-bottom:1px solid var(--bd)}
+    @media(max-width:768px){.ao-table-h,.ao-row{grid-template-columns:1.8fr 1fr 1fr 1fr;gap:.4rem;padding:.5rem .8rem}}
+    @media(max-width:640px){.ao-table-h,.ao-row{gap:.35rem;font-size:.75rem}}
+    @media(max-width:480px){.ao-table-h,.ao-row{grid-template-columns:1.5fr 1fr 0.8fr 0.8fr;gap:.3rem;padding:.45rem .6rem;font-size:.65rem}}
+    @media(max-width:360px){.ao-table-h,.ao-row{grid-template-columns:1.4fr 1fr 0.7fr 0.7fr;gap:.25rem;padding:.4rem .5rem;font-size:.6rem}}
     .ao-row:last-child{border-bottom:0}
     .ao-p{text-align:right;font-family:'DM Mono',monospace}
     .ao-c{text-align:right;font-weight:700}
     .ao-up{color:var(--em)} .ao-dn{color:var(--rd)} .ao-fl{color:var(--mu)}
-    .ao-market-wrap{padding:.85rem 1rem}
+    .ao-market-wrap{padding:.85rem 1rem;overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;max-width:100%}
+    @media(max-width:480px){.ao-market-wrap{padding:.65rem .7rem}}
+    @media(max-width:360px){.ao-market-wrap{padding:.55rem .6rem}}
     .ao-market-wrap + .ao-market-wrap{border-top:1px solid var(--bd)}
     .ao-market-name{margin:0 0 .6rem;color:#2e7d32;font-size:.98rem;font-weight:700}
-    .ao-market-table{width:100%;border-collapse:collapse;font-size:.82rem;background:#fff;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+    .ao-market-table{width:100%;min-width:620px;border-collapse:collapse;font-size:.82rem;background:#fff;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+    @media(max-width:768px){.ao-market-table{min-width:500px;font-size:.75rem}}
+    @media(max-width:480px){.ao-market-table{min-width:420px;font-size:.65rem}}
+    @media(max-width:360px){.ao-market-table{min-width:360px;font-size:.6rem}}
     .ao-market-table th{background:#fff7ef;color:#6B7280;text-align:left;padding:.52rem;border-bottom:1px solid var(--bd);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase}
     .ao-market-table td{padding:.52rem;border-bottom:1px solid #f3ece3;color:#243852;vertical-align:top}
     .ao-market-table tr:last-child td{border-bottom:0}
@@ -164,36 +202,67 @@
     .ao-market-table td.ao-dn{color:var(--rd) !important;font-weight:700}
     .ao-market-table td.ao-fl{color:var(--mu) !important;font-weight:700}
 
-    .ao-weather{background:linear-gradient(135deg,#1A1A2E,#16213E,#0F3460);color:#fff;border-radius:14px;overflow:hidden;margin-bottom:1rem}
+    .ao-weather{background:linear-gradient(135deg,#1A1A2E,#16213E,#0F3460);color:#fff;border-radius:14px;overflow:hidden;margin-bottom:1rem;width:100%;max-width:100%}
+    @media(max-width:768px){.ao-weather{border-radius:12px}}
+    @media(max-width:480px){.ao-weather{border-radius:10px}}
     .ao-w-top{padding:1rem;border-bottom:1px solid rgba(255,255,255,.12)}
+    @media(max-width:480px){.ao-w-top{padding:.8rem .75rem}}
+    @media(max-width:360px){.ao-w-top{padding:.7rem .6rem}}
     .ao-w-city{font-size:.73rem;opacity:.62}
+    @media(max-width:480px){.ao-w-city{font-size:.65rem}}
+    @media(max-width:360px){.ao-w-city{font-size:.6rem}}
     .ao-w-temp{font-family:'Playfair Display',serif;font-size:2.3rem;line-height:1.1}
+    @media(max-width:768px){.ao-w-temp{font-size:2rem}}
+    @media(max-width:480px){.ao-w-temp{font-size:1.7rem}}
+    @media(max-width:360px){.ao-w-temp{font-size:1.4rem}}
     .ao-w-desc{font-size:.82rem;opacity:.78}
-    .ao-w-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;padding:.8rem 1rem}
+    @media(max-width:480px){.ao-w-desc{font-size:.7rem}}
+    @media(max-width:360px){.ao-w-desc{font-size:.6rem}}
+    .ao-w-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;padding:.8rem 1rem;width:100%;max-width:100%}
+    @media(max-width:768px){.ao-w-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:480px){.ao-w-grid{grid-template-columns:1fr}}
     .ao-w-box{background:rgba(255,255,255,.08);border-radius:8px;padding:.48rem .6rem}
+    @media(max-width:480px){.ao-w-box{padding:.4rem .5rem;border-radius:6px}}
+    @media(max-width:360px){.ao-w-box{padding:.35rem .45rem}}
     .ao-w-box small{display:block;opacity:.58;font-size:.6rem;letter-spacing:.06em}
+    @media(max-width:480px){.ao-w-box small{font-size:.55rem}}
+    @media(max-width:360px){.ao-w-box small{font-size:.5rem}}
     .ao-w-box strong{font-size:.83rem}
+    @media(max-width:480px){.ao-w-box strong{font-size:.7rem}}
+    @media(max-width:360px){.ao-w-box strong{font-size:.6rem}}
     .ao-fc{padding:.75rem 1rem;border-top:1px solid rgba(255,255,255,.12)}
+    @media(max-width:480px){.ao-fc{padding:.6rem .8rem}}
+    @media(max-width:360px){.ao-fc{padding:.5rem .6rem}}
     .ao-f{display:flex;justify-content:space-between;font-size:.74rem;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
+    @media(max-width:480px){.ao-f{font-size:.65rem;padding:.2rem 0}}
+    @media(max-width:360px){.ao-f{font-size:.6rem}}
     .ao-f:last-child{border-bottom:0}
 
-    .ao-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;padding:.8rem}
-    .ao-mini{background:var(--cr);border:1px solid var(--bd);border-radius:9px;padding:.55rem .68rem}
-    .ao-mini div:first-child{font-size:.64rem;color:var(--mu);font-weight:700}
-    .ao-mini div:nth-child(2){font-family:'DM Mono',monospace;font-size:.84rem;font-weight:700;margin:.1rem 0}
-    .ao-mini div:last-child{font-size:.68rem;font-weight:700}
+    .ao-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(0.3rem,1.5vw,0.45rem);padding:clamp(0.6rem,2vw,0.8rem)}
+    .ao-mini{background:var(--cr);border:1px solid var(--bd);border-radius:9px;padding:clamp(0.4rem,1.5vw,0.55rem) clamp(0.5rem,1.5vw,0.68rem)}
+    .ao-mini div:first-child{font-size:clamp(0.55rem,1.3vw,0.64rem);color:var(--mu);font-weight:700}
+    .ao-mini div:nth-child(2){font-family:'DM Mono',monospace;font-size:clamp(0.7rem,1.8vw,0.84rem);font-weight:700;margin:clamp(0.05rem,0.5vw,0.1rem) 0}
+    .ao-mini div:last-child{font-size:clamp(0.55rem,1.3vw,0.68rem);font-weight:700}
+    @media(max-width:640px){.ao-mini-grid{grid-template-columns:1fr;gap:0.3rem;padding:0.6rem}.ao-mini{padding:0.4rem 0.5rem}}
+    @media(max-width:480px){.ao-mini-grid{gap:0.25rem;padding:0.5rem}.ao-mini{padding:0.35rem 0.45rem}.ao-mini div:first-child{font-size:0.5rem}.ao-mini div:nth-child(2){font-size:0.7rem}.ao-mini div:last-child{font-size:0.5rem}}
+    @media(max-width:360px){.ao-mini-grid{padding:0.4rem}.ao-mini{padding:0.3rem 0.4rem}.ao-mini div:first-child{font-size:0.45rem}.ao-mini div:nth-child(2){font-size:0.6rem}.ao-mini div:last-child{font-size:0.45rem}}
 
-    .ao-city-overlay{position:fixed;inset:0;background:rgba(26,26,46,.55);display:none;align-items:flex-start;justify-content:center;padding-top:80px;z-index:999}
+    .ao-city-overlay{position:fixed;inset:0;background:rgba(26,26,46,.55);display:none;align-items:flex-start;justify-content:center;padding-top:80px;z-index:999;overflow-y:auto}
+    @media(max-width:768px){.ao-city-overlay{padding-top:60px}}
+    @media(max-width:480px){.ao-city-overlay{padding-top:40px}}
     .ao-city-overlay.open{display:flex}
     .ao-city-modal{background:#fff;border-radius:14px;width:560px;max-width:95vw;max-height:72vh;display:flex;flex-direction:column;overflow:hidden}
+    @media(max-width:640px){.ao-city-modal{max-width:92vw;max-height:70vh;width:100%}}
+    @media(max-width:480px){.ao-city-modal{max-width:90vw;max-height:65vh;width:100%;border-radius:10px}}
+    @media(max-width:360px){.ao-city-modal{max-width:88vw;max-height:60vh}}
     .ao-city-h{padding:.9rem 1rem;border-bottom:1px solid var(--bd);display:flex;gap:.5rem;align-items:center}
     .ao-city-h input{flex:1;border:1px solid var(--bd);border-radius:9px;padding:.45rem .6rem}
     .ao-city-b{padding:.75rem;overflow:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem}
     .ao-city-btn{border:1px solid var(--bd);background:#fff;border-radius:8px;padding:.44rem .5rem;text-align:left;cursor:pointer;font-size:.78rem}
     .ao-city-btn.on{border-color:var(--sf);background:rgba(255,107,0,.08);color:var(--sf);font-weight:700}
 
-    @media(max-width:1120px){.ao-rates{grid-template-columns:repeat(3,1fr)}.ao-grid{grid-template-columns:1fr}}
-    @media(max-width:640px){.ao-rates{grid-template-columns:repeat(2,1fr)}.ao-city-b{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.ao-city-b{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:480px){.ao-city-b{grid-template-columns:1fr}}
 </style>
 
 <div class="ao-home">
@@ -206,7 +275,7 @@
         <div class="ao-rate"><div class="ao-rate-l" data-k="skg">Silver /kg</div><div class="ao-rate-v" id="aoSKG">—</div><div class="ao-rate-s" id="aoSKGs">—</div></div>
     </div>
 
-    <div class="ao-ticker"><div class="ao-ticker-track" id="aoTicker"><span class="ao-ti">Loading live rates...</span></div></div>
+    <div class="ao-ticker"><div class="ao-ticker-track" id="aoTicker"><span class="ao-ti">Loading...</span></div></div>
 
     <div class="ao-grid">
         <div>
@@ -216,18 +285,18 @@
             </div>
 
             <div class="ao-card">
-                <div class="ao-card-h"><div class="ao-card-t" id="aoMandiTitle">Market Commodity Prices</div><span class="ao-badge">LIVE</span></div>
+                <div class="ao-card-h"><div class="ao-card-t" id="aoMandiTitle">Market Commodity Prices</div><span class="ao-badge ao-badge-live" id="aoLiveMandi">LIVE</span></div>
                 <div class="ao-table-h" id="aoMandiHeader"><div id="aoHc">Commodity</div><div style="text-align:right" id="aoHp">Price</div><div style="text-align:right" id="aoHch">Change</div><div style="text-align:right" id="aoHt">Trend</div></div>
                 <div id="aoMandi"></div>
             </div>
 
             <div class="ao-card">
-                <div class="ao-card-h"><div class="ao-card-t" id="aoCryptoTitle">Cryptocurrency</div><span class="ao-badge">LIVE</span></div>
+                <div class="ao-card-h"><div class="ao-card-t" id="aoCryptoTitle">Cryptocurrency</div><span class="ao-badge ao-badge-live" id="aoLiveCrypto">LIVE</span></div>
                 <div class="ao-mini-grid" id="aoCrypto"></div>
             </div>
 
             <div class="ao-card">
-                <div class="ao-card-h"><div class="ao-card-t" id="aoFxTitle">Currency Exchange</div><span class="ao-badge">LIVE</span></div>
+                <div class="ao-card-h"><div class="ao-card-t" id="aoFxTitle">Currency Exchange</div><span class="ao-badge ao-badge-live" id="aoLiveFx">LIVE</span></div>
                 <div id="aoFx"></div>
             </div>
 
@@ -240,7 +309,7 @@
         <div>
             <div class="ao-weather">
                 <div class="ao-w-top">
-                    <div class="ao-w-city" id="aoWCity">{{ $initialCity?->name ?? 'Washim' }}, MH</div>
+                    <div class="ao-w-city" id="aoWCity">{{ city_display_name($initialCity?->name ?? 'Washim') }}, MH</div>
                     <div class="ao-w-temp" id="aoWTemp">—°C</div>
                     <div class="ao-w-desc" id="aoWDesc">Fetching weather...</div>
                 </div>
@@ -275,26 +344,30 @@
 <script>
 (() => {
     const TR = {
-        en:{tag:'Aajcha bhav, aajcha offer',news:'City News',local:'LOCAL',mandi:'Market Commodity Prices',crypto:'Cryptocurrency',fx:'Currency Exchange',farm:'Farming Notes',season:'SEASONAL',india:'Indian Markets',hc:'Commodity',hp:'Price (/q)',hch:'Change',ht:'Trend',h:'HUMIDITY',w:'WIND',f:'FEELS LIKE',u:'UV INDEX',choose:'Choose Your City',g24:'24K Gold /g',g22:'22K Gold /g',g18:'18K Gold /g',sg:'Silver /g',s10:'Silver /10g',skg:'Silver /kg'},
-        mr:{tag:'आजचा भाव, आजचा ऑफर',news:'शहर बातम्या',local:'स्थानिक',mandi:'बाजार भाव',crypto:'क्रिप्टोकरन्सी',fx:'परकीय चलन',farm:'शेती सल्ला',season:'हंगाम',india:'भारतीय बाजार',hc:'माल',hp:'भाव (/क्विं)',hch:'बदल',ht:'कल',h:'आर्द्रता',w:'वारा',f:'जाणवते',u:'UV निर्देशांक',choose:'तुमचे शहर निवडा',g24:'२४K सोने /ग्रॅम',g22:'२२K सोने /ग्रॅम',g18:'१८K सोने /ग्रॅम',sg:'चांदी /ग्रॅम',s10:'चांदी /१०ग्रॅम',skg:'चांदी /किलो'},
-        hi:{tag:'आज का भाव, आज का ऑफर',news:'शहर समाचार',local:'स्थानीय',mandi:'बाज़ार भाव',crypto:'क्रिप्टोकरेंसी',fx:'विदेशी मुद्रा',farm:'खेती सलाह',season:'मौसमी',india:'भारतीय बाज़ार',hc:'वस्तु',hp:'भाव (/क्विं)',hch:'बदलाव',ht:'रुझान',h:'नमी',w:'हवा',f:'महसूस होता है',u:'UV सूचकांक',choose:'अपना शहर चुनें',g24:'२४K सोना /ग्राम',g22:'२२K सोना /ग्राम',g18:'१८K सोना /ग्राम',sg:'चांदी /ग्राम',s10:'चांदी /१०ग्राम',skg:'चांदी /किलो'}
+        en:{tag:'Aajcha bhav, aajcha offer',news:'City News',local:'LOCAL',mandi:'Market Commodity Prices',crypto:'Cryptocurrency',fx:'Currency Exchange',farm:'Farming Notes',season:'SEASONAL',india:'Indian Markets',hc:'Commodity',hp:'Price (/q)',hch:'Change',ht:'Trend',h:'HUMIDITY',w:'WIND',f:'FEELS LIKE',u:'UV INDEX',choose:'Choose Your City',g24:'24K Gold /g',g22:'22K Gold /g',g18:'18K Gold /g',sg:'Silver /g',s10:'Silver /10g',skg:'Silver /kg',live:'LIVE',loading:'Loading live rates...',noCity:'No city found.',weatherLive:'Live weather data',weatherUnavailable:'Weather unavailable',forecastUnavailable:'Forecast unavailable',noNews:'No local news available.',noMarketWise:'No market-wise data available.',noMarket:'No market data.',cryptoUnavailable:'Crypto feed unavailable.',forexUnavailable:'Forex feed unavailable.',indiaUnavailable:'Indian market feed unavailable right now.',commodity:'Commodity',variety:'Variety',min:'Min',max:'Max',modal:'Modal',date:'Date',change:'Change',trend:'Trend',liveRatesUnavailable:'Live rates temporarily unavailable.'},
+        mr:{tag:'आजचा भाव, आजचा ऑफर',news:'शहर बातम्या',local:'स्थानिक',mandi:'बाजार भाव',crypto:'क्रिप्टोकरन्सी',fx:'परकीय चलन',farm:'शेती सल्ला',season:'हंगाम',india:'भारतीय बाजार',hc:'माल',hp:'भाव (/क्विं)',hch:'बदल',ht:'कल',h:'आर्द्रता',w:'वारा',f:'जाणवते',u:'UV निर्देशांक',choose:'तुमचे शहर निवडा',g24:'२४K सोने /ग्रॅम',g22:'२२K सोने /ग्रॅम',g18:'१८K सोने /ग्रॅम',sg:'चांदी /ग्रॅम',s10:'चांदी /१०ग्रॅम',skg:'चांदी /किलो',live:'लाईव्ह',loading:'लाईव्ह दर लोड होत आहेत...',noCity:'शहर सापडले नाही.',weatherLive:'लाईव्ह हवामान माहिती',weatherUnavailable:'हवामान उपलब्ध नाही',forecastUnavailable:'अंदाज उपलब्ध नाही',noNews:'स्थानिक बातम्या उपलब्ध नाहीत.',noMarketWise:'बाजारनिहाय डेटा उपलब्ध नाही.',noMarket:'बाजार डेटा उपलब्ध नाही.',cryptoUnavailable:'क्रिप्टो फीड उपलब्ध नाही.',forexUnavailable:'फॉरेक्स फीड उपलब्ध नाही.',indiaUnavailable:'भारतीय बाजार फीड सध्या उपलब्ध नाही.',commodity:'माल',variety:'प्रकार',min:'किमान',max:'कमाल',modal:'मोडल',date:'दिनांक',change:'बदल',trend:'कल',liveRatesUnavailable:'लाईव्ह दर तात्पुरते उपलब्ध नाहीत.'},
+        hi:{tag:'आज का भाव, आज का ऑफर',news:'शहर समाचार',local:'स्थानीय',mandi:'बाज़ार भाव',crypto:'क्रिप्टोकरेंसी',fx:'विदेशी मुद्रा',farm:'खेती सलाह',season:'मौसमी',india:'भारतीय बाज़ार',hc:'वस्तु',hp:'भाव (/क्विं)',hch:'बदलाव',ht:'रुझान',h:'नमी',w:'हवा',f:'महसूस होता है',u:'UV सूचकांक',choose:'अपना शहर चुनें',g24:'२४K सोना /ग्राम',g22:'२२K सोना /ग्राम',g18:'१८K सोना /ग्राम',sg:'चांदी /ग्राम',s10:'चांदी /१०ग्राम',skg:'चांदी /किलो',live:'लाइव',loading:'लाइव रेट लोड हो रहे हैं...',noCity:'कोई शहर नहीं मिला।',weatherLive:'लाइव मौसम डेटा',weatherUnavailable:'मौसम उपलब्ध नहीं',forecastUnavailable:'पूर्वानुमान उपलब्ध नहीं',noNews:'स्थानीय समाचार उपलब्ध नहीं।',noMarketWise:'बाज़ार-वार डेटा उपलब्ध नहीं।',noMarket:'बाज़ार डेटा उपलब्ध नहीं।',cryptoUnavailable:'क्रिप्टो फीड उपलब्ध नहीं।',forexUnavailable:'फॉरेक्स फीड उपलब्ध नहीं।',indiaUnavailable:'भारतीय बाज़ार फीड अभी उपलब्ध नहीं है।',commodity:'वस्तु',variety:'किस्म',min:'न्यूनतम',max:'अधिकतम',modal:'मोडल',date:'तारीख',change:'बदलाव',trend:'रुझान',liveRatesUnavailable:'लाइव रेट अस्थायी रूप से उपलब्ध नहीं हैं।'}
     };
 
     const CITY_DATA = @json($cityPayload);
     const DB_FARM = @json($farmingPayload);
     const DB_MARKET = @json($dbMarketPayload);
     const SERVER_GROUPED_MARKET = @json($groupedMarketPayload);
+    const MARKET_SOURCE = @json($marketSource ?? 'database');
     const DB_NEWS = @json($dbNewsPayload);
     const SERVER_METALS = @json($metals ?? []);
     const SERVER_METALS_META = @json($metalsMeta ?? []);
     const SERVER_INDIAN_MARKETS = @json($indianMarkets ?? []);
+    const AGMARK_RESOURCE_ID = '35985678-0d79-46b4-9ed6-6f13308a1d24';
+    const AGMARK_API_KEY = '579b464db66ec23bdd000001c20c0593c63b4ae97757e11d2e3f369e';
     const FALLBACK_WEATHER = { days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], mr:['रवि','सोम','मंगळ','बुध','गुरु','शुक्र','शनि'], hi:['रवि','सोम','मंगल','बुध','गुरु','शुक्र','शनि'] };
 
-    let lang = 'en';
+    let lang = @json(app()->getLocale() ?: 'en');
     let city = {
         name: @json($initialCity?->name ?? 'Washim'),
         lat: Number(@json($initialCity?->latitude ?? 20.1035)) || 20.1035,
         lon: Number(@json($initialCity?->longitude ?? 77.1478)) || 77.1478,
+        district: @json($initialCity?->agmarknet_district ?: $initialCity?->name ?: 'Washim'),
     };
 
     const inr = (n) => '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
@@ -311,6 +384,12 @@
         document.getElementById('aoSeasonLbl').textContent = text('season');
         document.getElementById('aoIndiaTitle').textContent = text('india');
         document.getElementById('aoCityModalTitle').textContent = text('choose');
+        const liveMandi = document.getElementById('aoLiveMandi');
+        const liveCrypto = document.getElementById('aoLiveCrypto');
+        const liveFx = document.getElementById('aoLiveFx');
+        if (liveMandi) liveMandi.textContent = text('live');
+        if (liveCrypto) liveCrypto.textContent = text('live');
+        if (liveFx) liveFx.textContent = text('live');
         document.getElementById('aoHc').textContent = text('hc');
         document.getElementById('aoHp').textContent = text('hp');
         document.getElementById('aoHch').textContent = text('hch');
@@ -331,13 +410,18 @@
         const list = CITY_DATA.filter(c => !q || c.name.toLowerCase().includes(q));
         grid.innerHTML = list.map(c => `
             <button type="button" class="ao-city-btn ${c.name===city.name?'on':''}" data-city="${esc(c.name)}">${esc(c.name)}</button>
-        `).join('') || '<div style="grid-column:1/-1;color:#6B7280;padding:.8rem">No city found.</div>';
+        `).join('') || `<div style="grid-column:1/-1;color:#6B7280;padding:.8rem">${esc(text('noCity'))}</div>`;
 
         grid.querySelectorAll('.ao-city-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const found = CITY_DATA.find(c => c.name === btn.dataset.city);
                 if (!found) return;
-                city = { name: found.name, lat: Number(found.lat) || city.lat, lon: Number(found.lon) || city.lon };
+                city = {
+                    name: found.name,
+                    lat: Number(found.lat) || city.lat,
+                    lon: Number(found.lon) || city.lon,
+                    district: found.district || found.name || city.name,
+                };
                 document.getElementById('aoWCity').textContent = `${city.name}, MH`;
                 document.getElementById('aoNewsTitle').textContent = `${text('news')} — ${city.name}`;
                 closeAoCity();
@@ -417,7 +501,7 @@
             const sg = (silverOz / 31.1035) * usdInr;
             renderMetalsFromPerGram(g24, sg, usdInr, goldOz, silverOz);
         } catch {
-            document.getElementById('aoTicker').innerHTML = '<span class="ao-ti">Live rates temporarily unavailable.</span>';
+            document.getElementById('aoTicker').innerHTML = `<span class="ao-ti">${esc(text('liveRatesUnavailable'))}</span>`;
         }
     }
 
@@ -427,7 +511,7 @@
             const d = await r.json();
             const c = d.current || {};
             document.getElementById('aoWTemp').textContent = `${Math.round(c.temperature_2m ?? 0)}°C`;
-            document.getElementById('aoWDesc').textContent = 'Live weather data';
+            document.getElementById('aoWDesc').textContent = text('weatherLive');
             document.getElementById('aoWH').textContent = `${Math.round(c.relative_humidity_2m ?? 0)}%`;
             document.getElementById('aoWW').textContent = `${Math.round(c.wind_speed_10m ?? 0)} km/h`;
             document.getElementById('aoWF').textContent = `${Math.round(c.apparent_temperature ?? 0)}°C`;
@@ -444,9 +528,9 @@
                 const dt = new Date(days[i]);
                 fc += `<div class="ao-f"><span>${labels[dt.getDay()]} ${dt.getDate()}</span><span><strong>${Math.round(tmax[i])}°</strong> / ${Math.round(tmin[i])}°</span></div>`;
             }
-            document.getElementById('aoFC').innerHTML = fc || '<div class="ao-f">Forecast unavailable</div>';
+            document.getElementById('aoFC').innerHTML = fc || `<div class="ao-f">${esc(text('forecastUnavailable'))}</div>`;
         } catch {
-            document.getElementById('aoWDesc').textContent = 'Weather unavailable';
+            document.getElementById('aoWDesc').textContent = text('weatherUnavailable');
         }
     }
 
@@ -487,7 +571,7 @@
     function renderNews(items){
         const list = (items || []).slice(0, 6);
         if (!list.length) {
-            document.getElementById('aoNews').innerHTML = '<div class="ao-list-item">No local news available.</div>';
+            document.getElementById('aoNews').innerHTML = `<div class="ao-list-item">${esc(text('noNews'))}</div>`;
             return;
         }
         document.getElementById('aoNews').innerHTML = list.map((n, i) => `
@@ -502,12 +586,28 @@
     }
 
     async function fetchCommodities(){
-        if (SERVER_GROUPED_MARKET.length) {
+        if (MARKET_SOURCE === 'agmarknet' && SERVER_GROUPED_MARKET.length) {
             renderGroupedCommodities(SERVER_GROUPED_MARKET);
             return;
         }
+
+        const buildAgmarkUrl = (district = '') => {
+            const fromDate = new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+            const toDate = new Date().toISOString().slice(0, 10);
+            const params = new URLSearchParams({
+                'api-key': AGMARK_API_KEY,
+                'format': 'json',
+                'filters[State]': 'Maharashtra',
+                'sort[Market]': 'desc',
+                'range[Arrival_Date][gte]': fromDate,
+                'range[Arrival_Date][lte]': toDate,
+            });
+            if (district) params.set('filters[District]', district);
+            return `https://api.data.gov.in/resource/${AGMARK_RESOURCE_ID}?${params.toString()}`;
+        };
+
         try {
-            const cityUrl = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=579b464db66ec23bdd000001cdd3946e44ce4aab825ef5571310&format=json&filters[State.keyword]=Maharashtra&filters[District.keyword]=${encodeURIComponent(city.name)}&limit=20&sort[Arrival_Date]=desc`;
+            const cityUrl = buildAgmarkUrl(city.district || city.name);
             const r1 = await fetch(cityUrl);
             const d1 = await r1.json();
             if (d1.records?.length) {
@@ -515,12 +615,16 @@
                 if (rows.length) return renderCommodities(rows);
             }
 
-            const stateUrl = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=579b464db66ec23bdd000001cdd3946e44ce4aab825ef5571310&format=json&filters[State.keyword]=Maharashtra&limit=20&sort[Arrival_Date]=desc';
+            const stateUrl = buildAgmarkUrl('');
             const r2 = await fetch(stateUrl);
             const d2 = await r2.json();
             const rows2 = normalizeMandiRows(d2.records || []);
             if (rows2.length) return renderCommodities(rows2);
         } catch {}
+        if (SERVER_GROUPED_MARKET.length) {
+            renderGroupedCommodities(SERVER_GROUPED_MARKET);
+            return;
+        }
         renderCommodities(DB_MARKET);
     }
 
@@ -568,7 +672,7 @@
         if (header) header.style.display = 'none';
 
         if (!groups || !groups.length) {
-            document.getElementById('aoMandi').innerHTML = '<div class="ao-row"><div>No market-wise data available.</div></div>';
+            document.getElementById('aoMandi').innerHTML = `<div class="ao-row"><div>${esc(text('noMarketWise'))}</div></div>`;
             return;
         }
 
@@ -578,14 +682,14 @@
                 <table class="ao-market-table">
                     <thead>
                         <tr>
-                            <th>Commodity</th>
-                            <th>Variety</th>
-                            <th>Min</th>
-                            <th>Max</th>
-                            <th>Modal</th>
-                            <th>Date</th>
-                            <th>Change</th>
-                            <th>Trend</th>
+                            <th>${esc(text('commodity'))}</th>
+                            <th>${esc(text('variety'))}</th>
+                            <th>${esc(text('min'))}</th>
+                            <th>${esc(text('max'))}</th>
+                            <th>${esc(text('modal'))}</th>
+                            <th>${esc(text('date'))}</th>
+                            <th>${esc(text('change'))}</th>
+                            <th>${esc(text('trend'))}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -691,7 +795,7 @@
         const header = document.getElementById('aoMandiHeader');
         if (header) header.style.display = 'grid';
         if (!rows || !rows.length) {
-            document.getElementById('aoMandi').innerHTML = '<div class="ao-row"><div>No market data.</div></div>';
+            document.getElementById('aoMandi').innerHTML = `<div class="ao-row"><div>${esc(text('noMarket'))}</div></div>`;
             return;
         }
         document.getElementById('aoMandi').innerHTML = rows.map(r => {
@@ -717,7 +821,7 @@
                 return `<div class="ao-mini"><div>${symbol}</div><div>${p > 100 ? inr(p.toFixed(0)) : inr(p.toFixed(4))}</div><div class="${ch>=0?'ao-up':'ao-dn'}">${ch>=0?'▲':'▼'} ${Math.abs(ch).toFixed(2)}%</div></div>`;
             }).join('');
         } catch {
-            document.getElementById('aoCrypto').innerHTML = '<div class="ao-mini" style="grid-column:1/-1">Crypto feed unavailable.</div>';
+            document.getElementById('aoCrypto').innerHTML = `<div class="ao-mini" style="grid-column:1/-1">${esc(text('cryptoUnavailable'))}</div>`;
         }
     }
 
@@ -731,7 +835,7 @@
                     <div><strong>${f} 1 ${c}</strong></div><div style="font-family:'DM Mono',monospace">${inr((1 / (d.rates[c] || 1)).toFixed(2))}</div>
                 </div>`).join('');
         } catch {
-            document.getElementById('aoFx').innerHTML = '<div style="padding:.8rem 1rem">Forex feed unavailable.</div>';
+            document.getElementById('aoFx').innerHTML = `<div style="padding:.8rem 1rem">${esc(text('forexUnavailable'))}</div>`;
         }
     }
 
@@ -768,7 +872,7 @@
 
     function renderIndianMarkets(indices){
         if (!indices || !indices.length) {
-            document.getElementById('aoIndia').innerHTML = '<div style="padding:.8rem 1rem">Indian market feed unavailable right now.</div>';
+            document.getElementById('aoIndia').innerHTML = `<div style="padding:.8rem 1rem">${esc(text('indiaUnavailable'))}</div>`;
             return;
         }
         document.getElementById('aoIndia').innerHTML = indices.map(r => `
@@ -794,6 +898,7 @@
 
     async function init(){
         applyLang();
+        document.getElementById('aoTicker').innerHTML = `<span class="ao-ti">${esc(text('loading'))}</span>`;
         document.getElementById('aoWCity').textContent = `${city.name}, MH`;
         renderFarm();
         await Promise.allSettled([fetchMetals(), fetchWeather(), fetchNews(), fetchCommodities(), fetchCrypto(), fetchForex(), fetchIndianMarkets()]);

@@ -55,3 +55,44 @@ if (!function_exists('truncate_text')) {
         return mb_substr($text, 0, $length - mb_strlen($omission)) . $omission;
     }
 }
+
+if (!function_exists('city_display_name')) {
+    /**
+     * Translate city names for display only. Raw DB values remain unchanged for queries/APIs.
+     */
+    function city_display_name($city): string
+    {
+        $value = is_object($city) ? (string) ($city->name ?? '') : (string) $city;
+        $value = trim($value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        $normalized = strtolower((string) preg_replace('/[^a-z0-9]+/', ' ', $value));
+        $normalized = trim(preg_replace('/\s+/', ' ', $normalized));
+
+        $map = [
+            'washim' => 'city_washim',
+            'washim main' => 'city_washim',
+            'mangrulpir' => 'city_mangrulpir',
+            'karanja' => 'city_karanja',
+            'karanja apmc' => 'city_karanja',
+            'amravati' => 'city_amravati',
+            'shelubajar' => 'city_shelubajar',
+            'akola' => 'city_akola',
+            'pune' => 'city_pune',
+            'surat' => 'city_surat',
+        ];
+
+        $uiKey = $map[$normalized] ?? null;
+
+        if (!$uiKey) {
+            return $value;
+        }
+
+        $translated = __('ui.' . $uiKey);
+
+        return $translated !== 'ui.' . $uiKey ? $translated : $value;
+    }
+}

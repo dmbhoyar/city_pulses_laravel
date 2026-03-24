@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\Job;
 use App\Models\Market;
 use App\Services\NewsClient;
+use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -84,6 +85,71 @@ class FarmingController extends Controller
         }
 
         $topCommodities = $this->buildCommoditySummary($marketRows);
+
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            $farmings->getCollection()->transform(function ($item) use ($locale) {
+                if (is_string($item->title) && trim($item->title) !== '') {
+                    $item->title = TextTranslationService::translate($item->title, $locale);
+                }
+
+                if (is_string($item->content) && trim($item->content) !== '') {
+                    $item->content = TextTranslationService::translate($item->content, $locale);
+                }
+
+                return $item;
+            });
+
+            $agriJobs->transform(function ($item) use ($locale) {
+                if (is_string($item->title) && trim($item->title) !== '') {
+                    $item->title = TextTranslationService::translate($item->title, $locale);
+                }
+
+                if (is_string($item->description) && trim($item->description) !== '') {
+                    $item->description = TextTranslationService::translate($item->description, $locale);
+                }
+
+                if (is_string($item->category) && trim($item->category) !== '') {
+                    $item->category = TextTranslationService::translate($item->category, $locale);
+                }
+
+                return $item;
+            });
+
+            $marketRows->transform(function ($item) use ($locale) {
+                if (is_string($item->commodity) && trim($item->commodity) !== '') {
+                    $item->commodity = TextTranslationService::translate($item->commodity, $locale);
+                }
+
+                if (is_string($item->district) && trim($item->district) !== '') {
+                    $item->district = TextTranslationService::translate($item->district, $locale);
+                }
+
+                return $item;
+            });
+
+            foreach ($cityNews as $index => $item) {
+                if (!is_array($item)) {
+                    continue;
+                }
+
+                if (isset($item['title']) && is_string($item['title']) && trim($item['title']) !== '') {
+                    $cityNews[$index]['title'] = TextTranslationService::translate($item['title'], $locale);
+                }
+
+                if (isset($item['source']) && is_string($item['source']) && trim($item['source']) !== '') {
+                    $cityNews[$index]['source'] = TextTranslationService::translate($item['source'], $locale);
+                }
+            }
+
+            $topCommodities = $topCommodities->map(function (array $row) use ($locale) {
+                if (isset($row['name']) && is_string($row['name']) && trim($row['name']) !== '') {
+                    $row['name'] = TextTranslationService::translate($row['name'], $locale);
+                }
+
+                return $row;
+            });
+        }
 
         return view('farming.index', compact(
             'farmings',

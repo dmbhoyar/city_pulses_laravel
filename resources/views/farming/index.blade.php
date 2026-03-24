@@ -97,33 +97,106 @@
     .farm-stats{grid-template-columns:repeat(2,1fr)}
     .farm-scheme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
+
+  @media(max-width:960px){
+    .farm-stats{grid-template-columns:repeat(2,1fr);gap:12px}
+    .farm-articles{grid-template-columns:1fr}
+    .farm-job-list{grid-template-columns:1fr}
+  }
+
   @media(max-width:768px){
-    .farm-hero-grid{grid-template-columns:1fr}
+    .farm-wrap{padding:12px 10px 20px}
+    .farm-hero{padding:14px 12px}
+    .farm-hero h1{font-size:clamp(1.25rem,6vw,1.8rem)}
+    .farm-hero p{font-size:.9rem;line-height:1.5}
+    .farm-hero-grid{grid-template-columns:1fr;gap:10px}
+    .farm-search input, .farm-city-select{font-size:14px;padding:9px 10px}
+    .farm-search button{padding:0 12px;font-size:12px}
+    .farm-stats{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+    .farm-stat{padding:10px 12px}
+    .farm-stat .n{font-size:1.2rem}
+    .farm-stat .l{font-size:.7rem}
     .farm-articles,.farm-scheme-grid,.farm-job-list{grid-template-columns:1fr}
-    .farm-stats{grid-template-columns:1fr}
-    .farm-calendar{grid-template-columns:1fr repeat(6,1fr)}
-    .farm-wrap{padding:12px 10px 24px}
-    .farm-hero{padding:16px 14px}
-    .farm-hero h1{font-size:1.45rem}
-    .farm-card-h h3{font-size:.92rem}
+    .farm-card-h h3{font-size:.88rem;font-size:clamp(.82rem,2.5vw,.95rem)}
+    .farm-article h4{font-size:.9rem;margin-bottom:5px}
+    .farm-article p{font-size:.78rem}
+    .farm-scheme h5{font-size:.82rem}
+    .farm-scheme p{font-size:.72rem}
+    .farm-calendar{grid-template-columns:80px repeat(6,1fr)}
+    .farm-cal-head{font-size:.6rem}
+    .farm-cal-crop{font-size:.7rem}
+    .farm-table{font-size:.75rem;min-width:100%;overflow-x:auto}
+    .farm-table td, .farm-table th{padding:6px 7px}
+  }
+
+  @media(max-width:640px){
+    .farm-wrap{padding:10px 8px 16px}
+    .farm-hero{padding:12px 10px;margin-bottom:12px}
+    .farm-hero h1{font-size:clamp(1.1rem,5vw,1.5rem);margin-bottom:6px}
+    .farm-hero p{font-size:.85rem;max-width:100%}
+    .farm-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
+    .farm-stat{padding:8px 10px}
+    .farm-stat .n{font-size:1rem}
+    .farm-stat .l{font-size:.65rem;letter-spacing:.5px}
+    .farm-card{border-radius:10px}
+    .farm-card-h{padding:10px 12px;font-size:.85rem}
+    .farm-card-b{padding:10px}
+    .farm-article{padding:9px}
+    .farm-article h4{font-size:.85rem}
+    .farm-article p{font-size:.75rem;line-height:1.4}
+    .farm-meta{font-size:.68rem}
+    .farm-scheme{padding:8px}
+    .farm-scheme:hover{transform:translateY(-1px)}
+    .farm-job{padding:8px}
+    .farm-job h5{font-size:.85rem}
+    .farm-job p{font-size:.73rem}
+    .farm-scheme-grid{gap:8px}
+  }
+
+  @media(max-width:480px){
+    .farm-wrap{padding:8px 6px 12px}
+    .farm-hero{padding:10px 8px}
+    .farm-hero h1{font-size:clamp(.95rem,4vw,1.25rem)}
+    .farm-hero p{font-size:.8rem}
+    .farm-search, .farm-city-select{font-size:13px}
+    .farm-search input{padding:8px}
+    .farm-stats{grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+    .farm-stat{padding:6px 8px}
+    .farm-stat .n{font-size:.95rem}
+    .farm-stat .l{font-size:.6rem}
+    .farm-card-h{padding:8px 10px}
+    .farm-card-b{padding:8px}
+    .farm-article{padding:7px}
+    .farm-articles{gap:8px}
+    .farm-scheme-grid{grid-template-columns:1fr;gap:6px}
+    .farm-scheme{padding:7px}
+  }
+
+  @media(max-width:360px){
+    .farm-wrap{padding:6px 4px 10px}
+    .farm-hero{padding:8px 6px}
+    .farm-hero h1{font-size:clamp(.85rem,3vw,1.1rem);margin-bottom:4px}
+    .farm-hero p{font-size:.75rem;margin:0}
+    .farm-stats{gap:4px}
+    .farm-card-h, .farm-card-b{padding:6px}
   }
 </style>
 
 @php
   $schemes = [
-    ['name' => 'PM-KISAN', 'desc' => '₹6,000/year support in 3 installments for eligible farmer families.', 'link' => 'https://pmkisan.gov.in'],
-    ['name' => 'PM-KUSUM', 'desc' => 'Solar pump support with subsidy for irrigation and lower energy cost.', 'link' => 'https://mnre.gov.in'],
-    ['name' => 'PMFBY', 'desc' => 'Crop insurance for weather damage, pests, and production loss.', 'link' => 'https://pmfby.gov.in'],
-    ['name' => 'Kisan Credit Card', 'desc' => 'Working capital credit line for seasonal farm operations.', 'link' => 'https://www.nabard.org'],
-    ['name' => 'e-NAM', 'desc' => 'National agri market access and better mandi price discovery.', 'link' => 'https://enam.gov.in'],
-    ['name' => 'National Bee Mission', 'desc' => 'Support for beekeeping, equipment and training.', 'link' => 'https://nbb.gov.in'],
+    ['name' => 'PM-KISAN', 'desc' => __('ui.scheme_pm_kisan_desc'), 'link' => 'https://pmkisan.gov.in'],
+    ['name' => 'PM-KUSUM', 'desc' => __('ui.scheme_pm_kusum_desc'), 'link' => 'https://mnre.gov.in'],
+    ['name' => 'PMFBY', 'desc' => __('ui.scheme_pmfby_desc'), 'link' => 'https://pmfby.gov.in'],
+    ['name' => __('ui.kisan_credit_card'), 'desc' => __('ui.scheme_kcc_desc'), 'link' => 'https://www.nabard.org'],
+    ['name' => 'e-NAM', 'desc' => __('ui.scheme_enam_desc'), 'link' => 'https://enam.gov.in'],
+    ['name' => __('ui.national_bee_mission'), 'desc' => __('ui.scheme_nbm_desc'), 'link' => 'https://nbb.gov.in'],
   ];
 
   $cropRows = [
-    ['Wheat', [0,0,0,0,0,0,0,0,0,1,1,2]],
-    ['Soybean', [0,0,0,0,0,1,1,2,2,0,0,0]],
-    ['Cotton', [0,0,0,0,1,1,1,0,2,0,0,0]],
-    ['Onion', [1,2,0,0,0,0,1,1,1,0,2,0]],
+    [__('ui.crop_wheat'), [0,0,0,0,0,0,0,0,0,1,1,2]],
+    [__('ui.crop_soybean'), [0,0,0,0,0,1,1,2,2,0,0,0]],
+    [__('ui.crop_cotton'), [0,0,0,0,1,1,1,0,2,0,0,0]],
+    [__('ui.crop_onion'), [1,2,0,0,0,0,1,1,1,0,2,0]],
   ];
 
   $monthLabels = ['J','F','M','A','M','J','J','A','S','O','N','D'];
@@ -131,20 +204,20 @@
 
 <div class="farm-wrap">
   <section class="farm-hero">
-    <h1>🌾 Smart Farming — {{ $selectedCityName ?: 'All Cities' }}</h1>
-    <p>Reference-style farming module integrated with your project data: city-wise farming articles, mandi prices, agri jobs, local agri news, schemes, and seasonal planning.</p>
+    <h1>🌾 {{ __('ui.smart_farming') }} — {{ $selectedCityName ? city_display_name($selectedCityName) : __('ui.all_cities') }}</h1>
+    <p>{{ __('ui.farming_intro') }}</p>
     <div class="farm-hero-grid">
       <form class="farm-search" method="GET" action="{{ route('farming.index') }}">
         <input type="hidden" name="city_id" value="{{ $selectedCityId ?: '' }}">
-        <input type="text" name="q" value="{{ $q }}" placeholder="Search farming topics, crops, irrigation, organic...">
-        <button type="submit">Search</button>
+        <input type="text" name="q" value="{{ $q }}" placeholder="{{ __('ui.farming_search_placeholder') }}">
+        <button type="submit">{{ __('ui.search') }}</button>
       </form>
       <form method="GET" action="{{ route('farming.index') }}">
         <input type="hidden" name="q" value="{{ $q }}">
         <select name="city_id" class="farm-city-select" onchange="this.form.submit()">
-          <option value="">📍 All Cities</option>
+          <option value="">📍 {{ __('ui.all_cities') }}</option>
           @foreach($cities as $city)
-            <option value="{{ $city->id }}" {{ (int) ($selectedCityId ?? 0) === (int) $city->id ? 'selected' : '' }}>📍 {{ $city->name }}</option>
+            <option value="{{ $city->id }}" {{ (int) ($selectedCityId ?? 0) === (int) $city->id ? 'selected' : '' }}>📍 {{ city_display_name($city->name) }}</option>
           @endforeach
         </select>
       </form>
@@ -152,33 +225,33 @@
   </section>
 
   <section class="farm-stats">
-    <div class="farm-stat"><div class="n">{{ $farmings->total() }}</div><div class="l">Filtered Articles</div></div>
-    <div class="farm-stat"><div class="n">{{ $cityArticles }}</div><div class="l">{{ $selectedCityName ?: 'All City' }} Articles</div></div>
-    <div class="farm-stat"><div class="n">{{ $marketRows->count() }}</div><div class="l">Mandi Rows</div></div>
-    <div class="farm-stat"><div class="n">{{ $agriJobs->count() }}</div><div class="l">Agri Jobs</div></div>
+    <div class="farm-stat"><div class="n">{{ $farmings->total() }}</div><div class="l">{{ __('ui.filtered_articles') }}</div></div>
+    <div class="farm-stat"><div class="n">{{ $cityArticles }}</div><div class="l">{{ __('ui.city_articles_count', ['city' => $selectedCityName ? city_display_name($selectedCityName) : __('ui.all_cities')]) }}</div></div>
+    <div class="farm-stat"><div class="n">{{ $marketRows->count() }}</div><div class="l">{{ __('ui.mandi_rows') }}</div></div>
+    <div class="farm-stat"><div class="n">{{ $agriJobs->count() }}</div><div class="l">{{ __('ui.agri_jobs') }}</div></div>
   </section>
 
   <section class="farm-main">
     <div>
       <div class="farm-card" id="articles">
         <div class="farm-card-h">
-          <h3>📰 City Farming Articles</h3>
-          <a href="{{ route('farming.create') }}" class="toggle-btn">+ Share Blog</a>
+          <h3>📰 {{ __('ui.city_farming_articles') }}</h3>
+          <a href="{{ route('farming.create') }}" class="toggle-btn">+ {{ __('ui.share_blog') }}</a>
         </div>
         <div class="farm-card-b">
-          <div class="farm-api-badge" style="margin-bottom:10px">Dynamic · City-wise blogs by users</div>
+          <div class="farm-api-badge" style="margin-bottom:10px">{{ __('ui.dynamic_citywise_blogs') }}</div>
           <div class="farm-articles">
             @forelse($farmings as $f)
               <article class="farm-article">
                 <h4><a href="{{ route('farming.show', $f) }}">{{ $f->title }}</a></h4>
                 <p>{{ \Illuminate\Support\Str::limit(strip_tags((string) $f->content), 170) }}</p>
                 <div class="farm-meta">
-                  <span>✍️ {{ $f->author_name ?: 'Farmer' }} · 📍 {{ $f->city?->name ?: 'City not set' }}</span>
+                  <span>✍️ {{ $f->author_name ?: __('ui.farmer') }} · 📍 {{ $f->city?->name ?: __('ui.city_not_set') }}</span>
                   <span>{{ $f->created_at?->format('d M Y') }}</span>
                 </div>
               </article>
             @empty
-              <p style="margin:0;color:var(--farm-muted)">No farming articles found for this city/filter.</p>
+              <p style="margin:0;color:var(--farm-muted)">{{ __('ui.no_farming_articles_city_filter') }}</p>
             @endforelse
           </div>
           @if($farmings->count())
@@ -188,14 +261,14 @@
       </div>
 
       <div class="farm-card" id="schemes" style="margin-top:14px">
-        <div class="farm-card-h"><h3>🏛️ Government Schemes</h3></div>
+        <div class="farm-card-h"><h3>🏛️ {{ __('ui.govt_schemes') }}</h3></div>
         <div class="farm-card-b">
           <div class="farm-scheme-grid">
             @foreach($schemes as $scheme)
               <a class="farm-scheme" href="{{ $scheme['link'] }}" target="_blank" rel="noopener">
                 <h5>{{ $scheme['name'] }}</h5>
                 <p>{{ $scheme['desc'] }}</p>
-                <div class="go">Open Official Site →</div>
+                <div class="go">{{ __('ui.open_official_site') }} →</div>
               </a>
             @endforeach
           </div>
@@ -204,30 +277,30 @@
 
       <div class="farm-card" id="mandi" style="margin-top:14px">
         <div class="farm-card-h">
-          <h3>💰 Mandi Prices ({{ $selectedCityName ?: 'Latest' }})</h3>
-          <span class="farm-api-badge" id="farmMandiSource">DB + Live API</span>
+          <h3>💰 {{ __('ui.mandi_prices') }} ({{ $selectedCityName ? city_display_name($selectedCityName) : __('ui.latest') }})</h3>
+          <span class="farm-api-badge" id="farmMandiSource">{{ __('ui.db_live_api') }}</span>
         </div>
         <div class="farm-card-b">
           <div class="farm-table-wrap">
             <table class="farm-table">
               <thead>
                 <tr>
-                  <th>Commodity</th><th>City</th><th>District</th><th>Modal</th><th>Min</th><th>Max</th><th>Date</th>
+                  <th>{{ __('ui.commodity') }}</th><th>{{ __('ui.city_label') }}</th><th>{{ __('ui.district') }}</th><th>{{ __('ui.modal') }}</th><th>{{ __('ui.min') }}</th><th>{{ __('ui.max') }}</th><th>{{ __('ui.date') }}</th>
                 </tr>
               </thead>
               <tbody>
                 @forelse($marketRows as $row)
                   <tr>
-                    <td>{{ $row->commodity ?: '—' }}</td>
-                    <td>{{ $row->city ?: ($row->city_rel?->name ?: '—') }}</td>
-                    <td>{{ $row->district ?: '—' }}</td>
-                    <td>₹{{ $row->modal_price ? number_format((float) $row->modal_price, 0) : '—' }}</td>
-                    <td>₹{{ $row->min_price ? number_format((float) $row->min_price, 0) : '—' }}</td>
-                    <td>₹{{ $row->max_price ? number_format((float) $row->max_price, 0) : '—' }}</td>
-                    <td>{{ $row->price_date?->format('d M Y') ?: '—' }}</td>
+                    <td>{{ $row->commodity ?: __('ui.dash') }}</td>
+                    <td>{{ $row->city ?: ($row->city_rel?->name ?: __('ui.dash')) }}</td>
+                    <td>{{ $row->district ?: __('ui.dash') }}</td>
+                    <td>₹{{ $row->modal_price ? number_format((float) $row->modal_price, 0) : __('ui.dash') }}</td>
+                    <td>₹{{ $row->min_price ? number_format((float) $row->min_price, 0) : __('ui.dash') }}</td>
+                    <td>₹{{ $row->max_price ? number_format((float) $row->max_price, 0) : __('ui.dash') }}</td>
+                    <td>{{ $row->price_date?->format('d M Y') ?: __('ui.dash') }}</td>
                   </tr>
                 @empty
-                  <tr><td colspan="7">No mandi data available for this city right now.</td></tr>
+                  <tr><td colspan="7">{{ __('ui.no_mandi_data_city') }}</td></tr>
                 @endforelse
               </tbody>
               <tbody id="farmMandiLiveBody" style="display:none"></tbody>
@@ -237,7 +310,7 @@
       </div>
 
       <div class="farm-card" id="jobs" style="margin-top:14px">
-        <div class="farm-card-h"><h3>💼 Agriculture Jobs (City Wise)</h3></div>
+        <div class="farm-card-h"><h3>💼 {{ __('ui.agriculture_jobs_city_wise') }}</h3></div>
         <div class="farm-card-b">
           <div class="farm-job-list">
             @forelse($agriJobs as $job)
@@ -245,20 +318,20 @@
                 <h5>{{ $job->title }}</h5>
                 <p>{{ \Illuminate\Support\Str::limit(strip_tags((string) $job->description), 120) }}</p>
                 <div class="farm-meta" style="margin-bottom:4px">
-                  <span>📍 {{ $job->city?->name ?: ($job->location ?: 'City not set') }}</span>
-                  <span>{{ $job->category ?: 'General' }}</span>
+                  <span>📍 {{ $job->city?->name ?: ($job->location ?: __('ui.city_not_set')) }}</span>
+                  <span>{{ $job->category ?: __('ui.general') }}</span>
                 </div>
-                <a href="{{ route('jobs.show', $job) }}">View Job →</a>
+                <a href="{{ route('jobs.show', $job) }}">{{ __('ui.view_job') }} →</a>
               </div>
             @empty
-              <p style="margin:0;color:var(--farm-muted)">No agriculture jobs found for this city yet.</p>
+              <p style="margin:0;color:var(--farm-muted)">{{ __('ui.no_agriculture_jobs_city') }}</p>
             @endforelse
           </div>
         </div>
       </div>
 
       <div class="farm-card" id="calendar" style="margin-top:14px">
-        <div class="farm-card-h"><h3>📅 Seasonal Crop Calendar</h3></div>
+        <div class="farm-card-h"><h3>📅 {{ __('ui.crop_calendar') }}</h3></div>
         <div class="farm-card-b">
           <div class="farm-calendar" style="margin-bottom:8px">
             <div></div>
@@ -272,62 +345,62 @@
               @endforeach
             @endforeach
           </div>
-          <div style="font-size:.76rem;color:var(--farm-muted)">Green = sowing/growth, Yellow = harvest window. Adjust by local rainfall and soil condition.</div>
+          <div style="font-size:.76rem;color:var(--farm-muted)">{{ __('ui.crop_calendar_legend') }}</div>
         </div>
       </div>
     </div>
 
     <aside>
       <div class="farm-card" id="weather">
-        <div class="farm-card-h"><h3>🌦️ Farm Weather</h3></div>
+        <div class="farm-card-h"><h3>🌦️ {{ __('ui.farm_weather') }}</h3></div>
         <div class="farm-card-b">
           <div class="farm-weather">
-            <div style="font-size:.72rem;opacity:.86">{{ $selectedCityName ?: 'Selected City' }}</div>
+            <div style="font-size:.72rem;opacity:.86">{{ $selectedCityName ? city_display_name($selectedCityName) : __('ui.selected_city') }}</div>
             <div style="font-size:1.4rem;font-weight:800" id="farmTemp">--°C</div>
-            <div style="font-size:.82rem;opacity:.92" id="farmCond">Loading condition...</div>
-            <div class="row"><span>Humidity</span><strong id="farmHum">--%</strong></div>
-            <div class="row"><span>Wind</span><strong id="farmWind">-- km/h</strong></div>
-            <div class="row"><span>Rain chance</span><strong id="farmRain">--%</strong></div>
+            <div style="font-size:.82rem;opacity:.92" id="farmCond">{{ __('ui.loading_condition') }}</div>
+            <div class="row"><span>{{ __('ui.humidity') }}</span><strong id="farmHum">--%</strong></div>
+            <div class="row"><span>{{ __('ui.wind') }}</span><strong id="farmWind">-- km/h</strong></div>
+            <div class="row"><span>{{ __('ui.rain_chance') }}</span><strong id="farmRain">--%</strong></div>
           </div>
-          <div style="font-size:.74rem;color:var(--farm-muted)">Auto city coordinates from your city settings.</div>
+          <div style="font-size:.74rem;color:var(--farm-muted)">{{ __('ui.auto_city_coordinates') }}</div>
         </div>
       </div>
 
       <div class="farm-card" style="margin-top:12px">
-        <div class="farm-card-h"><h3>📊 Commodity Snapshot</h3></div>
+        <div class="farm-card-h"><h3>📊 {{ __('ui.commodity_snapshot') }}</h3></div>
         <div class="farm-card-b">
           @forelse($topCommodities as $commodity)
             <div class="farm-kpi">
               <span>{{ $commodity['name'] }}</span>
-              <strong>₹{{ $commodity['modal_price'] ? number_format((float) $commodity['modal_price'], 0) : '—' }}</strong>
+              <strong>₹{{ $commodity['modal_price'] ? number_format((float) $commodity['modal_price'], 0) : __('ui.dash') }}</strong>
             </div>
           @empty
-            <div style="font-size:.78rem;color:var(--farm-muted)">No commodity summary available.</div>
+            <div style="font-size:.78rem;color:var(--farm-muted)">{{ __('ui.no_commodity_summary') }}</div>
           @endforelse
         </div>
       </div>
 
       <div class="farm-card" style="margin-top:12px">
         <div class="farm-card-h">
-          <h3>📰 City Agriculture News</h3>
+          <h3>📰 {{ __('ui.city_agriculture_news') }}</h3>
           <span class="farm-api-badge">Google News RSS</span>
         </div>
         <div class="farm-card-b">
           @forelse($cityNews as $news)
             <article class="farm-news-item">
               <a href="{{ $news['link'] }}" target="_blank" rel="noopener">{{ $news['title'] }}</a>
-              <div class="farm-news-meta">{{ $news['source'] ?: 'News' }} · {{ $news['pubDate'] ?: 'Latest' }}</div>
+              <div class="farm-news-meta">{{ $news['source'] ?: __('ui.news') }} · {{ $news['pubDate'] ?: __('ui.latest') }}</div>
             </article>
           @empty
-            <div style="font-size:.78rem;color:var(--farm-muted)">City-specific agriculture news not available right now.</div>
+            <div style="font-size:.78rem;color:var(--farm-muted)">{{ __('ui.city_agri_news_unavailable') }}</div>
           @endforelse
 
           <div class="farm-news-live" id="hnNewsBox">
             <h5>
-              <span>⚡ Live Farming Headlines</span>
+              <span>⚡ {{ __('ui.live_farming_headlines') }}</span>
               <span class="farm-api-badge" style="font-size:.6rem;padding:1px 6px">Hacker News Algolia</span>
             </h5>
-            <div id="hnNewsItems" style="font-size:.75rem;color:var(--farm-muted)">Loading live headlines...</div>
+            <div id="hnNewsItems" style="font-size:.75rem;color:var(--farm-muted)">{{ __('ui.loading_live_headlines') }}</div>
           </div>
         </div>
       </div>
@@ -343,6 +416,26 @@
     const agmarknetDistrict = @json((string) ($selectedCity?->agmarknet_district ?? ''));
     const cityName = @json((string) ($selectedCityName ?? 'Maharashtra'));
     const AGMARKNET_KEY = '579b464db66ec23bdd000001cdd3946e44ce4aab0ddc33ad780ea6de';
+    const farmI18n = {
+      clear: @json(__('ui.weather_clear')),
+      mostlyClear: @json(__('ui.weather_mostly_clear')),
+      partlyCloudy: @json(__('ui.weather_partly_cloudy')),
+      overcast: @json(__('ui.weather_overcast')),
+      fog: @json(__('ui.weather_fog')),
+      drizzle: @json(__('ui.weather_drizzle')),
+      lightRain: @json(__('ui.weather_light_rain')),
+      rain: @json(__('ui.weather_rain')),
+      heavyRain: @json(__('ui.weather_heavy_rain')),
+      showers: @json(__('ui.weather_showers')),
+      heavyShowers: @json(__('ui.weather_heavy_showers')),
+      thunderstorm: @json(__('ui.weather_thunderstorm')),
+      weatherUpdate: @json(__('ui.weather_update')),
+      weatherUnavailable: @json(__('ui.weather_unavailable')),
+      agmarknetLive: @json(__('ui.agmarknet_live_badge')),
+      newsFallback: @json(__('ui.news')),
+      noLiveHeadlines: @json(__('ui.no_live_headlines')),
+      liveNewsUnavailable: @json(__('ui.live_news_unavailable')),
+    };
 
     async function loadFarmWeather(){
       try {
@@ -352,16 +445,16 @@
         const current = data.current || {};
 
         const condMap = {
-          0:'Clear',1:'Mostly Clear',2:'Partly Cloudy',3:'Overcast',45:'Fog',51:'Drizzle',53:'Drizzle',61:'Light Rain',63:'Rain',65:'Heavy Rain',80:'Showers',81:'Showers',82:'Heavy Showers',95:'Thunderstorm'
+          0:farmI18n.clear,1:farmI18n.mostlyClear,2:farmI18n.partlyCloudy,3:farmI18n.overcast,45:farmI18n.fog,51:farmI18n.drizzle,53:farmI18n.drizzle,61:farmI18n.lightRain,63:farmI18n.rain,65:farmI18n.heavyRain,80:farmI18n.showers,81:farmI18n.showers,82:farmI18n.heavyShowers,95:farmI18n.thunderstorm
         };
 
         document.getElementById('farmTemp').textContent = `${Math.round(current.temperature_2m ?? 0)}°C`;
-        document.getElementById('farmCond').textContent = condMap[current.weather_code] || 'Weather update';
+        document.getElementById('farmCond').textContent = condMap[current.weather_code] || farmI18n.weatherUpdate;
         document.getElementById('farmHum').textContent = `${current.relative_humidity_2m ?? '--'}%`;
         document.getElementById('farmWind').textContent = `${current.wind_speed_10m ?? '--'} km/h`;
         document.getElementById('farmRain').textContent = `${current.precipitation_probability ?? '--'}%`;
       } catch (e) {
-        document.getElementById('farmCond').textContent = 'Weather unavailable';
+        document.getElementById('farmCond').textContent = farmI18n.weatherUnavailable;
       }
     }
 
@@ -370,11 +463,11 @@
         let url = `https://api.data.gov.in/resource/9ef4c6348b5524a09a98c1dc8b3f6b0b?api-key=${AGMARKNET_KEY}&format=json&limit=14`;
 
         if (agmarknetState) {
-          url += `&filters[State.keyword]=${encodeURIComponent(agmarknetState)}`;
+          url += `&filters[State]=${encodeURIComponent(agmarknetState)}`;
         }
 
         if (agmarknetDistrict) {
-          url += `&filters[District.keyword]=${encodeURIComponent(agmarknetDistrict)}`;
+          url += `&filters[District]=${encodeURIComponent(agmarknetDistrict)}`;
         }
 
         const res = await fetch(url);
@@ -387,13 +480,13 @@
         if (!body) return;
 
         const rows = records.slice(0, 12).map((rec) => {
-          const commodity = rec.Commodity || rec.commodity || '—';
-          const city = rec.Market || rec.market || rec.District || '—';
-          const district = rec.District || rec.district || '—';
-          const modal = rec.Modal_Price || rec.modal_price || '—';
-          const min = rec.Min_Price || rec.min_price || '—';
-          const max = rec.Max_Price || rec.max_price || '—';
-          const date = rec.Arrival_Date || rec.arrival_date || '—';
+          const commodity = rec.Commodity || rec.commodity || @json(__('ui.dash'));
+          const city = rec.Market || rec.market || rec.District || @json(__('ui.dash'));
+          const district = rec.District || rec.district || @json(__('ui.dash'));
+          const modal = rec.Modal_Price || rec.modal_price || @json(__('ui.dash'));
+          const min = rec.Min_Price || rec.min_price || @json(__('ui.dash'));
+          const max = rec.Max_Price || rec.max_price || @json(__('ui.dash'));
+          const date = rec.Arrival_Date || rec.arrival_date || @json(__('ui.dash'));
 
           return `<tr><td>${commodity}</td><td>${city}</td><td>${district}</td><td>₹${modal}</td><td>₹${min}</td><td>₹${max}</td><td>${date}</td></tr>`;
         });
@@ -408,7 +501,7 @@
 
         const source = document.getElementById('farmMandiSource');
         if (source) {
-          source.textContent = 'data.gov.in · Agmarknet Live';
+          source.textContent = farmI18n.agmarknetLive;
         }
       } catch (e) {
       }
@@ -425,18 +518,18 @@
         const hits = (data.hits || []).filter((h) => h.title && h.url);
 
         if (!hits.length) {
-          container.textContent = 'No live headlines available right now.';
+          container.textContent = farmI18n.noLiveHeadlines;
           return;
         }
 
         container.innerHTML = hits.slice(0, 5).map((h) => {
           const domain = (() => {
-            try { return new URL(h.url).hostname.replace('www.', ''); } catch (_) { return 'News'; }
+            try { return new URL(h.url).hostname.replace('www.', ''); } catch (_) { return farmI18n.newsFallback; }
           })();
           return `<div class="item"><a href="${h.url}" target="_blank" rel="noopener">${h.title}</a><small>${domain}</small></div>`;
         }).join('');
       } catch (e) {
-        container.textContent = 'Live news unavailable right now.';
+        container.textContent = farmI18n.liveNewsUnavailable;
       }
     }
 

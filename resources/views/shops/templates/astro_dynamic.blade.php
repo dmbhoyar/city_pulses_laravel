@@ -6,45 +6,45 @@
     : [];
 
   /* ── Brand / Hero ── */
-  $brandName       = trim((string)($tc['footer_brand']     ?? $shop->name ?? 'Nakshtea Astro'));
+  $brandName       = trim((string)($tc['footer_brand']     ?? $shop->name ?? 'नक्षत्र अॅस्ट्रो'));
   $heroTitle       = trim((string)($tc['hero_title']       ?? $brandName));
-  $heroBadge       = trim((string)($tc['hero_badge']       ?? 'Vedic Astrology · Numerology · Vastu · Remedies'));
-  $heroTagline     = trim((string)($tc['footer_tagline']   ?? 'Ancient Wisdom. Modern Guidance.'));
-  $heroDescription = trim((string)($tc['hero_description'] ?? 'Personalised birth chart readings, powerful remedies, and live expert guidance — in Hindi & English, 24/7.'));
-  $primaryCta      = trim((string)($tc['primary_cta']      ?? 'Talk to Astrologer'));
-  $secondaryCta    = trim((string)($tc['secondary_cta']    ?? 'Horoscope 2026'));
-  $ctaTitle        = trim((string)($tc['cta_title']        ?? 'Get Your Personalised Reading Today'));
-  $ctaDesc         = trim((string)($tc['cta_description']  ?? 'Accurate, confidential guidance on any life question — in Hindi & English, available 24/7'));
-  $ctaButton       = trim((string)($tc['cta_button']       ?? 'Get Callback'));
+  $heroBadge       = trim((string)($tc['hero_badge']       ?? 'वैदिक ज्योतिष · अंकशास्त्र · वास्तू · उपाय'));
+  $heroTagline     = trim((string)($tc['footer_tagline']   ?? 'प्राचीन ज्ञान. आधुनिक मार्गदर्शन.'));
+  $heroDescription = trim((string)($tc['hero_description'] ?? 'वैयक्तिक कुंडली वाचन, प्रभावी उपाय आणि थेट तज्ज्ञ मार्गदर्शन — 24/7 उपलब्ध.'));
+  $primaryCta      = trim((string)($tc['primary_cta']      ?? 'ज्योतिष तज्ज्ञाशी बोला'));
+  $secondaryCta    = trim((string)($tc['secondary_cta']    ?? 'राशीभविष्य 2026'));
+  $ctaTitle        = trim((string)($tc['cta_title']        ?? 'आजच तुमचे वैयक्तिक मार्गदर्शन घ्या'));
+  $ctaDesc         = trim((string)($tc['cta_description']  ?? 'जीवनातील कोणत्याही प्रश्नावर अचूक, गोपनीय मार्गदर्शन — 24/7 उपलब्ध'));
+  $ctaButton       = trim((string)($tc['cta_button']       ?? 'कॉलबॅक मिळवा'));
 
   /* ── Hero Stats ── */
   $stats = is_array($tc['hero_stats'] ?? null) && count($tc['hero_stats'])
     ? $tc['hero_stats']
     : [
-        ['value'=>'50K+', 'label'=>'Happy Clients'],
-        ['value'=>'25',   'label'=>'Years Experience'],
-        ['value'=>'4.9★', 'label'=>'App Rating'],
-        ['value'=>'24/7', 'label'=>'Available'],
+        ['value'=>'50K+', 'label'=>'समाधानी ग्राहक'],
+        ['value'=>'25',   'label'=>'वर्षांचा अनुभव'],
+        ['value'=>'4.9★', 'label'=>'रेटिंग'],
+        ['value'=>'24/7', 'label'=>'उपलब्ध'],
       ];
 
   /* ── Provider ── */
-  $providerName    = trim((string)($tc['provider_name']    ?? optional($shop->user)->full_name   ?? 'Astro Expert'));
+  $providerName    = trim((string)($tc['provider_name']    ?? optional($shop->user)->full_name   ?? 'ज्योतिष तज्ज्ञ'));
   $providerContact = trim((string)($tc['provider_contact'] ?? $shop->phone                       ?? optional($shop->user)->mobile_number ?? ''));
   $providerEmail   = trim((string)($tc['provider_email']   ?? optional($shop->user)->email       ?? ''));
-  $providerBio     = trim((string)($tc['provider_bio']     ?? 'Our expert astrologers are available 24/7 for consultations via phone, WhatsApp, or video call in Hindi and English.'));
+  $providerBio     = trim((string)($tc['provider_bio']     ?? 'आमचे तज्ज्ञ ज्योतिषी फोन, व्हॉट्सअॅप आणि व्हिडिओ कॉलद्वारे 24/7 मार्गदर्शन देतात.'));
 
   /* ── Why Us ── */
-  $whyTitle    = trim((string)($tc['why_title']    ?? 'Trusted by 50,000+ Clients'));
-  $whySubtitle = trim((string)($tc['why_subtitle'] ?? 'Authentic, accurate, and always available — the promise'));
+  $whyTitle    = trim((string)($tc['why_title']    ?? '50,000+ ग्राहकांचा विश्वास'));
+  $whySubtitle = trim((string)($tc['why_subtitle'] ?? 'प्रामाणिक, अचूक आणि नेहमी उपलब्ध — आमचे वचन'));
   $defaultWhy  = [
-    ['ico'=>'🎓','title'=>'Expert Astrologers',     'desc'=>'All astrologers are certified Jyotish Acharyas with 15+ years of practice and thousands of readings.'],
-    ['ico'=>'🔒','title'=>'100% Confidential',      'desc'=>'Your personal details and life questions are completely private and never shared with anyone.'],
-    ['ico'=>'⚡','title'=>'Instant Reports',          'desc'=>'Digital reports delivered within 24 hours. Live consultations available within 60 minutes of booking.'],
-    ['ico'=>'🌍','title'=>'Hindi & English',          'desc'=>'Full consultation available in Hindi and English to make guidance accessible to every client.'],
-    ['ico'=>'💎','title'=>'Certified Gemstones',      'desc'=>'All gemstones are lab-certified, naturally energised, and sourced from trusted mines globally.'],
-    ['ico'=>'📱','title'=>'Easy Online Booking',      'desc'=>'Book a consultation, order a report, or get remedies — all from your phone in under 2 minutes.'],
-    ['ico'=>'🛡️','title'=>'Satisfaction Guarantee',  'desc'=>'Not satisfied with your reading? We offer a free follow-up session — no questions asked.'],
-    ['ico'=>'✨','title'=>'Authentic Vedic Methods',  'desc'=>'Classical Parashari, Jaimini, Lal Kitab, and KP systems — not generic computer-generated reports.'],
+    ['ico'=>'🎓','title'=>'तज्ज्ञ ज्योतिषी',     'desc'=>'15+ वर्षांचा अनुभव असलेले प्रमाणित ज्योतिष आचार्य.'],
+    ['ico'=>'🔒','title'=>'100% गोपनीय',      'desc'=>'तुमची वैयक्तिक माहिती आणि प्रश्न पूर्णपणे गोपनीय ठेवले जातात.'],
+    ['ico'=>'⚡','title'=>'त्वरित रिपोर्ट',          'desc'=>'24 तासांत डिजिटल रिपोर्ट. बुकिंगनंतर 60 मिनिटांत थेट सल्ला उपलब्ध.'],
+    ['ico'=>'🌍','title'=>'मराठी · हिंदी · इंग्रजी',          'desc'=>'प्रत्येक ग्राहकासाठी सोप्या भाषेत पूर्ण मार्गदर्शन.'],
+    ['ico'=>'💎','title'=>'प्रमाणित रत्न',      'desc'=>'लॅब-प्रमाणित आणि ऊर्जित नैसर्गिक रत्न.'],
+    ['ico'=>'📱','title'=>'सोपे ऑनलाइन बुकिंग',      'desc'=>'2 मिनिटांत सल्ला, रिपोर्ट किंवा उपाय बुक करा.'],
+    ['ico'=>'🛡️','title'=>'समाधान हमी',  'desc'=>'मार्गदर्शन पसंत नसेल तर मोफत फॉलो-अप सत्र उपलब्ध.'],
+    ['ico'=>'✨','title'=>'अस्सल वैदिक पद्धती',  'desc'=>'पाराशरी, जैमिनी, लाल किताब आणि KP पद्धतींवर आधारित सल्ला.'],
   ];
   $whyItems = is_array($tc['why_items'] ?? null) && count($tc['why_items']) ? $tc['why_items'] : $defaultWhy;
 
@@ -66,16 +66,16 @@
      $tc['astrology_*'] and $tc['services_*'] as headings.
   ──────────────────────────────────────────────────────────────────────── */
   $defaultFlatItems = [
-    ['icon'=>'📅','name'=>'Horoscope Reading',  'description'=>'Year-ahead forecasts with monthly predictions.',      'price'=>'From ₹499'],
-    ['icon'=>'🔢','name'=>'Numerology',           'description'=>'Name and destiny number analysis.',                  'price'=>'From ₹499'],
-    ['icon'=>'🏡','name'=>'Vastu Guidance',       'description'=>'Home and office Vastu correction support.',          'price'=>'From ₹499'],
-    ['icon'=>'🤝','name'=>'Match Making',          'description'=>'Detailed compatibility and kundali matching.',       'price'=>'From ₹499'],
+    ['icon'=>'📅','name'=>'राशीभविष्य वाचन',  'description'=>'वर्षभराचा अंदाज आणि मासिक मार्गदर्शन.',      'price'=>'₹499 पासून'],
+    ['icon'=>'🔢','name'=>'अंकशास्त्र',           'description'=>'नाव आणि भाग्यांक विश्लेषण.',                  'price'=>'₹499 पासून'],
+    ['icon'=>'🏡','name'=>'वास्तू मार्गदर्शन',       'description'=>'घर आणि कार्यालयासाठी वास्तू सल्ला.',          'price'=>'₹499 पासून'],
+    ['icon'=>'🤝','name'=>'कुंडली जुळवणी',          'description'=>'तपशीलवार जुळवणी आणि सुसंगतता विश्लेषण.',       'price'=>'₹499 पासून'],
   ];
   $flatServices = count($services) ? array_map(fn($s) => [
     'icon'        => trim((string)($s['icon']        ?? '✨')),
-    'name'        => trim((string)($s['name']        ?? 'Service')),
+    'name'        => trim((string)($s['name']        ?? 'सेवा')),
     'description' => trim((string)($s['description'] ?? '')),
-    'price'       => trim((string)($s['price']       ?? 'From ₹499')),
+    'price'       => trim((string)($s['price']       ?? '₹499 पासून')),
   ], $services) : $defaultFlatItems;
 
   /* Load configured groups */
@@ -84,14 +84,14 @@
 
   if (count($savedGroups)) {
     $serviceGroups = array_map(fn($g) => [
-      'eyebrow'  => trim((string)($g['eyebrow']  ?? '✦ Services')),
-      'title'    => trim((string)($g['title']    ?? 'Our Services')),
+      'eyebrow'  => trim((string)($g['eyebrow']  ?? '✦ सेवा')),
+      'title'    => trim((string)($g['title']    ?? 'आमच्या सेवा')),
       'subtitle' => trim((string)($g['subtitle'] ?? '')),
       'items'    => is_array($g['items'] ?? null) ? array_values(array_filter(array_map(fn($i) => [
         'icon'        => trim((string)($i['icon']        ?? '✨')),
         'name'        => trim((string)($i['name']        ?? '')),
         'description' => trim((string)($i['description'] ?? '')),
-        'price'       => trim((string)($i['price']       ?? 'From ₹499')),
+        'price'       => trim((string)($i['price']       ?? '₹499 पासून')),
       ], $g['items']), fn($i) => !empty($i['name']))) : [],
     ], $savedGroups);
   } else {
@@ -100,18 +100,18 @@
     $serviceGroups = [];
     if ($half > 0) {
       $serviceGroups[] = [
-        'eyebrow'  => trim((string)($tc['astrology_eyebrow'] ?? '01 · Astrology Consultation')),
-        'title'    => trim((string)($tc['astrology_title']   ?? 'Expert Readings for Every Life Area')),
-        'subtitle' => trim((string)($tc['astrology_subtitle']?? 'Personalised consultations — accurate, confidential, and deeply insightful')),
+        'eyebrow'  => trim((string)($tc['astrology_eyebrow'] ?? '01 · ज्योतिष सल्ला')),
+        'title'    => trim((string)($tc['astrology_title']   ?? 'जीवनातील प्रत्येक क्षेत्रासाठी तज्ज्ञ मार्गदर्शन')),
+        'subtitle' => trim((string)($tc['astrology_subtitle']?? 'वैयक्तिक सल्ला — अचूक, गोपनीय आणि सखोल')),
         'items'    => array_slice($flatServices, 0, $half),
       ];
     }
     $remaining = array_slice($flatServices, $half);
     if (count($remaining)) {
       $serviceGroups[] = [
-        'eyebrow'  => trim((string)($tc['services_eyebrow']  ?? '02 · Premium Services')),
-        'title'    => trim((string)($tc['services_title']    ?? 'Our Astrology Services')),
-        'subtitle' => trim((string)($tc['services_subtitle'] ?? 'Deep reports, sacred rituals, transit analysis and specialist readings for every need')),
+        'eyebrow'  => trim((string)($tc['services_eyebrow']  ?? '02 · प्रीमियम सेवा')),
+        'title'    => trim((string)($tc['services_title']    ?? 'आमच्या ज्योतिष सेवा')),
+        'subtitle' => trim((string)($tc['services_subtitle'] ?? 'सखोल रिपोर्ट, पूजा, गोचर विश्लेषण आणि तज्ज्ञ मार्गदर्शन')),
         'items'    => $remaining,
       ];
     }
@@ -582,13 +582,20 @@ footer{position:relative;z-index:2;background:rgba(0,0,0,.55);
 /* ══════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .footer-top{grid-template-columns:1fr 1fr;gap:28px;}
+  .svc-grid,.prod-grid,.why-grid,.testi-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+}
+
 @media(max-width:960px){
   .footer-top{grid-template-columns:1fr 1fr;}
   .contact-grid{grid-template-columns:1fr;}
   .hero-orbit{width:560px;height:560px;}
   .hero-orbit2{width:360px;height:360px;}
   .hero{padding:calc(var(--nav-h) + 28px) 20px 56px;}
+  .svc-grid,.prod-grid,.why-grid,.testi-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
 }
+
 @media(max-width:768px){
   :root{--nav-h:62px;}
   .nav{padding:0 16px;}
@@ -597,6 +604,7 @@ footer{position:relative;z-index:2;background:rgba(0,0,0,.55);
   .nav-links,.nav-cta{display:none;}
   .hamburger{display:flex;}
   .mobile-menu{display:flex;padding:18px 16px 22px;width:100%;max-width:100vw;overflow-x:hidden;}
+  .svc-grid,.prod-grid,.why-grid,.testi-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
 
   .hero{min-height:auto;align-items:stretch;text-align:left;padding:calc(var(--nav-h) + 22px) 16px 42px;}
   .hero > *{max-width:100%;}
@@ -617,8 +625,6 @@ footer{position:relative;z-index:2;background:rgba(0,0,0,.55);
   .sec-head{margin-bottom:34px;}
   .sec-title{line-height:1.2;}
   .sec-sub{max-width:100%;font-size:14px;}
-  .svc-grid{grid-template-columns:1fr;gap:12px;}
-  .prod-grid,.why-grid,.testi-grid{grid-template-columns:1fr;gap:12px;}
 
   .cta-section{padding:58px 16px;}
   .cta-form{max-width:100%;}
@@ -628,15 +634,26 @@ footer{position:relative;z-index:2;background:rgba(0,0,0,.55);
   .contact-form{padding:20px 14px;}
   .footer-top{grid-template-columns:1fr;gap:20px;}
 }
+
+@media(max-width:640px){
+  .hero{padding:calc(var(--nav-h) + 18px) 14px 36px;}
+  .hero h1{font-size:clamp(28px,9vw,42px);}
+  .hero-tagline{font-size:clamp(14px,4vw,18px);}
+  .section,.cta-section,footer{padding:40px 14px;}
+  .sec-title{font-size:clamp(22px,6vw,32px);}
+  .svc-grid,.prod-grid,.why-grid,.testi-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+}
+
 @media(max-width:480px){
   .hero{padding:calc(var(--nav-h) + 18px) 12px 34px;}
-  .section,.cta-section,footer{padding-left:12px;padding-right:12px;}
+  .section,.cta-section,footer{padding-left:12px;padding-right:12px;padding-top:32px;padding-bottom:32px;}
   .hero-stats{grid-template-columns:1fr 1fr;gap:10px;}
   .mobile-menu a{font-size:14px;padding:12px 10px;}
   .mobile-menu{padding-left:12px;padding-right:12px;}
   .modal{padding:24px 14px;border-radius:14px;}
   .toast{left:12px;right:12px;transform:translateY(20px);white-space:normal;text-align:center;}
   .toast.show{transform:translateY(0);}
+  .svc-grid,.prod-grid,.why-grid,.testi-grid{grid-template-columns:1fr;gap:8px;}
 }
 </style>
 </head>
@@ -737,7 +754,7 @@ footer{position:relative;z-index:2;background:rgba(0,0,0,.55);
       <h3>{{ $item['name'] }}</h3>
       <p>{{ $item['description'] }}</p>
       @if(!empty($item['price']))<span class="svc-price">{{ $item['price'] }}</span>@endif
-      <span class="card-cta">Book Now →</span>
+      <span class="card-cta">आत्ता बुक करा →</span>
     </div>
     @endforeach
   </div>

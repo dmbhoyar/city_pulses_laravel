@@ -20,12 +20,12 @@
       ->take(12)
       ->values();
   $tickerItems = $tickerItems->isNotEmpty() ? $tickerItems : collect([
-      'Dynamic city updates will appear here as soon as fresh stories are available.',
-      'Use the city filter to switch the edition by location.',
-      'Superadmin can publish alerts, events, and offers from the Updates module.',
+      __('ui.upd_ticker_fallback_1'),
+      __('ui.upd_ticker_fallback_2'),
+      __('ui.upd_ticker_fallback_3'),
   ]);
   $editionDate = now()->format('l, d F Y');
-  $cityEdition = $selectedCity?->name ?: 'All Cities';
+  $cityEdition = $selectedCity?->name ? city_display_name($selectedCity->name) : __('ui.all_cities');
   $leadLink = $leadStory ? ($leadStory->source_url ?: route('updates.show', $leadStory)) : '#';
   $leadPhoto = $leadStory && $leadStory->photo_path ? \Illuminate\Support\Facades\Storage::url($leadStory->photo_path) : null;
 @endphp
@@ -154,14 +154,14 @@
 <div id="updatesEdition">
   <div class="dmodal" id="cpDlModal">
     <div class="dbox">
-      <h3>Download Edition</h3>
-      <p>Select format for this CityPulse daily edition.</p>
+      <h3>{{ __('ui.upd_download_edition') }}</h3>
+      <p>{{ __('ui.upd_select_format') }}</p>
       <div class="dopts">
-        <div class="dopt sel" id="cpOptPdf" onclick="cpSetFmt('pdf')"><div class="dopt-ic">📄</div><div class="dopt-l">PDF Print</div></div>
-        <div class="dopt" id="cpOptImg" onclick="cpSetFmt('img')"><div class="dopt-ic">🖼️</div><div class="dopt-l">PNG Image</div></div>
+        <div class="dopt sel" id="cpOptPdf" onclick="cpSetFmt('pdf')"><div class="dopt-ic">📄</div><div class="dopt-l">{{ __('ui.upd_pdf_print') }}</div></div>
+        <div class="dopt" id="cpOptImg" onclick="cpSetFmt('img')"><div class="dopt-ic">🖼️</div><div class="dopt-l">{{ __('ui.upd_png_image') }}</div></div>
       </div>
-      <button class="btn-ok" onclick="cpDownloadEdition()">⬇ Download Now</button>
-      <button class="btn-no" onclick="cpCloseModal()">Cancel</button>
+      <button class="btn-ok" onclick="cpDownloadEdition()">⬇ {{ __('ui.upd_download_now') }}</button>
+      <button class="btn-no" onclick="cpCloseModal()">{{ __('ui.cancel') }}</button>
     </div>
   </div>
   <div class="toast" id="cpToast"></div>
@@ -170,38 +170,38 @@
     <div class="mast-meta">
       <span class="ed">VOL. CXLII · CITY EDITION</span>
       <span>{{ strtoupper($editionDate) }}</span>
-      <span>{{ strtoupper($cityEdition) }} NEWS DESK</span>
-      <span>UPDATES MODULE</span>
+      <span>{{ strtoupper($cityEdition) }} {{ __('ui.upd_news_desk') }}</span>
+      <span>{{ __('ui.upd_updates_module') }}</span>
     </div>
     <div class="mast-hero">
       <div class="mast-rule"></div>
       <div class="mast-name">CityPulse</div>
-      <div class="mast-strap">Dynamic Local Edition from /updates</div>
+      <div class="mast-strap">{{ __('ui.upd_mast_strap') }}</div>
     </div>
     <div class="mast-nav">
-      <div class="nb on" data-page="front" onclick="cpGoPage('front', this)">Front Page</div>
-      <div class="nb" data-page="news" onclick="cpGoPage('news', this)">Latest News</div>
-      <div class="nb" data-page="events" onclick="cpGoPage('events', this)">Events</div>
-      <div class="nb" data-page="jobs" onclick="cpGoPage('jobs', this)">Jobs</div>
-      <div class="nb" data-page="markets" onclick="cpGoPage('markets', this)">Markets</div>
-      <div class="nb" data-page="opinion" onclick="cpGoPage('opinion', this)">Opinion</div>
+      <div class="nb on" data-page="front" onclick="cpGoPage('front', this)">{{ __('ui.upd_front_page') }}</div>
+      <div class="nb" data-page="news" onclick="cpGoPage('news', this)">{{ __('ui.upd_latest_news') }}</div>
+      <div class="nb" data-page="events" onclick="cpGoPage('events', this)">{{ __('ui.upd_events') }}</div>
+      <div class="nb" data-page="jobs" onclick="cpGoPage('jobs', this)">{{ __('ui.upd_jobs') }}</div>
+      <div class="nb" data-page="markets" onclick="cpGoPage('markets', this)">{{ __('ui.upd_markets') }}</div>
+      <div class="nb" data-page="opinion" onclick="cpGoPage('opinion', this)">{{ __('ui.upd_opinion') }}</div>
     </div>
     <div class="mast-actions">
       <form method="GET" action="{{ route('updates.index') }}">
         <select class="cp-select" name="city_id" onchange="this.form.submit()">
-          <option value="">All Cities Edition</option>
+          <option value="">{{ __('ui.upd_all_cities_edition') }}</option>
           @foreach($cities as $city)
-            <option value="{{ $city->id }}" {{ (int) ($selectedCity?->id ?? 0) === (int) $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+            <option value="{{ $city->id }}" {{ (int) ($selectedCity?->id ?? 0) === (int) $city->id ? 'selected' : '' }}>{{ city_display_name($city->name) }}</option>
           @endforeach
         </select>
       </form>
-      <button class="btn-r" type="button" onclick="window.location.reload()">↻ Refresh</button>
+      <button class="btn-r" type="button" onclick="window.location.reload()">↻ {{ __('ui.refresh') }}</button>
       @auth
         @if(auth()->user()->isSuperadmin())
-          <a class="btn-a" href="{{ route('updates.create') }}">+ New Update</a>
+          <a class="btn-a" href="{{ route('updates.create') }}">+ {{ __('ui.upd_new_update') }}</a>
         @endif
       @endauth
-      <button class="btn-d" type="button" onclick="document.getElementById('cpDlModal').classList.add('open')">⬇ Download Edition</button>
+      <button class="btn-d" type="button" onclick="document.getElementById('cpDlModal').classList.add('open')">⬇ {{ __('ui.upd_download_edition') }}</button>
     </div>
   </div>
 
@@ -219,58 +219,58 @@
   </div>
 
   <div class="rbar">
-    <span class="rl">Live Bar</span>
+    <span class="rl">{{ __('ui.upd_live_bar') }}</span>
     <div class="rsep"></div>
     <div class="rc"><span class="rl2">🥇 GOLD 24K</span><span class="rv gv" id="cpGold">₹85,900</span><span class="ru">/10g</span><span class="rch up" id="cpGoldC">+₹320</span></div>
     <div class="rc"><span class="rl2">🥈 SILVER</span><span class="rv sv" id="cpSilver">₹96,500</span><span class="ru">/kg</span><span class="rch up" id="cpSilverC">+₹740</span></div>
     <div class="rsep"></div>
     <div class="rc"><span class="rl2">💵 USD</span><span class="rv" id="cpUsd">₹84.10</span><span class="ru">INR</span></div>
     <div class="rc"><span class="rl2">🌡 {{ strtoupper($cityEdition) }}</span><span class="rv" id="cpTemp">32</span><span class="ru">°C</span></div>
-    <div class="rc"><span class="rl2">⛅</span><span class="rv" id="cpWx" style="font-size:.78rem">Partly Cloudy</span></div>
-    <div class="rtime">Updated: <span id="cpUpd">{{ now()->format('h:i A') }}</span><span class="live-dot"><span class="ld"></span>LIVE</span></div>
+    <div class="rc"><span class="rl2">⛅</span><span class="rv" id="cpWx" style="font-size:.78rem">{{ __('ui.weather_partly_cloudy') }}</span></div>
+    <div class="rtime">{{ __('ui.upd_updated_label') }}: <span id="cpUpd">{{ now()->format('h:i A') }}</span><span class="live-dot"><span class="ld"></span>{{ __('ui.upd_live_label') }}</span></div>
   </div>
 
   <main class="pg on" id="cpPgFront">
     <div class="dbanner"><div class="dline"></div><div class="dtext">{{ strtoupper($editionDate) }}</div><div class="dline"></div></div>
     <div class="g3">
       <div class="col">
-        <div class="flag">Top Story</div>
-        <h1 class="h1">{{ $leadStory?->title ?: 'Fresh city stories will appear here once updates are published.' }}</h1>
-        <div class="byl"><em>{{ $leadStory?->city?->name ?: $cityEdition }}</em> · {{ optional($leadStory?->published_at ?: $leadStory?->created_at)->format('d M Y, h:i A') ?: 'Live edition' }}</div>
+        <div class="flag">{{ __('ui.upd_top_story') }}</div>
+        <h1 class="h1">{{ $leadStory?->title ?: __('ui.upd_fresh_city_stories') }}</h1>
+        <div class="byl"><em>{{ $leadStory?->city?->name ?: $cityEdition }}</em> · {{ optional($leadStory?->published_at ?: $leadStory?->created_at)->format('d M Y, h:i A') ?: __('ui.upd_live_edition') }}</div>
         <div class="hero-art">
           @if($leadPhoto)
             <img src="{{ $leadPhoto }}" alt="{{ $leadStory->title }}">
           @else
             📰
           @endif
-          <div class="hero-cap">{{ $leadStory?->update_type ? strtoupper($leadStory->update_type) : 'NEWS' }} · CITYPULSE DESK</div>
+          <div class="hero-cap">{{ $leadStory?->update_type ? strtoupper($leadStory->update_type) : __('ui.upd_news') }} · {{ __('ui.upd_citypulse_desk') }}</div>
         </div>
-        <p class="body dc">{{ \Illuminate\Support\Str::limit(strip_tags($leadStory?->content ?: 'Use the Updates module to publish breaking alerts, civic stories, offers, and city happenings. This edition automatically reshapes those entries into a newspaper-style front page.'), 520) }}</p>
-        <a href="{{ $leadLink }}" target="{{ $leadStory && $leadStory->source_url ? '_blank' : '_self' }}" class="byl" style="color:var(--red)">Continue Reading →</a>
+        <p class="body dc">{{ \Illuminate\Support\Str::limit(strip_tags($leadStory?->content ?: __('ui.upd_publish_updates_note')), 520) }}</p>
+        <a href="{{ $leadLink }}" target="{{ $leadStory && $leadStory->source_url ? '_blank' : '_self' }}" class="byl" style="color:var(--red)">{{ __('ui.upd_continue_reading') }} →</a>
         @if($secondaryStories->isNotEmpty())
           <hr class="rule2">
-          <div class="flag">Also</div>
+          <div class="flag">{{ __('ui.upd_also') }}</div>
           @foreach($secondaryStories as $story)
             <div style="margin-bottom:.7rem">
               <h3 class="h3"><a href="{{ $story->source_url ?: route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h3>
-              <p class="body" style="font-size:.8rem;margin-bottom:0">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: 'Open the full update for complete details.'), 120) }}</p>
+                <p class="body" style="font-size:.8rem;margin-bottom:0">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: __('ui.upd_open_full_update')), 120) }}</p>
             </div>
           @endforeach
         @endif
       </div>
 
       <div class="col">
-        <div class="flag">Edition Snapshot</div>
-        <h3 class="h3">{{ $cityEdition }} in Brief</h3>
-        <div class="src-badge"><span class="ld"></span>Dynamic module data</div>
+        <div class="flag">{{ __('ui.upd_edition_snapshot') }}</div>
+        <h3 class="h3">{{ $cityEdition }} {{ __('ui.upd_in_brief') }}</h3>
+        <div class="src-badge"><span class="ld"></span>{{ __('ui.upd_dynamic_module_data') }}</div>
         <div class="mgrid">
-          <div class="mc"><div class="mc-l">Published Updates</div><div class="mc-v">{{ $updates->count() }}</div><div class="mc-s">Current edition</div></div>
-          <div class="mc"><div class="mc-l">Events</div><div class="mc-v">{{ $eventUpdates->count() }}</div><div class="mc-s">Local happenings</div></div>
-          <div class="mc"><div class="mc-l">Jobs</div><div class="mc-v">{{ $jobs->count() }}</div><div class="mc-s">Open roles</div></div>
-          <div class="mc"><div class="mc-l">Markets</div><div class="mc-v">{{ max($marketRows->count(), $marketIndices ? count($marketIndices) : 0) }}</div><div class="mc-s">Tracked signals</div></div>
+          <div class="mc"><div class="mc-l">{{ __('ui.upd_published_updates') }}</div><div class="mc-v">{{ $updates->count() }}</div><div class="mc-s">{{ __('ui.upd_current_edition') }}</div></div>
+          <div class="mc"><div class="mc-l">{{ __('ui.upd_events') }}</div><div class="mc-v">{{ $eventUpdates->count() }}</div><div class="mc-s">{{ __('ui.upd_local_happenings') }}</div></div>
+          <div class="mc"><div class="mc-l">{{ __('ui.upd_jobs') }}</div><div class="mc-v">{{ $jobs->count() }}</div><div class="mc-s">{{ __('ui.upd_open_roles') }}</div></div>
+          <div class="mc"><div class="mc-l">{{ __('ui.upd_markets') }}</div><div class="mc-v">{{ max($marketRows->count(), $marketIndices ? count($marketIndices) : 0) }}</div><div class="mc-s">{{ __('ui.upd_tracked_signals') }}</div></div>
         </div>
         <hr class="rule2">
-        <div class="flag">Market Watch</div>
+        <div class="flag">{{ __('ui.upd_market_watch') }}</div>
         @if(!empty($marketIndices))
           @foreach(array_slice($marketIndices, 0, 4) as $index)
             <div class="mc" style="margin-bottom:7px">
@@ -280,12 +280,12 @@
             </div>
           @endforeach
         @else
-          <div class="empty">Market indices unavailable right now.</div>
+          <div class="empty">{{ __('ui.upd_market_indices_unavailable') }}</div>
         @endif
       </div>
 
       <div class="col">
-        <div class="flag">Upcoming Events</div>
+        <div class="flag">{{ __('ui.upd_upcoming_events') }}</div>
         @forelse($frontEvents as $event)
           @php $eventDate = $event->published_at ?: $event->created_at; @endphp
           <div class="evt">
@@ -296,118 +296,118 @@
             </div>
           </div>
         @empty
-          <div class="empty">No events published for this edition yet.</div>
+          <div class="empty">{{ __('ui.upd_no_events') }}</div>
         @endforelse
         <hr class="rule2">
-        <div class="flag">Jobs Today</div>
+        <div class="flag">{{ __('ui.upd_jobs_today') }}</div>
         @forelse($frontJobs as $job)
           <div class="jcard">
             <div class="jtitle"><a href="{{ $job->external_url ?: route('jobs.show', $job) }}" style="color:inherit">{{ $job->title }}</a></div>
-            <div class="jco">{{ $job->company ?: 'CityPulse Network' }} · {{ $job->location ?: ($job->city?->name ?: $cityEdition) }}</div>
-            <span class="tag tgn">Hiring</span>
+            <div class="jco">{{ $job->company ?: __('ui.upd_citypulse_network') }} · {{ $job->location ?: ($job->city?->name ?: $cityEdition) }}</div>
+            <span class="tag tgn">{{ __('ui.upd_hiring') }}</span>
           </div>
         @empty
-          <div class="empty">No jobs available right now.</div>
+          <div class="empty">{{ __('ui.upd_no_jobs') }}</div>
         @endforelse
       </div>
     </div>
 
     <div style="margin-top:1.2rem">
-      <div class="sbar"><h2>Latest from Around the Web</h2><em>{{ $selectedCity?->name ? $selectedCity->name . ' Google News' : 'External feeds when city selected' }}</em></div>
+      <div class="sbar"><h2>{{ __('ui.upd_latest_from_web') }}</h2><em>{{ $selectedCity?->name ? city_display_name($selectedCity->name) . ' Google News' : __('ui.upd_external_feeds_hint') }}</em></div>
       <div class="g4">
         @forelse(array_slice($cityNews, 0, 4) as $item)
           <div class="col">
-            <div class="flag">External</div>
-            <h3 class="h3"><a href="{{ $item['link'] ?? '#' }}" target="_blank" rel="noopener" style="color:inherit">{{ $item['title'] ?? 'Untitled story' }}</a></h3>
-            <div class="byl"><em>{{ $item['source'] ?? 'News' }}</em> · {{ $item['pubDate'] ?? 'Live feed' }}</div>
+            <div class="flag">{{ __('ui.upd_external') }}</div>
+            <h3 class="h3"><a href="{{ $item['link'] ?? '#' }}" target="_blank" rel="noopener" style="color:inherit">{{ $item['title'] ?? __('ui.upd_untitled_story') }}</a></h3>
+            <div class="byl"><em>{{ $item['source'] ?? __('ui.upd_news_source') }}</em> · {{ $item['pubDate'] ?? __('ui.upd_live_feed') }}</div>
           </div>
         @empty
-          <div class="col empty" style="grid-column:1/-1">Select a city to load external local news headlines.</div>
+          <div class="col empty" style="grid-column:1/-1">{{ __('ui.upd_select_city_headlines') }}</div>
         @endforelse
       </div>
     </div>
 
     <div style="margin-top:1.2rem">
-      <div class="sbar"><h2>Markets &amp; Opinion</h2><em>Local data &amp; editorial highlights</em></div>
+      <div class="sbar"><h2>{{ __('ui.upd_markets_opinion') }}</h2><em>{{ __('ui.upd_local_data_editorial') }}</em></div>
       <div class="g2">
         <div class="col">
-          <div class="flag">Markets Snapshot</div>
+          <div class="flag">{{ __('ui.upd_markets_snapshot') }}</div>
           @if($marketRows->isNotEmpty())
             <div class="mgrid">
               @foreach($marketRows->take(4) as $market)
                 <div class="mc">
-                  <div class="mc-l">{{ $market->commodity ?: 'Commodity' }}</div>
+                  <div class="mc-l">{{ $market->commodity ?: __('ui.upd_commodity') }}</div>
                   <div class="mc-v">₹{{ number_format((float) ($market->modal_price ?: $market->rate ?: 0), 0) }}</div>
-                  <div class="mc-s">{{ $market->city_rel?->name ?: $market->city ?: $cityEdition }} · {{ optional($market->price_date)->format('d M Y') ?: 'Latest' }}</div>
+                  <div class="mc-s">{{ $market->city_rel?->name ?: $market->city ?: $cityEdition }} · {{ optional($market->price_date)->format('d M Y') ?: __('ui.upd_latest') }}</div>
                 </div>
               @endforeach
             </div>
           @else
-            <div class="empty">No local commodity entries available.</div>
+            <div class="empty">{{ __('ui.upd_no_local_commodity') }}</div>
           @endif
         </div>
         <div class="col">
-          <div class="flag">Editorial Pick</div>
+          <div class="flag">{{ __('ui.upd_editorial_pick') }}</div>
           @php $editorial = $editorials->first(); @endphp
-          <h3 class="h3">{{ $editorial?->title ?: 'Why dynamic local publishing matters' }}</h3>
-          <div class="byl"><em>{{ $editorial?->city?->name ?: 'CityPulse Desk' }}</em></div>
-          <p class="body">{{ \Illuminate\Support\Str::limit(strip_tags($editorial?->content ?: 'This edition is driven directly from the Updates module, letting your published content flow into a richer newspaper-style experience without manual static edits.'), 280) }}</p>
-          <div class="pq"><p>“Local information becomes more valuable when it is readable, timely, and organized like a real daily edition.”</p><cite>— CityPulse Editorial Board</cite></div>
+          <h3 class="h3">{{ $editorial?->title ?: __('ui.upd_why_dynamic') }}</h3>
+          <div class="byl"><em>{{ $editorial?->city?->name ?: __('ui.upd_citypulse_desk') }}</em></div>
+          <p class="body">{{ \Illuminate\Support\Str::limit(strip_tags($editorial?->content ?: __('ui.upd_edition_fallback_text')), 280) }}</p>
+          <div class="pq"><p>"{{ __('ui.upd_quote_text') }}"</p><cite>{{ __('ui.upd_editorial_board') }}</cite></div>
         </div>
       </div>
     </div>
   </main>
 
   <main class="pg" id="cpPgNews">
-    <div class="dbanner"><div class="dline"></div><div class="dtext">Latest News — Dynamic Feed</div><div class="dline"></div></div>
-    <div class="sbar"><h2>Top Stories from Updates</h2><em>{{ $cityEdition }} edition</em></div>
+    <div class="dbanner"><div class="dline"></div><div class="dtext">{{ __('ui.upd_latest_news_feed_banner') }}</div><div class="dline"></div></div>
+    <div class="sbar"><h2>{{ __('ui.upd_top_stories') }}</h2><em>{{ $cityEdition }} {{ __('ui.upd_edition') }}</em></div>
     <div class="g2">
       @forelse($newsGridItems as $story)
         <div class="col row-b">
           <div class="flag">{{ strtoupper($story->update_type ?: 'general') }}</div>
           <h3 class="h2"><a href="{{ $story->source_url ?: route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h3>
           <div class="byl"><em>{{ $story->city?->name ?: $cityEdition }}</em> · {{ optional($story->published_at ?: $story->created_at)->format('d M Y, h:i A') }}</div>
-          <p class="body">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: 'Open the story for complete content.'), 240) }}</p>
+          <p class="body">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: __('ui.upd_open_story')), 240) }}</p>
         </div>
       @empty
-        <div class="col empty" style="grid-column:1/-1">No published updates yet.</div>
+        <div class="col empty" style="grid-column:1/-1">{{ __('ui.upd_no_updates') }}</div>
       @endforelse
     </div>
 
     <div style="margin-top:1.2rem">
-      <div class="sbar"><h2>City Feed</h2><em>Google News via service integration</em></div>
+      <div class="sbar"><h2>{{ __('ui.upd_city_feed') }}</h2><em>{{ __('ui.upd_google_news_integration') }}</em></div>
       <div class="g3e">
         @forelse(array_slice($cityNews, 0, 3) as $item)
           <div class="col">
-            <div class="flag">External</div>
-            <h3 class="h3"><a href="{{ $item['link'] ?? '#' }}" target="_blank" rel="noopener" style="color:inherit">{{ $item['title'] ?? 'Untitled story' }}</a></h3>
-            <div class="byl"><em>{{ $item['source'] ?? 'News' }}</em> · {{ $item['pubDate'] ?? 'Live' }}</div>
+            <div class="flag">{{ __('ui.upd_external') }}</div>
+            <h3 class="h3"><a href="{{ $item['link'] ?? '#' }}" target="_blank" rel="noopener" style="color:inherit">{{ $item['title'] ?? __('ui.upd_untitled_story') }}</a></h3>
+            <div class="byl"><em>{{ $item['source'] ?? __('ui.upd_news_source') }}</em> · {{ $item['pubDate'] ?? __('ui.upd_live_feed') }}</div>
           </div>
         @empty
-          <div class="col empty" style="grid-column:1/-1">No external city headlines loaded.</div>
+          <div class="col empty" style="grid-column:1/-1">{{ __('ui.upd_no_external_headlines') }}</div>
         @endforelse
       </div>
     </div>
 
     <div style="margin-top:1.2rem">
-      <div class="sbar"><h2>Offers &amp; Alerts</h2><em>Published from Updates</em></div>
+      <div class="sbar"><h2>{{ __('ui.upd_offers_alerts') }}</h2><em>{{ __('ui.upd_published_from_updates') }}</em></div>
       <div class="g4">
         @forelse($offerUpdates->take(4) as $offer)
           <div class="col">
-            <div class="flag">Offer</div>
+            <div class="flag">{{ __('ui.upd_offer') }}</div>
             <h4 class="h4"><a href="{{ $offer->source_url ?: route('updates.show', $offer) }}" style="color:inherit">{{ $offer->title }}</a></h4>
-            <p class="body" style="font-size:.78rem">{{ \Illuminate\Support\Str::limit(strip_tags($offer->content ?: 'Open the update for full offer details.'), 140) }}</p>
+            <p class="body" style="font-size:.78rem">{{ \Illuminate\Support\Str::limit(strip_tags($offer->content ?: __('ui.upd_open_offer')), 140) }}</p>
           </div>
         @empty
-          <div class="col empty" style="grid-column:1/-1">No offer updates available.</div>
+          <div class="col empty" style="grid-column:1/-1">{{ __('ui.upd_no_offers') }}</div>
         @endforelse
       </div>
     </div>
   </main>
 
   <main class="pg" id="cpPgEvents">
-    <div class="dbanner"><div class="dline"></div><div class="dtext">Events &amp; Happenings</div><div class="dline"></div></div>
-    <div class="sbar"><h2>City Events Calendar</h2><em>{{ $cityEdition }}</em></div>
+    <div class="dbanner"><div class="dline"></div><div class="dtext">{{ __('ui.upd_events_happenings') }}</div><div class="dline"></div></div>
+    <div class="sbar"><h2>{{ __('ui.upd_city_events_calendar') }}</h2><em>{{ $cityEdition }}</em></div>
     <div class="g2">
       @forelse($eventUpdates as $event)
         @php $eventDate = $event->published_at ?: $event->created_at; @endphp
@@ -416,43 +416,43 @@
             <div class="ebox"><div class="ed">{{ $eventDate->format('d') }}</div><div class="em">{{ strtoupper($eventDate->format('M')) }}</div></div>
             <div><div class="etitle"><a href="{{ $event->source_url ?: route('updates.show', $event) }}" style="color:inherit">{{ $event->title }}</a></div><div class="emeta">📍 {{ $event->city?->name ?: $cityEdition }}</div></div>
           </div>
-          <p class="body" style="font-size:.81rem">{{ \Illuminate\Support\Str::limit(strip_tags($event->content ?: 'Open this event update to read complete details.'), 220) }}</p>
-          <span class="tag tg">Event</span>
+          <p class="body" style="font-size:.81rem">{{ \Illuminate\Support\Str::limit(strip_tags($event->content ?: __('ui.upd_open_event')), 220) }}</p>
+          <span class="tag tg">{{ __('ui.upd_event_tag') }}</span>
         </div>
       @empty
-        <div class="col empty" style="grid-column:1/-1">No event entries published yet.</div>
+        <div class="col empty" style="grid-column:1/-1">{{ __('ui.upd_no_events_published') }}</div>
       @endforelse
     </div>
   </main>
 
   <main class="pg" id="cpPgJobs">
-    <div class="dbanner"><div class="dline"></div><div class="dtext">Employment — Open Positions</div><div class="dline"></div></div>
-    <div class="sbar"><h2>Jobs Feed</h2><em>Dynamic jobs module data</em></div>
+    <div class="dbanner"><div class="dline"></div><div class="dtext">{{ __('ui.upd_employment_banner') }}</div><div class="dline"></div></div>
+    <div class="sbar"><h2>{{ __('ui.upd_jobs_feed') }}</h2><em>{{ __('ui.upd_dynamic_jobs') }}</em></div>
     <div class="g3e">
       @forelse($jobs as $job)
         <div class="col">
           <div class="flag">{{ $job->city?->name ?: $cityEdition }}</div>
           <div class="jtitle"><a href="{{ $job->external_url ?: route('jobs.show', $job) }}" style="color:inherit">{{ $job->title }}</a></div>
-          <div class="jco">🏢 {{ $job->company ?: 'Employer not specified' }}</div>
-          <p class="body" style="font-size:.79rem">{{ \Illuminate\Support\Str::limit(strip_tags($job->description ?: 'Open the job for complete details.'), 180) }}</p>
+          <div class="jco">🏢 {{ $job->company ?: __('ui.upd_employer_not_specified') }}</div>
+          <p class="body" style="font-size:.79rem">{{ \Illuminate\Support\Str::limit(strip_tags($job->description ?: __('ui.upd_open_job')), 180) }}</p>
           @if($job->category)
             <span class="tag">{{ $job->category }}</span>
           @endif
-          <div style="margin-top:.45rem"><a href="{{ $job->external_url ?: route('jobs.show', $job) }}" class="byl" style="color:var(--red)">Apply →</a></div>
+          <div style="margin-top:.45rem"><a href="{{ $job->external_url ?: route('jobs.show', $job) }}" class="byl" style="color:var(--red)">{{ __('ui.upd_apply') }}</a></div>
         </div>
       @empty
-        <div class="col empty" style="grid-column:1/-1">No jobs available right now.</div>
+        <div class="col empty" style="grid-column:1/-1">{{ __('ui.upd_no_jobs') }}</div>
       @endforelse
     </div>
   </main>
 
   <main class="pg" id="cpPgMarkets">
-    <div class="dbanner"><div class="dline"></div><div class="dtext">Markets &amp; Commodities</div><div class="dline"></div></div>
+    <div class="dbanner"><div class="dline"></div><div class="dtext">{{ __('ui.upd_markets_commodities') }}</div><div class="dline"></div></div>
     <div class="g2">
       <div class="col">
-        <div class="flag">Indian Indices</div>
-        <h2 class="h2">Market Dashboard</h2>
-        <div class="src-badge"><span class="ld"></span>Yahoo Finance via server service</div>
+        <div class="flag">{{ __('ui.upd_indian_indices') }}</div>
+        <h2 class="h2">{{ __('ui.upd_market_dashboard') }}</h2>
+        <div class="src-badge"><span class="ld"></span>{{ __('ui.upd_yahoo_finance') }}</div>
         <div class="mgrid">
           @forelse($marketIndices as $index)
             <div class="mc">
@@ -461,54 +461,54 @@
               <div class="mc-s" style="color:{{ (float) $index['change'] >= 0 ? 'var(--green)' : 'var(--red)' }}">{{ (float) $index['change'] >= 0 ? '+' : '' }}{{ number_format((float) $index['change'], 2) }}%</div>
             </div>
           @empty
-            <div class="empty" style="grid-column:1/-1">Live index data unavailable.</div>
+            <div class="empty" style="grid-column:1/-1">{{ __('ui.upd_live_index_unavailable') }}</div>
           @endforelse
         </div>
       </div>
       <div class="col">
-        <div class="flag">Local Commodity Rates</div>
-        <h2 class="h2">{{ $cityEdition }} Market Entries</h2>
+        <div class="flag">{{ __('ui.upd_local_commodity_rates') }}</div>
+        <h2 class="h2">{{ $cityEdition }} {{ __('ui.upd_market_entries') }}</h2>
         @if($marketRows->isNotEmpty())
           <table style="width:100%;border-collapse:collapse;font-size:.81rem;margin-top:.45rem">
             <thead>
               <tr style="background:var(--ink);color:var(--paper)">
-                <th style="padding:5px 9px;text-align:left;font-family:var(--fm);font-size:10px">Commodity</th>
-                <th style="padding:5px 9px;text-align:right;font-family:var(--fm);font-size:10px">Modal</th>
-                <th style="padding:5px 9px;text-align:right;font-family:var(--fm);font-size:10px">Date</th>
+                <th style="padding:5px 9px;text-align:left;font-family:var(--fm);font-size:10px">{{ __('ui.upd_commodity') }}</th>
+                <th style="padding:5px 9px;text-align:right;font-family:var(--fm);font-size:10px">{{ __('ui.upd_modal') }}</th>
+                <th style="padding:5px 9px;text-align:right;font-family:var(--fm);font-size:10px">{{ __('ui.upd_date') }}</th>
               </tr>
             </thead>
             <tbody>
               @foreach($marketRows as $market)
                 <tr style="background:{{ $loop->odd ? 'var(--cream)' : 'var(--paper)' }}">
-                  <td style="padding:5px 9px">{{ $market->commodity ?: 'Commodity' }}</td>
+                  <td style="padding:5px 9px">{{ $market->commodity ?: __('ui.upd_commodity') }}</td>
                   <td style="padding:5px 9px;text-align:right;font-family:var(--fm)">₹{{ number_format((float) ($market->modal_price ?: $market->rate ?: 0), 0) }}</td>
-                  <td style="padding:5px 9px;text-align:right;font-family:var(--fm)">{{ optional($market->price_date)->format('d M') ?: 'Latest' }}</td>
+                  <td style="padding:5px 9px;text-align:right;font-family:var(--fm)">{{ optional($market->price_date)->format('d M') ?: __('ui.upd_latest') }}</td>
                 </tr>
               @endforeach
             </tbody>
           </table>
         @else
-          <div class="empty">No commodity rows available.</div>
+          <div class="empty">{{ __('ui.upd_no_commodity_rows') }}</div>
         @endif
-        <div class="notice"><div class="nt">Edition Note</div><p class="nb2">This page combines live service data and your own stored updates, jobs, and market records into one newspaper-style Updates edition.</p></div>
+        <div class="notice"><div class="nt">{{ __('ui.upd_edition_note') }}</div><p class="nb2">{{ __('ui.upd_edition_note_text') }}</p></div>
       </div>
     </div>
   </main>
 
   <main class="pg" id="cpPgOpinion">
-    <div class="dbanner"><div class="dline"></div><div class="dtext">Opinion &amp; Analysis</div><div class="dline"></div></div>
-    <div class="sbar"><h2>Editorial &amp; Columns</h2><em>Generated from published update content</em></div>
+    <div class="dbanner"><div class="dline"></div><div class="dtext">{{ __('ui.upd_opinion_analysis') }}</div><div class="dline"></div></div>
+    <div class="sbar"><h2>{{ __('ui.upd_editorial_columns') }}</h2><em>{{ __('ui.upd_generated_from_updates') }}</em></div>
     <div class="g3e">
       @forelse($editorials as $story)
         <div class="col">
           <div class="flag">{{ strtoupper($story->update_type ?: 'general') }}</div>
           <h2 class="h2" style="font-size:1.25rem"><a href="{{ $story->source_url ?: route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h2>
-          <div class="byl">By <em>{{ $story->city?->name ?: 'CityPulse Desk' }}</em></div>
-          <p class="body dc">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: 'Publish long-form updates to turn them into editorial-style reading sections.'), 340) }}</p>
+          <div class="byl">{{ __('ui.upd_by') }} <em>{{ $story->city?->name ?: __('ui.upd_citypulse_desk') }}</em></div>
+          <p class="body dc">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: __('ui.upd_publish_long_form')), 340) }}</p>
           <div class="pq"><p>“{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: $story->title), 110) }}”</p><cite>{{ $story->city?->name ?: 'CityPulse' }}</cite></div>
         </div>
       @empty
-        <div class="col empty" style="grid-column:1/-1">No editorial-style updates available.</div>
+        <div class="col empty" style="grid-column:1/-1">{{ __('ui.upd_no_editorial') }}</div>
       @endforelse
     </div>
   </main>
@@ -586,7 +586,8 @@
       const weatherData = await weatherResponse.json();
       if(weatherData?.current){
         cpEl('cpTemp').textContent = Math.round(weatherData.current.temperature_2m);
-        const weatherText = {0:'Clear',1:'Mostly Clear',2:'Partly Cloudy',3:'Overcast',45:'Foggy',61:'Rain',63:'Rain',80:'Showers',95:'Storm'}[weatherData.current.weather_code] || 'Partly Cloudy';
+        const cpWeatherMap = {0:@json(__('ui.weather_clear')),1:@json(__('ui.weather_mostly_clear')),2:@json(__('ui.weather_partly_cloudy')),3:@json(__('ui.weather_overcast')),45:@json(__('ui.weather_fog')),61:@json(__('ui.weather_rain')),63:@json(__('ui.weather_rain')),80:@json(__('ui.weather_showers')),95:@json(__('ui.weather_thunderstorm'))};
+        const weatherText = cpWeatherMap[weatherData.current.weather_code] || @json(__('ui.weather_partly_cloudy'));
         cpEl('cpWx').textContent = weatherText;
       }
     } catch (error) {}

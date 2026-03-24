@@ -320,12 +320,12 @@ class SubscriptionsController extends Controller
             $providerPhoto = $request->file('profile.provider_photo_file')->store('provider_profiles', 'public');
         }
 
-        $tc['provider_name'] = trim((string) ($profile['provider_name'] ?? ($tc['provider_name'] ?? ($owner->full_name ?: 'Service Provider'))));
+        $tc['provider_name'] = trim((string) ($profile['provider_name'] ?? ($tc['provider_name'] ?? ($owner->full_name ?: 'सेवा प्रदाता'))));
         $tc['provider_age'] = trim((string) ($profile['provider_age'] ?? ($tc['provider_age'] ?? '')));
-        $tc['provider_title'] = trim((string) ($profile['provider_title'] ?? ($tc['provider_title'] ?? 'Founder & Lead Expert')));
+        $tc['provider_title'] = trim((string) ($profile['provider_title'] ?? ($tc['provider_title'] ?? 'संस्थापक आणि प्रमुख तज्ञ')));
         $tc['provider_email'] = trim((string) ($profile['provider_email'] ?? ($tc['provider_email'] ?? ($owner->email ?: ''))));
         $tc['provider_contact'] = trim((string) ($profile['provider_contact'] ?? ($tc['provider_contact'] ?? ($shop->phone ?: ($owner->mobile_number ?? '')))));
-        $tc['provider_experience'] = trim((string) ($profile['provider_experience'] ?? ($tc['provider_experience'] ?? '5+ Years Experience')));
+        $tc['provider_experience'] = trim((string) ($profile['provider_experience'] ?? ($tc['provider_experience'] ?? '५+ वर्षांचा अनुभव')));
         $tc['provider_bio'] = trim((string) ($profile['provider_bio'] ?? ($tc['provider_bio'] ?? '')));
         $tc['provider_photo'] = $providerPhoto;
 

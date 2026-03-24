@@ -40,6 +40,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 // Root
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/set_city', [HomeController::class, 'setCity'])->name('set_city');
+Route::post('/set-language', [HomeController::class, 'setLanguage'])->name('set_language');
 
 // Auth routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

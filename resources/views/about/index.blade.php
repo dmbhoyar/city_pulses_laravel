@@ -151,11 +151,62 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  @media (max-width: 1024px) {
+    .about-page .offer-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  }
+
+  @media (max-width: 768px) {
+    .about-page section { padding: 48px 18px; }
+    .about-page h1 { font-size: 32px; }
+    .about-page h2 { font-size: 26px; }
+    .about-page .lead { font-size: 15px; margin-bottom: 36px; }
+    .about-page .offer-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .about-page .offer-card { padding: 20px 18px; }
+    .about-page .offer-icon { font-size: 26px; }
+    .about-page .offer-card h3 { font-size: 15px; }
+    .about-page .offer-card p { font-size: 12px; }
+    .about-page .why-grid { grid-template-columns: 1fr; gap: 14px; margin-top: 32px; }
+    .about-page .why-item { padding: 16px; gap: 10px; }
+    .about-page .why-check { width: 30px; height: 30px; font-size: 13px; }
+    .about-page .why-item h4 { font-size: 14px; }
+    .about-page .why-item p { font-size: 12px; }
+    .about-page .contact-cards { gap: 12px; }
+    .about-page .contact-card { min-width: 160px; padding: 16px 20px; }
+    .about-page .contact-card .ci { font-size: 22px; }
+    .about-page .contact-card h4 { font-size: 10px; }
+    .about-page .big-cta { padding: 12px 32px; font-size: 14px; }
+  }
+
   @media (max-width: 640px) {
-    .about-page section { padding: 48px 20px; }
-    .about-page .why-grid { grid-template-columns: 1fr; }
-    .about-page .stat { padding: 18px 14px; }
-    .about-page .hero { padding: 48px 20px 60px; }
+    .about-page section { padding: 36px 16px; }
+    .about-page h1 { font-size: 26px; }
+    .about-page h2 { font-size: 22px; }
+    .about-page .lead { font-size: 14px; margin-bottom: 28px; }
+    .about-page .offer-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .about-page .offer-card { padding: 16px 14px; }
+    .about-page .offer-icon { font-size: 24px; margin-bottom: 10px; }
+    .about-page .offer-card h3 { font-size: 13px; margin-bottom: 6px; }
+    .about-page .offer-card p { font-size: 11px; }
+    .about-page .why-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
+    .about-page .why-item { padding: 14px; gap: 10px; }
+    .about-page .why-check { width: 28px; height: 28px; font-size: 12px; }
+    .about-page .why-item h4 { font-size: 13px; margin-bottom: 4px; }
+    .about-page .why-item p { font-size: 11px; }
+    .about-page .contact-section { background: var(--cream); }
+    .about-page .contact-inner > p { font-size: 14px; margin-bottom: 24px; }
+    .about-page .contact-cards { flex-direction: column; gap: 10px; }
+    .about-page .contact-card { min-width: 100%; }
+    .about-page .big-cta { padding: 10px 26px; font-size: 13px; }
+  }
+
+  @media (max-width: 480px) {
+    .about-page section { padding: 28px 12px; }
+    .about-page h1 { font-size: 22px; margin-bottom: 16px; }
+    .about-page h2 { font-size: 18px; margin-bottom: 20px; }
+    .about-page .offer-grid { grid-template-columns: 1fr; gaps: 10px; }
+    .about-page .why-grid { gap: 10px; }
+    .about-page .contact-card h4 { font-size: 9px; }
+    .about-page .hero { padding: 36px 12px 48px; }
   }
 </style>
 
@@ -173,53 +224,53 @@
       </div>
     </div>
 
-    <h1>Your Village's<br><em>Digital Heartbeat</em></h1>
-    <p>Bringing real-time market rates, local news, jobs, rentals, and business tools to every farmer and shop owner — at a price everyone can afford.</p>
-    <a class="hero-cta" href="mailto:contact@aajchaoffer.com">Get in Touch →</a>
+    <h1>{{ __('ui.about_hero_title_1') }}<br><em>{{ __('ui.about_hero_title_2') }}</em></h1>
+    <p>{{ __('ui.about_hero_intro') }}</p>
+    <a class="hero-cta" href="mailto:contact@aajchaoffer.com">{{ __('ui.get_in_touch') }} →</a>
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="stat-num">7+</div><div class="stat-label">Core Sections</div></div>
-    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Cities Supported</div></div>
-    <div class="stat"><div class="stat-num">4</div><div class="stat-label">User Roles</div></div>
-    <div class="stat"><div class="stat-num">₹0</div><div class="stat-label">To Browse & Read</div></div>
+    <div class="stat"><div class="stat-num">7+</div><div class="stat-label">{{ __('ui.about_core_sections') }}</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">{{ __('ui.about_cities_supported') }}</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">{{ __('ui.about_user_roles') }}</div></div>
+    <div class="stat"><div class="stat-num">₹0</div><div class="stat-label">{{ __('ui.about_to_browse_read') }}</div></div>
   </div>
 
   <section class="offers-section">
     <div class="offers-inner">
-      <div class="section-tag">What We Offer</div>
-      <h2>Everything Your <span>Community Needs</span></h2>
-      <p class="lead">AajchaOffer is a one-stop platform built for small towns and villages — real data, local language, zero complexity.</p>
+      <div class="section-tag">{{ __('ui.about_what_we_offer') }}</div>
+      <h2>{{ __('ui.about_everything_your') }} <span>{{ __('ui.about_community_needs') }}</span></h2>
+      <p class="lead">{{ __('ui.about_offer_lead') }}</p>
       <div class="offer-grid">
         <div class="offer-card">
           <div class="offer-icon">🌾</div>
-          <h3>Live Market Rates</h3>
-          <p>Today's, yesterday's, and tomorrow's APMC rates for soybean, toor, wheat & more — directly from government APIs.</p>
+          <h3>{{ __('ui.about_card_live_market_rates') }}</h3>
+          <p>{{ __('ui.about_card_live_market_rates_desc') }}</p>
         </div>
         <div class="offer-card">
           <div class="offer-icon">📰</div>
-          <h3>Local News & Updates</h3>
-          <p>City-specific news, events, and a beautifully designed CityPulse newspaper you can download and share.</p>
+          <h3>{{ __('ui.about_card_local_news_updates') }}</h3>
+          <p>{{ __('ui.about_card_local_news_updates_desc') }}</p>
         </div>
         <div class="offer-card">
           <div class="offer-icon">💼</div>
-          <h3>Jobs Board</h3>
-          <p>Shop owners post local jobs. Government vacancies with official links. Apply with a single call tap.</p>
+          <h3>{{ __('ui.about_card_jobs_board') }}</h3>
+          <p>{{ __('ui.about_card_jobs_board_desc') }}</p>
         </div>
         <div class="offer-card">
           <div class="offer-icon">🏡</div>
-          <h3>Rentals & Buy/Sell</h3>
-          <p>Houses, shops, land, vehicles — list or find rentals. Buy & sell second-hand goods and farm equipment.</p>
+          <h3>{{ __('ui.about_card_rentals_buy_sell') }}</h3>
+          <p>{{ __('ui.about_card_rentals_buy_sell_desc') }}</p>
         </div>
         <div class="offer-card">
           <div class="offer-icon">🌿</div>
-          <h3>Farming Hub</h3>
-          <p>Government schemes, beekeeping tips, farming trends, blogs — all in one place for every farmer.</p>
+          <h3>{{ __('ui.about_card_farming_hub') }}</h3>
+          <p>{{ __('ui.about_card_farming_hub_desc') }}</p>
         </div>
         <div class="offer-card">
           <div class="offer-icon">🏪</div>
-          <h3>Digital Shop Pages</h3>
-          <p>Shop owners get a fully customizable web page, business card, worker management, and offer listings — all in one panel.</p>
+          <h3>{{ __('ui.about_card_digital_shop_pages') }}</h3>
+          <p>{{ __('ui.about_card_digital_shop_pages_desc') }}</p>
         </div>
       </div>
     </div>
@@ -227,32 +278,32 @@
 
   <section class="why-section">
     <div class="why-inner">
-      <div class="section-tag">Why AajchaOffer</div>
-      <h2>Built for Bharat. Priced for Everyone.</h2>
+      <div class="section-tag">{{ __('ui.about_why_aajchaoffer') }}</div>
+      <h2>{{ __('ui.about_built_for_bharat') }}</h2>
       <div class="why-grid">
         <div class="why-item">
           <div class="why-check">✓</div>
-          <div><h4>Truly Affordable</h4><p>Fraction of the cost of traditional digital marketing. Small shops can go online without breaking the bank.</p></div>
+          <div><h4>{{ __('ui.about_why_truly_affordable') }}</h4><p>{{ __('ui.about_why_truly_affordable_desc') }}</p></div>
         </div>
         <div class="why-item">
           <div class="why-check">✓</div>
-          <div><h4>No Login to Browse</h4><p>Anyone can view all data — news, rates, jobs — without signing up. Login only to add or update content.</p></div>
+          <div><h4>{{ __('ui.about_why_no_login') }}</h4><p>{{ __('ui.about_why_no_login_desc') }}</p></div>
         </div>
         <div class="why-item">
           <div class="why-check">✓</div>
-          <div><h4>City-Aware Data</h4><p>Switch city manually or auto-detect nearby cities. All data — rates, news, jobs — is hyper-local.</p></div>
+          <div><h4>{{ __('ui.about_why_city_aware') }}</h4><p>{{ __('ui.about_why_city_aware_desc') }}</p></div>
         </div>
         <div class="why-item">
           <div class="why-check">✓</div>
-          <div><h4>Digitize Your Business</h4><p>Get a shareable shop page, Maps presence, experience letters, ID cards, and offer listings.</p></div>
+          <div><h4>{{ __('ui.about_why_digitize_business') }}</h4><p>{{ __('ui.about_why_digitize_business_desc') }}</p></div>
         </div>
         <div class="why-item">
           <div class="why-check">✓</div>
-          <div><h4>Government-Grade Data</h4><p>Market rates, gold/silver prices, and job listings fetched from official government-approved APIs.</p></div>
+          <div><h4>{{ __('ui.about_why_govt_data') }}</h4><p>{{ __('ui.about_why_govt_data_desc') }}</p></div>
         </div>
         <div class="why-item">
           <div class="why-check">✓</div>
-          <div><h4>Farmer-First Design</h4><p>Simple, clean, readable UI designed for first-time smartphone users in rural Maharashtra and beyond.</p></div>
+          <div><h4>{{ __('ui.about_why_farmer_first') }}</h4><p>{{ __('ui.about_why_farmer_first_desc') }}</p></div>
         </div>
       </div>
     </div>
@@ -260,27 +311,27 @@
 
   <section class="contact-section" id="contact">
     <div class="contact-inner">
-      <div class="section-tag">Let's Connect</div>
-      <h2>Ready to Take Your Business <span>Digital?</span></h2>
-      <p>Whether you're a shop owner, local business, or just curious — we're here. Get your shop page live, reach more customers, and grow with AajchaOffer.</p>
+      <div class="section-tag">{{ __('ui.about_lets_connect') }}</div>
+      <h2>{{ __('ui.about_ready_take_business') }} <span>{{ __('ui.about_digital_q') }}</span></h2>
+      <p>{{ __('ui.about_contact_intro') }}</p>
       <div class="contact-cards">
         <div class="contact-card">
           <div class="ci">✉️</div>
-          <h4>Email Us</h4>
+          <h4>{{ __('ui.about_email_us') }}</h4>
           <a href="mailto:contact@aajchaoffer.com">contact@aajchaoffer.com</a>
         </div>
         <div class="contact-card">
           <div class="ci">🌐</div>
-          <h4>Platform</h4>
+          <h4>{{ __('ui.about_platform') }}</h4>
           <span>AajchaOffer.com</span>
         </div>
         <div class="contact-card">
           <div class="ci">📍</div>
-          <h4>Serving</h4>
-          <span>Maharashtra & Beyond</span>
+          <h4>{{ __('ui.about_serving') }}</h4>
+          <span>{{ __('ui.about_serving_value') }}</span>
         </div>
       </div>
-      <a class="big-cta" href="mailto:contact@aajchaoffer.com">Contact Us to Build Your Site →</a>
+      <a class="big-cta" href="mailto:contact@aajchaoffer.com">{{ __('ui.about_contact_cta') }} →</a>
     </div>
   </section>
 </div>
