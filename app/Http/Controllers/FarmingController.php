@@ -10,6 +10,9 @@ use App\Services\NewsClient;
 use App\Services\TextTranslationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class FarmingController extends Controller
 {
@@ -170,6 +173,106 @@ class FarmingController extends Controller
     public function show(Farming $farming)
     {
         return view('farming.show', compact('farming'));
+    }
+
+    public function liveMandi(Request $request)
+    {
+        $validated = $request->validate([
+            'state' => 'nullable|string|max:100',
+            'district' => 'nullable|string|max:100',
+            'limit' => 'nullable|integer|min:1|max:30',
+        ]);
+
+        $state = trim((string) ($validated['state'] ?? 'Maharashtra')) ?: 'Maharashtra';
+        $district = trim((string) ($validated['district'] ?? ''));
+        $limit = (int) ($validated['limit'] ?? 14);
+
+        $resourceId = env('DATA_GOV_RESOURCE_ID', '35985678-0d79-46b4-9ed6-6f13308a1d24');
+        $apiKey = env('DATA_GOV_API_KEY', '579b464db66ec23bdd000001c20c0593c63b4ae97757e11d2e3f369e');
+        $baseUrl = sprintf('https://api.data.gov.in/resource/%s', $resourceId);
+
+        $cacheKey = 'farming_live_mandi_' . md5(strtolower($state . '|' . $district . '|' . $limit));
+        $staleKey = $cacheKey . '_stale';
+
+        try {
+            $records = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($baseUrl, $apiKey, $state, $district, $limit, $staleKey) {
+                $params = [
+                    'api-key' => $apiKey,
+                    'format' => 'json',
+                    'limit' => $limit,
+                    'filters[State]' => $state,
+                ];
+
+                if ($district !== '') {
+                    $params['filters[District]'] = $district;
+                }
+
+                $response = Http::acceptJson()->timeout(12)->retry(2, 300)->get($baseUrl, $params);
+
+                if (!$response->successful()) {
+                    throw new \RuntimeException('Agmarknet request failed with status ' . $response->status());
+                }
+
+                $json = $response->json();
+                $items = array_values(array_filter($json['records'] ?? [], fn ($row) => is_array($row)));
+
+                if (!empty($items)) {
+                    Cache::put($staleKey, $items, now()->addHours(12));
+                }
+
+                return $items;
+            });
+
+            return response()->json([
+                'records' => $records,
+                'source' => 'agmarknet',
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('Farming live mandi fetch failed', [
+                'state' => $state,
+                'district' => $district,
+                'error' => $e->getMessage(),
+            ]);
+
+            $stale = Cache::get($staleKey, []);
+            if (!empty($stale)) {
+                return response()->json([
+                    'records' => $stale,
+                    'source' => 'stale',
+                ]);
+            }
+
+            $fallback = Market::query()
+                ->whereNotNull('commodity')
+                ->when($district !== '', function ($query) use ($district) {
+                    $query->where(function ($inner) use ($district) {
+                        $inner->where('district', 'like', '%' . $district . '%')
+                            ->orWhere('city', 'like', '%' . $district . '%');
+                    });
+                })
+                ->orderByDesc('price_date')
+                ->orderByDesc('created_at')
+                ->limit($limit)
+                ->get()
+                ->map(function ($row) {
+                    return [
+                        'Commodity' => $row->commodity,
+                        'Market' => $row->city,
+                        'District' => $row->district,
+                        'Modal_Price' => $row->modal_price,
+                        'Min_Price' => $row->min_price,
+                        'Max_Price' => $row->max_price,
+                        'Arrival_Date' => optional($row->price_date)->format('d/m/Y')
+                            ?: optional($row->updated_at)->format('d/m/Y'),
+                    ];
+                })
+                ->values();
+
+            return response()->json([
+                'records' => $fallback,
+                'source' => 'database',
+            ]);
+        }
     }
 
     public function create()

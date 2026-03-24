@@ -515,6 +515,7 @@
 </div>
 
 <script>
+  const cpServerMetals = @json($liveBarMetals ?? []);
   let cpDownloadFormat = 'pdf';
 
   function cpEl(id){ return document.getElementById(id); }
@@ -593,26 +594,16 @@
     } catch (error) {}
 
     try {
-      const fxResponse = await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=INR');
-      const fxData = await fxResponse.json();
-      const usdRate = fxData?.rates?.INR ? Number(fxData.rates.INR) : 84.10;
+      let usdRate = cpServerMetals?.usd_inr ? Number(cpServerMetals.usd_inr) : 84.10;
+      if (!cpServerMetals?.usd_inr) {
+        const fxResponse = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        const fxData = await fxResponse.json();
+        usdRate = fxData?.rates?.INR ? Number(fxData.rates.INR) : usdRate;
+      }
       cpEl('cpUsd').textContent = '₹' + usdRate.toFixed(2);
 
-      let goldPerOz = 3180;
-      let silverPerOz = 33.5;
-      try {
-        const goldResponse = await fetch('https://api.frankfurter.dev/v1/latest?base=XAU&symbols=USD');
-        const goldData = await goldResponse.json();
-        if(goldData?.rates?.USD){ goldPerOz = Number(goldData.rates.USD); }
-      } catch (error) {}
-      try {
-        const silverResponse = await fetch('https://api.frankfurter.dev/v1/latest?base=XAG&symbols=USD');
-        const silverData = await silverResponse.json();
-        if(silverData?.rates?.USD){ silverPerOz = Number(silverData.rates.USD); }
-      } catch (error) {}
-
-      const goldInr = Math.round((goldPerOz / 31.1035) * 10 * usdRate);
-      const silverInr = Math.round((silverPerOz / 31.1035) * 1000 * usdRate);
+      const goldInr = Number(cpServerMetals?.gold_10g || 0) || 85900;
+      const silverInr = Number(cpServerMetals?.silver_kg || 0) || 96500;
       cpEl('cpGold').textContent = '₹' + goldInr.toLocaleString('en-IN');
       cpEl('cpSilver').textContent = '₹' + silverInr.toLocaleString('en-IN');
       cpEl('cpGoldC').textContent = '+₹' + Math.max(120, Math.round(goldInr * 0.003)).toLocaleString('en-IN');

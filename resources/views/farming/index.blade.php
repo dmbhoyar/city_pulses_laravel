@@ -16,7 +16,7 @@
     --farm-shadow:0 4px 18px rgba(61,43,31,.10);
   }
 
-  .farm-wrap{max-width:1280px;margin:0 auto;padding:16px 18px 30px;color:var(--farm-text)}
+  .farm-wrap{max-width:none;margin:0;padding:16px 18px 30px;color:var(--farm-text)}
   .farm-hero{background:linear-gradient(120deg,#1a5e20 0%, #2e7d32 60%, #43a047 100%);border-radius:14px;padding:22px 24px;color:#fff;box-shadow:var(--farm-shadow);margin-bottom:16px}
   .farm-hero h1{margin:0 0 8px;font-size:2rem;line-height:1.15;font-weight:800}
   .farm-hero p{margin:0;color:rgba(255,255,255,.9);max-width:760px;font-size:.95rem;line-height:1.6}
@@ -34,6 +34,7 @@
   .farm-stat .l{font-size:.75rem;color:var(--farm-muted);text-transform:uppercase;letter-spacing:.7px}
 
   .farm-main{display:grid;grid-template-columns:2fr 1fr;gap:14px;align-items:start}
+  .farm-main > div,.farm-main > aside{min-width:0}
   .farm-card{background:var(--farm-card);border:1px solid var(--farm-border);border-radius:12px;box-shadow:var(--farm-shadow)}
   .farm-card-h{padding:12px 14px;border-bottom:1px solid var(--farm-border);display:flex;justify-content:space-between;align-items:center}
   .farm-card-h h3{margin:0;font-size:1rem;display:flex;align-items:center;gap:6px}
@@ -85,6 +86,8 @@
 
   .farm-weather{background:linear-gradient(135deg,#3d2b1f,#5c3d2e);border-radius:11px;padding:11px;color:#fff;margin-bottom:10px}
   .farm-weather .row{display:flex;justify-content:space-between;gap:8px;font-size:.82rem;margin-top:6px}
+  .farm-weather .row span{min-width:0}
+  .farm-weather .row strong{margin-left:auto;text-align:right;white-space:nowrap;min-width:max-content}
   .farm-news-live{margin-top:10px;border:1px dashed var(--farm-border);border-radius:10px;padding:8px 10px;background:#fff}
   .farm-news-live h5{margin:0 0 6px;font-size:.78rem;display:flex;align-items:center;justify-content:space-between;gap:8px}
   .farm-news-live .item{padding:7px 0;border-bottom:1px solid var(--farm-border)}
@@ -122,10 +125,11 @@
     .farm-article p{font-size:.78rem}
     .farm-scheme h5{font-size:.82rem}
     .farm-scheme p{font-size:.72rem}
-    .farm-calendar{grid-template-columns:80px repeat(6,1fr)}
+    .farm-card#calendar .farm-card-b{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .farm-calendar{grid-template-columns:80px repeat(12,minmax(28px,1fr));min-width:560px}
     .farm-cal-head{font-size:.6rem}
     .farm-cal-crop{font-size:.7rem}
-    .farm-table{font-size:.75rem;min-width:100%;overflow-x:auto}
+    .farm-table{font-size:.75rem;min-width:640px}
     .farm-table td, .farm-table th{padding:6px 7px}
   }
 
@@ -170,6 +174,9 @@
     .farm-articles{gap:8px}
     .farm-scheme-grid{grid-template-columns:1fr;gap:6px}
     .farm-scheme{padding:7px}
+    .farm-weather{padding:9px}
+    .farm-weather .row{font-size:.74rem;gap:6px}
+    .farm-weather .row strong{font-size:.74rem}
   }
 
   @media(max-width:360px){
@@ -415,7 +422,7 @@
     const agmarknetState = @json((string) ($selectedCity?->agmarknet_state ?? 'Maharashtra'));
     const agmarknetDistrict = @json((string) ($selectedCity?->agmarknet_district ?? ''));
     const cityName = @json((string) ($selectedCityName ?? 'Maharashtra'));
-    const AGMARKNET_KEY = '579b464db66ec23bdd000001cdd3946e44ce4aab0ddc33ad780ea6de';
+    const FARM_LIVE_MANDI_URL = @json(route('farming.live_mandi'));
     const farmI18n = {
       clear: @json(__('ui.weather_clear')),
       mostlyClear: @json(__('ui.weather_mostly_clear')),
@@ -460,17 +467,20 @@
 
     async function loadLiveMandi(){
       try {
-        let url = `https://api.data.gov.in/resource/9ef4c6348b5524a09a98c1dc8b3f6b0b?api-key=${AGMARKNET_KEY}&format=json&limit=14`;
-
-        if (agmarknetState) {
-          url += `&filters[State]=${encodeURIComponent(agmarknetState)}`;
-        }
-
+        const params = new URLSearchParams({
+          state: agmarknetState || 'Maharashtra',
+          limit: '14',
+        });
         if (agmarknetDistrict) {
-          url += `&filters[District]=${encodeURIComponent(agmarknetDistrict)}`;
+          params.set('district', agmarknetDistrict);
         }
 
-        const res = await fetch(url);
+        const res = await fetch(`${FARM_LIVE_MANDI_URL}?${params.toString()}`, {
+          headers: { 'Accept': 'application/json' },
+        });
+        if (!res.ok) {
+          throw new Error(`Live mandi request failed with status ${res.status}`);
+        }
         const data = await res.json();
         const records = Array.isArray(data.records) ? data.records : [];
 

@@ -38,6 +38,7 @@
         return [
             'n' => $r->commodity ?: 'General Rate',
             'u' => ($r->city ?: 'Local mandi') . ' market',
+            'min' => (float) ($r->min_price ?? 0),
             'p' => $current,
             'pv' => $previous,
             'max' => (float) ($r->max_price ?? 0),
@@ -119,7 +120,7 @@
 
     .ao-home{--sf:#FF6B00;--gd:#D4A017;--em:#1A936F;--cr:#FFF8F0;--ink:#1A1A2E;--mu:#6B7280;--cd:#FFFFFF;--bd:#F0E8DC;--rd:#E53E3E;--bl:#2B6CB0;font-family:'DM Sans','Noto Sans Devanagari',sans-serif;color:var(--ink);max-width:100%;overflow-x:hidden;margin:0 auto;padding:1rem;width:100%}
     .ao-home *{box-sizing:border-box}
-    .ao-inner{max-width:1120px;margin:0 auto;width:100%}
+    .ao-inner{max-width:none;margin:0;width:100%}
     @media(max-width:768px){.ao-home{padding:0.75rem}}
     @media(max-width:640px){.ao-home{padding:0.5rem}}
     @media(max-width:480px){.ao-home{padding:0.5rem;font-size:0.95rem}}
@@ -148,7 +149,7 @@
     .ao-ti{font-size:.75rem}
     .ao-ti b{font-family:'DM Mono',monospace}
 
-    .ao-grid{display:grid;grid-template-columns:1fr 300px;gap:clamp(0.75rem,2vw,1rem);align-items:start;width:100%;max-width:100%;margin:0 auto}
+    .ao-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,320px);gap:clamp(0.75rem,2vw,1rem);align-items:start;width:100%;max-width:100%;margin:0}
     @media(max-width:1024px){.ao-grid{grid-template-columns:1fr 260px;gap:0.85rem}}
     @media(max-width:900px){.ao-grid{grid-template-columns:1fr 240px;gap:0.75rem}}
     @media(max-width:768px){.ao-grid{grid-template-columns:1fr;gap:0.75rem}}
@@ -839,6 +840,7 @@
             rows.push({
                 n: current.commodity,
                 u: `${current.market} mandi`,
+                min: current.min,
                 p: current.modal,
                 pv: previous.modal,
                 max: current.max,
@@ -865,7 +867,12 @@
             const pct = r.pv ? Math.abs((diff / r.pv) * 100).toFixed(1) : '0.0';
             const cls = diff > 0 ? 'ao-up' : diff < 0 ? 'ao-dn' : 'ao-fl';
             const trend = diff > 0 ? '▲' : diff < 0 ? '▼' : '—';
-            return `<div class="ao-row"><div><strong>${esc(r.n)}</strong><div class="ao-row-sub">${esc(r.u || '')}${r.date ? ' · ' + esc(r.date) : ''}</div></div><div class="ao-p">${inr(r.p)}</div><div class="ao-c ${cls}">${diff === 0 ? '—' : (diff > 0 ? '+' : '') + inr(diff)}</div><div class="ao-c ${cls}">${trend} ${diff === 0 ? '0.0' : pct}%</div></div>`;
+            const minValue = Number(r.min || 0);
+            const maxValue = Number(r.max || 0);
+            const rangeText = (minValue > 0 || maxValue > 0)
+                ? ` · Min ${inr(minValue || r.p)} · Max ${inr(maxValue || r.p)}`
+                : '';
+            return `<div class="ao-row"><div><strong>${esc(r.n)}</strong><div class="ao-row-sub">${esc(r.u || '')}${r.date ? ' · ' + esc(r.date) : ''}${rangeText}</div></div><div class="ao-p">${inr(r.p)}</div><div class="ao-c ${cls}">${diff === 0 ? '—' : (diff > 0 ? '+' : '') + inr(diff)}</div><div class="ao-c ${cls}">${trend} ${diff === 0 ? '0.0' : pct}%</div></div>`;
         }).join('');
     }
 

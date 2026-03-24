@@ -66,6 +66,7 @@ Route::resource('listings', ListingsController::class);
 
 // Farming
 Route::resource('farming', FarmingController::class);
+Route::get('/farming/live-mandi', [FarmingController::class, 'liveMandi'])->name('farming.live_mandi');
 
 // Updates
 Route::resource('updates', UpdatesController::class);
