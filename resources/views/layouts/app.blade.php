@@ -50,6 +50,7 @@
   @endphp
   <link rel="stylesheet" href="{{ asset('css/application.css') }}?v={{ $appCssVersion }}">
   <style>
+      @stack('styles')
     .global-top{position:sticky;top:0;z-index:120;background:rgba(255,248,240,.96);backdrop-filter:blur(14px);border-bottom:1px solid #F0E8DC;padding:.62rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem}
       /* Panel active item */
       .panel-list li.active-item{background:linear-gradient(90deg,#eef5ff,#f4f8ff);border-left:3px solid #2f4e74;padding-left:5px}
@@ -87,6 +88,8 @@
     .mobile-sidebar-brand .mobile-logo{width:26px;height:26px;display:block}
     .mobile-sidebar-brand .mobile-title{font-weight:700;font-size:.95rem;color:#334a68}
     .sidebar-panel{background:#f3f4f6 !important;border-right:1px solid #d9dde3 !important}
+    .about-ruby-icon{display:flex;align-items:center;justify-content:flex-start;margin:4px 0 8px 0}
+    .about-ruby-icon svg{display:block}
     .guide-bot{position:fixed;right:16px;bottom:16px;z-index:420;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
     .guide-toggle{
       width:56px;height:56px;border:none;border-radius:50%;
@@ -131,6 +134,7 @@
       .guide-list li{padding:7px 8px}
     }
   </style>
+@stack('scripts')
 </head>
 @php
   $routeShopParam = request()->route('shop');
@@ -217,6 +221,16 @@
           </a>
           <span class="icon-name">{{ __('ui.services') }}</span>
         </li>
+        <li class="icon-item {{ request()->routeIs('shortsplay') ? 'selected' : '' }}" data-key="shortsplay">
+          <a href="{{ route('shortsplay') }}" class="icon-square" title="ShortsPlay">
+            <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M4 8l4-4h8l4 4-8 12L4 8z" fill="#e23b57"/>
+              <path d="M8 4l4 4 4-4" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 8h16" fill="none" stroke="#b91f3b" stroke-width="1.1"/>
+            </svg>
+          </a>
+          <span class="icon-name">SHORTSPLAY</span>
+        </li>
         <li class="icon-item {{ request()->routeIs('about') ? 'selected' : '' }}" data-key="about">
           <a href="{{ route('about') }}" class="icon-square" title="About Us">
             <img src="{{ asset('images/icons/about.svg') }}" alt="About Us" width="24" height="24">
@@ -259,6 +273,7 @@
       <a href="{{ route('rents.index') }}" class="mobile-sec-link {{ request()->routeIs('rents.*') ? 'active' : '' }}">🏘️ {{ __('ui.rents') }}</a>
       <a href="{{ route('buy.index') }}" class="mobile-sec-link {{ request()->routeIs('buy.*') ? 'active' : '' }}">🛒 {{ __('ui.buy') }}</a>
       <a href="{{ route('services.index') }}" class="mobile-sec-link {{ request()->routeIs('services.*') ? 'active' : '' }}">🛠️ {{ __('ui.services') }}</a>
+      <a href="{{ route('shortsplay') }}" class="mobile-sec-link {{ request()->routeIs('shortsplay') ? 'active' : '' }}">💎 ShortsPlay</a>
       <a href="{{ route('about') }}" class="mobile-sec-link {{ request()->routeIs('about') ? 'active' : '' }}">ℹ️ {{ __('ui.about_us') }}</a>
     </div>
 
@@ -311,6 +326,15 @@
         $myServiceXShareUrl = "https://twitter.com/intent/tweet?url={$myServiceUrlEncoded}&text={$myServiceShareTextEncoded}";
         $myServiceTelegramShareUrl = "https://t.me/share/url?url={$myServiceUrlEncoded}&text={$myServiceShareTextEncoded}";
       @endphp
+      @if(request()->routeIs('about'))
+        <div class="about-ruby-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 8l4-4h8l4 4-8 12L4 8z" fill="#e23b57"/>
+            <path d="M8 4l4 4 4-4" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 8h16" fill="none" stroke="#b91f3b" stroke-width="1.1"/>
+          </svg>
+        </div>
+      @endif
       <div class="panel-title {{ request()->routeIs('home') || $isMyService || $isMyShop || $panelIsSuperadmin ? 'active' : '' }}">
         {{ request()->routeIs('about') ? __('ui.about_us') : ($panelIsSuperadmin ? __('ui.admin_panel') : ($isMyService ? __('ui.my_service') : ($isMyShop ? __('ui.my_shop') : __('ui.home')))) }}
       </div>
@@ -706,7 +730,7 @@
           ['+',@json(__('ui.share_blog')),"{{ route('farming.create') }}"],
         ],
         rec: [@json(__('ui.rec_farming_citywise')),@json(__('ui.rec_farming_blog_short')),@json(__('ui.rec_farming_live_api'))],
-        icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2e7d32" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 7h-6l3-7zM6 12h12v8H6z"/></svg>',
+        icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2e7d32" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 7h-6l3-7zM6 10h10v8H6z"/></svg>',
         color: '#2e7d32'
       },
       rents: {
@@ -738,6 +762,15 @@
         icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#0d6efd" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4zM4 10h16v8H4z"/></svg>',
         color: '#0d6efd'
       },
+      shortsplay: {
+        title: 'ShortsPlay',
+        items: [
+          ['💎','Open ShortsPlay',"{{ route('shortsplay') }}"],
+        ],
+        rec: ['Watch short videos', 'Earn ruby points', 'Track your leaderboard rank'],
+        icon: '<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M4 8l4-4h8l4 4-8 12L4 8z" fill="#e23b57"/><path d="M8 4l4 4 4-4" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 8h16" fill="none" stroke="#b91f3b" stroke-width="1.1"/></svg>',
+        color: '#e23b57'
+      },
       admin: {
         title: @json(__('ui.admin_panel')),
         items: [
@@ -768,7 +801,7 @@
           ['📊',@json(__('ui.dashboard')),       "{{ route('shop_dashboard') }}"],
         ],
         rec: [@json(__('ui.rec_manage_service_team')),@json(__('ui.rec_handle_requests')),@json(__('ui.rec_share_id_card'))],
-        icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>',
+        icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#2f4e74" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 12H7v-2h8v2zm0-4H7v-2h8v2zm5-5H4V6h16v1z"/></svg>',
         color: '#2f4e74'
       },
       myshop: {

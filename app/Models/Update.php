@@ -12,7 +12,12 @@ class Update extends Model
 
     const UPDATE_TYPES = ['general', 'offer', 'event'];
 
-    protected $fillable = ['title', 'content', 'update_type', 'source_url', 'photo_path', 'published_at', 'city_id', 'shop_id'];
+    protected $fillable = ['title', 'content', 'update_type', 'source_url', 'photo_path', 'published_at', 'city_id', 'shop_id', 'points_required'];
+    // Add points_required attribute for offers
+    public function getPointsRequiredAttribute($value)
+    {
+        return $value && $value > 0 ? $value : 200;
+    }
 
     protected $casts = [
         'published_at' => 'datetime',

@@ -23,7 +23,7 @@
 
     <div class="field">
       <label for="mobile_number">{{ __('ui.mobile_number') }}</label>
-      <input type="tel" id="mobile_number" name="mobile_number" value="{{ old('mobile_number') }}" autocomplete="tel">
+      <input type="tel" id="mobile_number" name="mobile_number" value="{{ old('mobile_number') }}" autocomplete="tel" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number">
     </div>
 
     <div class="field">
@@ -33,7 +33,7 @@
         <input type="hidden" name="role" value="seller">
       @else
         <select id="role" name="role" class="form-control">
-          <option value="normal" {{ old('role','normal') === 'normal' ? 'selected' : '' }}>{{ __('ui.normal') }}</option>
+          <option value="user" {{ old('role','user') === 'user' ? 'selected' : '' }}>{{ __('ui.normal') }}</option>
           <option value="seller" {{ old('role') === 'seller' ? 'selected' : '' }}>{{ __('ui.seller') }}</option>
           <option value="shopowner" {{ old('role') === 'shopowner' ? 'selected' : '' }}>{{ __('ui.shop_owner') }}</option>
           <option value="shopworker" {{ old('role') === 'shopworker' ? 'selected' : '' }}>{{ __('ui.shop_worker') }}</option>
@@ -67,6 +67,8 @@
         </button>
       </div>
     </div>
+
+
 
     <div class="actions">
       <button type="submit" class="button primary">{{ __('ui.sign_up') }}</button>

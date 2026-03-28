@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\EmailOtpService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
@@ -13,13 +14,17 @@ class ForgotPasswordController extends Controller
         return view('auth.passwords.email');
     }
 
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(Request $request, EmailOtpService $otpService)
     {
-        $request->validate(['email' => 'required|email']);
-        $status = Password::sendResetLink($request->only('email'));
+        $request->validate(['mobile_number' => 'required|regex:/^[0-9]{10}$/']);
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with('notice', __($status))
-            : back()->withErrors(['email' => __($status)]);
+        $mobileNumber = trim((string) $request->mobile_number);
+
+        if (User::where('mobile_number', $mobileNumber)->exists()) {
+            $otpService->sendOtp($mobileNumber, 'password_reset');
+        }
+
+        return redirect()->route('password.otp.form', ['mobile_number' => $mobileNumber])
+            ->with('notice', 'If your mobile number exists, an OTP has been sent.');
     }
 }

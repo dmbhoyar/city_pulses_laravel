@@ -12,7 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        //
+        // Run on 1st, 7th, 14th, 21st, and 28th of each month at 2:00 AM
+        $schedule->command('coupons:fetch-amazon')->monthlyOn(1, '2:00');
+        $schedule->command('coupons:fetch-amazon')->monthlyOn(7, '2:00');
+        $schedule->command('coupons:fetch-amazon')->monthlyOn(14, '2:00');
+        $schedule->command('coupons:fetch-amazon')->monthlyOn(21, '2:00');
+        $schedule->command('coupons:fetch-amazon')->monthlyOn(28, '2:00');
     }
 
     /**

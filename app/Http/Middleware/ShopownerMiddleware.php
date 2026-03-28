@@ -19,7 +19,7 @@ class ShopownerMiddleware
             return $next($request);
         }
 
-        if (strtolower((string) $user->role) === 'normal') {
+        if (in_array(strtolower((string) $user->role), ['normal', 'user'], true)) {
             $user->role = 'shopowner';
             $user->save();
             return $next($request);

@@ -27,7 +27,7 @@ class UsersController extends Controller
             'last_name' => 'nullable|string|max:100',
             'email' => 'required|email|max:255|unique:users,email',
             'mobile_number' => 'nullable|string|max:20',
-            'role' => 'required|string|in:normal,shopowner,service_provider,shopworker,superadmin,admin',
+            'role' => 'required|string|in:user,shopowner,service_provider,shopworker,superadmin,admin',
             'password' => 'required|string|min:6|max:255',
         ]);
 
@@ -50,7 +50,7 @@ class UsersController extends Controller
             'last_name' => 'nullable|string|max:100',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'mobile_number' => 'nullable|string|max:20',
-            'role' => 'required|string|in:normal,shopowner,service_provider,shopworker,superadmin,admin',
+            'role' => 'required|string|in:user,shopowner,service_provider,shopworker,superadmin,admin',
             'password' => 'nullable|string|min:6|max:255',
         ]);
 

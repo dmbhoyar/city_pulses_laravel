@@ -20,7 +20,7 @@
         <div>
           <label>Role</label>
           <select name="role" required>
-            <option value="normal">normal</option>
+            <option value="user">user</option>
             <option value="shopowner">shopowner</option>
             <option value="service_provider">service_provider</option>
             <option value="shopworker">shopworker</option>
@@ -64,7 +64,7 @@
               <td><span class="admin-tag">{{ $u->role }}</span></td>
               <td>{{ optional($u->created_at)->format('d M Y') }}</td>
               <td>
-                <form action="{{ route('admin.users.update', $u) }}" method="POST" class="admin-inline">
+                <form action="{{ route('admin.users.update', $u) }}" method="POST" class="admin-inline" id="user-update-{{ $u->id }}">
                   @csrf
                   @method('PATCH')
                   <div class="row">
@@ -75,7 +75,7 @@
                   <div class="row2">
                     <input type="text" name="mobile_number" value="{{ $u->mobile_number }}" placeholder="Mobile">
                     <select name="role" required>
-                      @foreach(['normal','shopowner','service_provider','shopworker','superadmin','admin'] as $role)
+                      @foreach(['user','shopowner','service_provider','shopworker','superadmin','admin'] as $role)
                         <option value="{{ $role }}" {{ $u->role === $role ? 'selected' : '' }}>{{ $role }}</option>
                       @endforeach
                     </select>
@@ -83,13 +83,15 @@
                   <input type="password" name="password" placeholder="New password (optional)">
                   <div class="admin-actions">
                     <button type="submit" class="button">Update</button>
+                  </div>
                 </form>
+                <div class="admin-actions">
                     <form action="{{ route('admin.users.destroy', $u) }}" method="POST" onsubmit="return confirm('Delete this user?')">
                       @csrf
                       @method('DELETE')
                       <button type="submit" class="button danger">Delete</button>
                     </form>
-                  </div>
+                </div>
               </td>
             </tr>
           @empty

@@ -3,16 +3,17 @@
 @section('content')
 <div class="devise-panel">
   <h2>{{ __('ui.forgot_your_password') }}</h2>
+  <p>Enter your mobile number to receive OTP and reset your password.</p>
 
   <form action="{{ route('password.email') }}" method="POST" class="devise-form">
     @csrf
     <div class="field">
-      <label for="email">{{ __('ui.email') }}</label>
-      <input type="email" id="email" name="email" value="{{ old('email') }}" autofocus autocomplete="email">
+      <label for="mobile_number">{{ __('ui.mobile_number') }}</label>
+      <input type="tel" id="mobile_number" name="mobile_number" value="{{ old('mobile_number') }}" autofocus autocomplete="tel" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number">
     </div>
 
     <div class="actions">
-      <button type="submit" class="button primary">{{ __('ui.send_reset_password_instructions') }}</button>
+      <button type="submit" class="button primary">Send OTP</button>
     </div>
   </form>
 

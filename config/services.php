@@ -25,4 +25,10 @@ return [
         'webhook_secret' => env('STRIPE_ENDPOINT_SECRET'),
     ],
 
+    'sms' => [
+        'api_url' => env('SMS_API_URL'),
+        'api_key' => env('SMS_API_KEY'),
+        'sender' => env('SMS_SENDER', 'CITYPL'),
+    ],
+
 ];

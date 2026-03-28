@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('last_name')->default('');
             $table->string('email')->unique();
             $table->string('mobile_number')->default('');
-            $table->string('role')->default('normal')->index();
+            $table->string('role')->default('user')->index();
             $table->text('experience')->nullable();
             $table->string('tags')->nullable();
             $table->foreignId('shop_id')->nullable();

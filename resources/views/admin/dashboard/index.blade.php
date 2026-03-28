@@ -39,5 +39,48 @@
       <li>Update expired jobs/offers to maintain platform quality.</li>
     </ul>
   </div>
+
+  @if(auth()->user()->isSuperadmin())
+    <div class="admin-card" id="amazon-coupon-fetch">
+      <h3>Amazon Coupons</h3>
+      <button id="fetch-amazon-coupons-btn" class="button">Fetch Amazon Coupons</button>
+      <div id="fetch-amazon-coupons-result" style="margin-top:10px;"></div>
+    </div>
+  @endif
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('fetch-amazon-coupons-btn');
+    if (btn) {
+        btn.addEventListener('click', function() {
+            btn.disabled = true;
+            var resultDiv = document.getElementById('fetch-amazon-coupons-result');
+            resultDiv.innerHTML = 'Fetching...';
+            fetch("{{ route('admin.fetch_amazon_coupons') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.innerHTML = '<span style="color:green">' + data.message + '</span>';
+                } else {
+                    resultDiv.innerHTML = '<span style="color:red">' + data.message + '</span>';
+                }
+                btn.disabled = false;
+            })
+            .catch(() => {
+                resultDiv.innerHTML = '<span style="color:red">Error occurred.</span>';
+                btn.disabled = false;
+            });
+        });
+    }
+});
+</script>
+@endpush
 @endsection

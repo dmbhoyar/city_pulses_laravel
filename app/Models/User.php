@@ -15,7 +15,7 @@ class User extends Authenticatable implements CanResetPasswordContract
     protected $fillable = [
         'first_name', 'last_name', 'email', 'mobile_number',
         'password', 'role', 'experience', 'tags',
-        'shop_id', 'subscription_expires_at',
+        'shop_id', 'subscription_expires_at', 'ruby_points', 'shorts_role',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -55,6 +55,42 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function serviceReviews()
     {
         return $this->hasMany(ServiceReview::class);
+    }
+
+    // ShortsPlay Relationships
+    public function shortVideos()
+    {
+        return $this->hasMany(ShortVideo::class, 'creator_id');
+    }
+
+    public function videoLikes()
+    {
+        return $this->hasMany(VideoLike::class);
+    }
+
+    public function videoComments()
+    {
+        return $this->hasMany(VideoComment::class);
+    }
+
+    public function videoShares()
+    {
+        return $this->hasMany(VideoShare::class);
+    }
+
+    public function shortVideoSubscriptions()
+    {
+        return $this->hasMany(ShortVideoSubscription::class);
+    }
+
+    public function creatorSubscriptions()
+    {
+        return $this->hasMany(ShortVideoSubscription::class, 'creator_id');
+    }
+
+    public function rubyTiers()
+    {
+        return $this->hasMany(RubyTier::class);
     }
 
     // Role helpers

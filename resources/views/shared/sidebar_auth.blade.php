@@ -31,7 +31,11 @@
 
     {{-- User identity card --}}
     <div class="su-card">
-      <div class="su-avatar">{{ strtoupper(substr($user->first_name ?: $user->email, 0, 1)) }}</div>
+      @if(!empty($user->avatar_url))
+        <img src="{{ $user->avatar_url }}" alt="Avatar" class="su-avatar" style="object-fit:cover;">
+      @else
+        <div class="su-avatar">{{ strtoupper(substr($user->first_name ?: $user->email, 0, 1)) }}</div>
+      @endif
       <div class="su-info">
         <div class="su-name">{{ $user->full_name }}</div>
         <div class="su-email">{{ $user->email }}</div>
@@ -39,7 +43,7 @@
     </div>
 
     {{-- Quick workspace jump links --}}
-    @if($showMyService || $showMyShop || $showDashboard)
+    @if($showMyService || $showMyShop || $showDashboard || Route::has('profile.edit'))
     <div class="su-links">
       @if($showMyService)
         <a href="{{ route('myservice') }}" class="ws-btn">{{ __('ui.my_service') }}</a>
@@ -50,8 +54,8 @@
       @if($showDashboard)
         <a href="{{ route('shop_dashboard') }}">📊 {{ __('ui.dashboard') }}</a>
       @endif
-      @if(Route::has('profile.edit'))
-        <a href="{{ route('profile.edit') }}">{{ __('ui.profile') }}</a>
+      @if(Route::has('profile.show'))
+        <a href="{{ route('profile.show') }}">{{ __('ui.profile') }}</a>
       @endif
     </div>
     @endif

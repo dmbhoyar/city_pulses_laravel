@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Update;
 use App\Services\TextTranslationService;
+use App\Services\CouponApiService;
+use App\Models\CouponRedemption;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class OffersController extends Controller
@@ -81,6 +84,19 @@ class OffersController extends Controller
             });
         }
 
-        return view('offers.index', compact('city', 'offers', 'events', 'today'));
+        // Fetch coupons from the database (not API)
+        $apiCoupons = \App\Models\Coupon::where(function($q) {
+            $q->whereNull('expiry_date')->orWhere('expiry_date', '>=', now());
+        })->orderByDesc('id')->get();
+
+        // Fetch user coupon redemptions
+        $userRedemptions = [];
+        if (Auth::check()) {
+            $userRedemptions = CouponRedemption::where('user_id', Auth::id())
+                ->orderByDesc('redeemed_at')
+                ->get();
+        }
+
+        return view('offers.index', compact('city', 'offers', 'events', 'today', 'apiCoupons', 'userRedemptions'));
     }
 }

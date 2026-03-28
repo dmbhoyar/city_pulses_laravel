@@ -1,4 +1,20 @@
 <?php
+// Set points required for offer (Super Admin Only)
+Route::post('/admin/offers/{id}/set-points', function($id, \Illuminate\Http\Request $request) {
+    if (!auth()->check() || !auth()->user()->isSuperadmin()) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
+    $offer = \App\Models\Update::find($id);
+    if (!$offer || $offer->update_type !== 'offer') {
+        return response()->json(['error' => 'Invalid offer'], 404);
+    }
+    $points = (int) $request->input('points_required', 200);
+    $offer->points_required = $points;
+    $offer->save();
+    return response()->json(['success' => true, 'points_required' => $points]);
+});
+// Coupon redemption history (user)
+Route::middleware('auth')->get('/coupons/my-redemptions', [\App\Http\Controllers\CouponController::class, 'myRedemptions']);
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -30,6 +46,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShortsPlayAuthController;
+use App\Http\Controllers\Api\ShortVideoController as ShortsPlayVideoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,10 +67,20 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
+Route::get('/register/otp', [RegisterController::class, 'showOtpForm'])->name('register.otp.form');
+Route::post('/register/otp', [RegisterController::class, 'verifyOtp'])->name('register.otp.verify');
+Route::post('/register/otp/resend', [RegisterController::class, 'resendOtp'])->name('register.otp.resend');
 Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+Route::get('/password/otp', [ResetPasswordController::class, 'showOtpResetForm'])->name('password.otp.form');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/my-profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/my-profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/my-profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 // Jobs
 Route::resource('jobs', JobsController::class);
@@ -219,10 +248,56 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::patch('/template-unlock-requests/{unlockRequest}/status', [AdminSubscriptionsController::class, 'updateUnlockStatus'])->name('template_unlock_requests.status');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+    // Amazon Coupon Fetch (Super Admin Only)
+    Route::post('/fetch-amazon-coupons', [\App\Http\Controllers\Admin\AmazonCouponController::class, 'fetch'])->name('fetch_amazon_coupons');
+    // Delete expired coupons (Super Admin Only)
+    Route::delete('/coupons/delete-expired', [\App\Http\Controllers\Admin\CouponAdminController::class, 'deleteExpired']);
+    // Delete specific coupon (Super Admin Only)
+    Route::delete('/coupons/{id}', [\App\Http\Controllers\Admin\CouponAdminController::class, 'deleteCoupon']);
+    // Set points required for coupon (Super Admin Only)
+    Route::post('/coupons/{id}/set-points', [\App\Http\Controllers\Admin\CouponAdminController::class, 'setPoints']);
 });
 
 // Webhooks
 Route::post('/webhooks/stripe', [StripeController::class, 'create'])->name('webhooks.stripe');
+
+// ShortsPlay
+Route::get('/shortsplay', fn() => view('shortsplay.index'))->name('shortsplay');
+Route::prefix('/shortsplay/auth')->group(function () {
+    Route::post('/login', [ShortsPlayAuthController::class, 'login']);
+    Route::post('/register', [ShortsPlayAuthController::class, 'register']);
+    Route::post('/forgot', [ShortsPlayAuthController::class, 'forgotPassword']);
+    Route::post('/reset', [ShortsPlayAuthController::class, 'resetPassword']);
+    Route::post('/logout', [ShortsPlayAuthController::class, 'logout'])->middleware('auth');
+    Route::get('/me', [ShortsPlayAuthController::class, 'me']);
+    Route::post('/profile/update', [ShortsPlayAuthController::class, 'updateProfile'])->middleware('auth');
+});
+
+Route::prefix('/shortsplay/data')->middleware('auth')->group(function () {
+    Route::get('/feed', [ShortsPlayVideoController::class, 'getFeed']);
+    Route::get('/my-videos', [ShortsPlayVideoController::class, 'myVideos']);
+    Route::post('/upload', [ShortsPlayVideoController::class, 'store']);
+    Route::get('/pending', [ShortsPlayVideoController::class, 'getPending']);
+    Route::post('/{video}/approve', [ShortsPlayVideoController::class, 'approve']);
+    Route::post('/{video}/reject', [ShortsPlayVideoController::class, 'reject']);
+    Route::delete('/{video}', [ShortsPlayVideoController::class, 'destroy']);
+    // Engagement
+    Route::post('/{video}/view', [ShortsPlayVideoController::class, 'recordView']);
+    Route::post('/{video}/like', [ShortsPlayVideoController::class, 'toggleLike']);
+    Route::get('/{video}/comments', [ShortsPlayVideoController::class, 'getComments']);
+    Route::post('/{video}/comment', [ShortsPlayVideoController::class, 'postComment']);
+    Route::post('/comments/{comment}/like', [ShortsPlayVideoController::class, 'likeComment']);
+    Route::post('/comments/{comment}/pin', [ShortsPlayVideoController::class, 'pinComment']);
+    Route::post('/{video}/share', [ShortsPlayVideoController::class, 'recordShare']);
+    Route::post('/referral-visit', [ShortsPlayVideoController::class, 'recordReferralVisit']);
+    Route::get('/users/search', [ShortsPlayVideoController::class, 'searchUsers']);
+    Route::get('/creator/{creator}/profile', [ShortsPlayVideoController::class, 'creatorProfile']);
+    Route::post('/creator/{creator}/subscribe', [ShortsPlayVideoController::class, 'toggleSubscribe']);
+    // Ruby
+    Route::get('/ruby/stats', [ShortsPlayVideoController::class, 'myRubyStats']);
+    Route::get('/ruby/leaderboard', [ShortsPlayVideoController::class, 'leaderboard']);
+    Route::get('/ruby/tiers', [ShortsPlayVideoController::class, 'tierInfo']);
+});
 
 // Public client request capture (from template forms)
 Route::post('/client-requests', [ShopsController::class, 'storeClientRequest'])->name('client_requests.store');
@@ -243,6 +318,14 @@ Route::get('/{service}/{provider}/id-card', [ShopsController::class, 'publicIdca
 Route::get('/{publicSlug}', [ShopsController::class, 'publicShowBySlug'])
     ->where('publicSlug', '[a-z0-9-]+')
     ->name('shops.public');
+
+
+
+// Public coupon fetch API for frontend
+Route::get('/coupons/fetch', [\App\Http\Controllers\CouponController::class, 'getCoupons']);
+
+// Coupon redemption (POST)
+Route::post('/coupons/redeem', [\App\Http\Controllers\CouponController::class, 'redeem']);
 
 // Public Service Page (legacy service/provider slug)
 Route::get('/{service}/{provider}', [ShopsController::class, 'publicShow'])
