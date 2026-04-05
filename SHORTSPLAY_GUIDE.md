@@ -1,12 +1,12 @@
 # ShortsPlay Implementation Guide
 
 ## Overview
-ShortsPlay is a YouTube Shorts and Instagram Reels aggregation platform with a Ruby Points gamification system. Content creators can upload videos, viewers can engage with them (like, comment, share, subscribe), and creators earn Ruby Points which unlock tier badges.
+ShortsPlay is a YouTube Shorts and Google Drive video aggregation platform with a Ruby Points gamification system. Content creators can upload videos, viewers can engage with them (like, comment, share, subscribe), and creators earn Ruby Points which unlock tier badges.
 
 ## Features Implemented
 
 ### 1. **Video Upload & Management**
-- Creators can paste YouTube Shorts or Instagram Reels links
+- Creators can paste YouTube Shorts or Google Drive video links
 - Source URLs are kept private from viewers
 - Videos must be approved by admin before appearing in feed
 - Admins can approve or reject submissions with notes
@@ -60,7 +60,7 @@ Added comprehensive Legal tab with:
 - title
 - source_url (kept private)
 - embed_id (extracted ID)
-- video_type ('yt' or 'ig')
+- video_type ('yt' or 'drive')
 - status ('pending', 'approved', 'rejected')
 - admin_notes
 - approved_at
@@ -91,7 +91,7 @@ Added comprehensive Legal tab with:
 - id
 - short_video_id (FK: short_videos)
 - user_id (FK: users)
-- platform (WhatsApp, Instagram, etc.)
+- platform (WhatsApp, Telegram, Facebook, etc.)
 ```
 
 #### `short_video_subscriptions`
@@ -317,7 +317,7 @@ When calculating user's tier:
 
 ## Security Considerations
 
-1. **Source URL Privacy**: Original YouTube/Instagram URLs are stored encrypted and never shown to viewers
+1. **Source URL Privacy**: Original YouTube/Google Drive URLs are stored encrypted and never shown to viewers
 2. **Engagement Validation**: Only authenticated users can engage
 3. **Duplicate Prevention**: Unique constraints prevent duplicate likes/subscriptions
 4. **Admin Only Actions**: Video approval/rejection requires admin role

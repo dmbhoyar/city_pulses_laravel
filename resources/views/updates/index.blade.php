@@ -201,6 +201,7 @@
           <a class="btn-a" href="{{ route('updates.create') }}">+ {{ __('ui.upd_new_update') }}</a>
         @endif
       @endauth
+      <a class="btn-a" href="{{ route('user_submissions.index', ['tab' => 'submit']) }}">+ {{ __('ui.send_news') }}</a>
       <button class="btn-d" type="button" onclick="document.getElementById('cpDlModal').classList.add('open')">⬇ {{ __('ui.upd_download_edition') }}</button>
     </div>
   </div>

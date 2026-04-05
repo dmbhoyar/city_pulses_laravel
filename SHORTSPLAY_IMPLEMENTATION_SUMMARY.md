@@ -3,7 +3,7 @@
 ## ✅ What Has Been Implemented
 
 ### Core Features
-✅ **Video Upload System** - Creator can upload YouTube Shorts or Instagram Reels links
+✅ **Video Upload System** - Creator can upload YouTube Shorts or Google Drive video links
 ✅ **Admin Verification** - Videos go to admin for review before appearing in feed
 ✅ **Viewer Engagement** - Users can like, comment, share, and subscribe
 ✅ **Ruby Points System** - Automatic points calculation for all engagement types
@@ -111,7 +111,7 @@ Navigate to: `http://localhost/shortsplay` (requires authentication)
 #### Upload a Video
 1. Login as Creator
 2. Click "Upload" tab
-3. Paste YouTube Shorts or Instagram Reels link
+3. Paste YouTube Shorts or Google Drive video link
 4. Submit for review
 
 #### Admin Review

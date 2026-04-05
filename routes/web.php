@@ -16,6 +16,30 @@ Route::post('/admin/offers/{id}/set-points', function($id, \Illuminate\Http\Requ
 // Coupon redemption history (user)
 Route::middleware('auth')->get('/coupons/my-redemptions', [\App\Http\Controllers\CouponController::class, 'myRedemptions']);
 
+// Reading time reward — +2 pts once per page per day
+Route::middleware('auth')->post('/points/page-reading', function(\Illuminate\Http\Request $request) {
+    $user    = auth()->user();
+    $pageKey = (string) $request->input('page_key', '');
+    if (!$pageKey) return response()->json(['ok' => false]);
+
+    // One reward per user per page per calendar day
+    $subjectId = abs(crc32($pageKey . '|' . now()->toDateString()));
+
+    $event = \App\Models\ViewerPointEvent::firstOrCreate(
+        ['user_id' => $user->id, 'event_type' => 'reading', 'subject_type' => 'page', 'subject_id' => $subjectId],
+        ['points' => 2]
+    );
+
+    if (!$event->wasRecentlyCreated) {
+        return response()->json(['ok' => false, 'reason' => 'already_rewarded']);
+    }
+
+    $user->ruby_points += 2;
+    $user->save();
+
+    return response()->json(['ok' => true, 'points_earned' => 2, 'total' => $user->ruby_points]);
+});
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobsController;
@@ -49,6 +73,8 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortsPlayAuthController;
 use App\Http\Controllers\Api\ShortVideoController as ShortsPlayVideoController;
+use App\Http\Controllers\UserSubmissionController;
+use App\Http\Controllers\Admin\UserSubmissionAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -313,6 +339,20 @@ Route::get('/{service}/{provider}/id-card', [ShopsController::class, 'publicIdca
         'provider' => '[a-z0-9-]+',
     ])
     ->name('shops.idcard.public.legacy');
+
+// User submission routes
+Route::get('/user-submissions', [UserSubmissionController::class, 'index'])->name('user_submissions.index');
+Route::get('/user-submissions/create', [UserSubmissionController::class, 'create'])->name('user_submissions.create');
+Route::middleware('auth')->post('/user-submissions', [UserSubmissionController::class, 'store'])->name('user_submissions.store');
+
+// Admin routes for user submissions
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/user-submissions', [UserSubmissionAdminController::class, 'index'])->name('admin.user_submissions.index');
+    Route::post('/user-submissions/{id}/approve', [UserSubmissionAdminController::class, 'approve'])->name('admin.user_submissions.approve');
+    Route::post('/user-submissions/{id}/inactivate', [UserSubmissionAdminController::class, 'inactivate'])->name('admin.user_submissions.inactivate');
+    Route::post('/user-submissions/{id}/reject', [UserSubmissionAdminController::class, 'reject'])->name('admin.user_submissions.reject');
+    Route::delete('/user-submissions/{id}', [UserSubmissionAdminController::class, 'destroy'])->name('admin.user_submissions.destroy');
+});
 
 // Public Service Page (custom slug)
 Route::get('/{publicSlug}', [ShopsController::class, 'publicShowBySlug'])

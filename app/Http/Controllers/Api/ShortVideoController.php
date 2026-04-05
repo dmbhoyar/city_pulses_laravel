@@ -230,8 +230,6 @@ class ShortVideoController extends Controller
 
     /**
      * Approve a video
-     */
-    public function approve(Request $request, ShortVideo $video)
     {
         $user = auth()->user();
 
@@ -239,21 +237,19 @@ class ShortVideoController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized',
-            ], 403);
+                        'message' => 'Only YouTube Shorts and Google Drive video links are allowed.',
         }
 
         $video->update([
             'status' => 'approved',
             'approved_at' => now(),
         ]);
-
         return response()->json([
             'success' => true,
             'message' => 'Video approved and live',
             'data' => $this->formatVideoResponse($video, $user),
         ]);
     }
-
     /**
      * Reject a video
      */

@@ -1519,7 +1519,6 @@ async function doShare(platform){
   const encodedUrl=encodeURIComponent(shareUrl);
 
   if(platform==='WhatsApp')window.open(`https://wa.me/?text=${shareText}%20${encodedUrl}`,'_blank');
-  else if(platform==='Instagram')window.open(`https://www.instagram.com/`,'_blank');
   else if(platform==='Twitter')window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${encodedUrl}`,'_blank');
   else if(platform==='Facebook')window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,'_blank');
   else if(platform==='Telegram')window.open(`https://t.me/share/url?url=${encodedUrl}&text=${shareText}`,'_blank');

@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\Job;
 use App\Models\Market;
 use App\Models\Update;
+use App\Models\UserSubmission;
 use App\Services\IndianMarketsClient;
 use App\Services\NewsClient;
 use App\Services\TextTranslationService;
@@ -34,6 +35,28 @@ class UpdatesController extends Controller
             ->orderByRaw('COALESCE(published_at, created_at) DESC')
             ->limit(30)
             ->get();
+
+        // Add approved user submissions to updates
+        $userSubmissions = UserSubmission::where('status', 'approved')
+            ->orderByDesc('created_at')
+            ->limit(10)
+            ->get();
+        foreach ($userSubmissions as $submission) {
+            $updates->push((object) [
+                'id' => 'user_submission_' . $submission->id,
+                'title' => $submission->title,
+                'content' => $submission->content,
+                'photo_path' => $submission->photo ?: null,
+                'update_type' => $submission->type,
+                'city' => null,
+                'published_at' => $submission->created_at,
+                'created_at' => $submission->created_at,
+                'source_url' => '#',
+            ]);
+        }
+        $updates = $updates->sortByDesc(function($item) {
+            return $item->published_at ?? $item->created_at;
+        })->values();
 
         $eventUpdates = Update::query()
             ->with('city')
@@ -158,6 +181,13 @@ class UpdatesController extends Controller
     {
         $cacheKey = 'updates_agmarknet_rates_city_' . $city->id;
         $staleCacheKey = 'updates_agmarknet_rates_city_stale_' . $city->id;
+
+        // Serve from fresh cache without hitting the API every request
+        $cachedRows = Cache::get($cacheKey, []);
+        if (is_array($cachedRows) && !empty($cachedRows)) {
+            return $cachedRows;
+        }
+
         $apiKey = env('DATA_GOV_API_KEY')
             ?: env('AGMARKNET_API_KEY')
             ?: '579b464db66ec23bdd000001c20c0593c63b4ae97757e11d2e3f369e';
@@ -251,11 +281,6 @@ class UpdatesController extends Controller
                     ]);
                 }
             }
-        }
-
-        $cachedRows = Cache::get($cacheKey, []);
-        if (is_array($cachedRows) && !empty($cachedRows)) {
-            return $cachedRows;
         }
 
         $staleCachedRows = Cache::get($staleCacheKey, []);

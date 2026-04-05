@@ -15,6 +15,10 @@
     <div class="admin-stat"><small>Offers</small><strong>{{ $offers_count }}</strong></div>
     <div class="admin-stat"><small>Subscriptions</small><strong>{{ $subscriptions_count }}</strong></div>
     <div class="admin-stat"><small>Pending Unlocks</small><strong>{{ $unlock_requests_pending_count }}</strong></div>
+    <div class="admin-stat" style="{{ $pending_submissions_count > 0 ? 'border-color:#f59e0b;background:linear-gradient(180deg,#fffbeb,#fef3c7)' : '' }}">
+      <small style="{{ $pending_submissions_count > 0 ? 'color:#92400e' : '' }}">Pending Submissions</small>
+      <strong style="{{ $pending_submissions_count > 0 ? 'color:#b45309' : '' }}">{{ $pending_submissions_count }}</strong>
+    </div>
   </div>
 
   <div class="admin-card">
@@ -26,6 +30,9 @@
       <a href="{{ route('admin.jobs.index') }}" class="button">Jobs</a>
       <a href="{{ route('admin.offers.index') }}" class="button">Offers</a>
       <a href="{{ route('admin.subscriptions.index') }}" class="button">Subscriptions & Unlocks</a>
+      <a href="{{ route('admin.user_submissions.index') }}" class="button" style="{{ $pending_submissions_count > 0 ? 'background:#b45309;color:#fff;border-color:#b45309' : '' }}">
+        Community Submissions{{ $pending_submissions_count > 0 ? ' ('.$pending_submissions_count.' pending)' : '' }}
+      </a>
       <a href="{{ route('admin.settings.index') }}" class="button">Settings</a>
     </div>
   </div>

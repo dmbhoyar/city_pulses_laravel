@@ -51,32 +51,40 @@ class CouponController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // If redeeming a coupon
-        if ($request->has('coupon_code')) {
-            $request->validate([
-                'coupon_code' => 'required|string',
-                'store' => 'nullable|string',
-                'title' => 'nullable|string',
-            ]);
-            // Prevent duplicate redemption
+        // If redeeming a coupon (by coupon model ID)
+        if ($request->has('coupon_id')) {
+            $request->validate(['coupon_id' => 'required|integer|exists:coupons,id']);
+
+            $coupon = \App\Models\Coupon::findOrFail($request->coupon_id);
+            $points = ($coupon->points_required > 0) ? (int) $coupon->points_required : 200;
+
+            if ($user->ruby_points < $points) {
+                return response()->json(['error' => __('ui.offers_insufficient_points')], 400);
+            }
+
             $exists = CouponRedemption::where('user_id', $user->id)
-                ->where('coupon_code', $request->coupon_code)
+                ->where('coupon_code', 'coupon_' . $coupon->id)
                 ->exists();
             if ($exists) {
                 return response()->json(['error' => 'Already redeemed'], 409);
             }
+
             $redemption = CouponRedemption::create([
-                'user_id' => $user->id,
-                'coupon_code' => $request->coupon_code,
-                'store' => $request->store,
-                'title' => $request->title,
+                'user_id'     => $user->id,
+                'coupon_code' => 'coupon_' . $coupon->id,
+                'store'       => $coupon->store,
+                'title'       => $coupon->title,
                 'redeemed_at' => now(),
             ]);
-            // Deduct points
-            $points = $request->input('points_required', 200);
             $user->ruby_points = max(0, $user->ruby_points - $points);
             $user->save();
-            return response()->json(['success' => true, 'redemption' => $redemption]);
+
+            return response()->json([
+                'success'     => true,
+                'redemption'  => $redemption,
+                'coupon_code' => $coupon->discount_text,
+                'points_left' => $user->ruby_points,
+            ]);
         }
 
         // If redeeming an offer
@@ -108,7 +116,11 @@ class CouponController extends Controller
             ]);
             $user->ruby_points = max(0, $user->ruby_points - $points);
             $user->save();
-            return response()->json(['success' => true, 'redemption' => $redemption]);
+            return response()->json([
+                'success'    => true,
+                'redemption' => $redemption,
+                'points_left'=> $user->ruby_points,
+            ]);
         }
 
         return response()->json(['error' => 'Invalid request'], 400);

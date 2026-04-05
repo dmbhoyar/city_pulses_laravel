@@ -372,6 +372,7 @@
           <li><a href="{{ route('offers') }}" class="panel-link">{{ __('ui.offers_benefits') }}</a></li>
         @elseif(str_contains($ctrl, 'Updates'))
           <li><a href="{{ route('updates.index') }}" class="panel-link">{{ __('ui.front_page') }}</a></li>
+          <li><a href="{{ route('user_submissions.index') }}" class="panel-link">{{ __('ui.send_news') }}</a></li>
           <li><a href="{{ route('updates.index') }}#news" class="panel-link">{{ __('ui.latest_news') }}</a></li>
           <li><a href="{{ route('updates.index') }}#events" class="panel-link">{{ __('ui.events') }}</a></li>
           <li><a href="{{ route('updates.index') }}#jobs" class="panel-link">{{ __('ui.jobs_feed') }}</a></li>
@@ -691,6 +692,7 @@
           ['J',@json(__('ui.jobs_feed')),"{{ route('updates.index') }}#jobs"],
           ['M',@json(__('ui.markets')),"{{ route('updates.index') }}#markets"],
           ['O',@json(__('ui.opinion')),"{{ route('updates.index') }}#opinion"],
+          ['S',@json(__('ui.send_news')),"{{ route('user_submissions.index') }}"],
           @auth
             @if(auth()->user()->isSuperadmin())
               ['+',@json(__('ui.publish_update')),"{{ route('updates.create') }}"],
@@ -1078,6 +1080,63 @@
     });
   });
 </script>
+
+@auth
+<script>
+(function(){
+  // Reading-time reward: +2 pts after 10 continuous minutes on page (once per page per day)
+  var READ_MS   = 10 * 60 * 1000; // 10 minutes
+  var pageKey   = location.pathname;
+  var csrf      = document.querySelector('meta[name="csrf-token"]')?.content || '';
+  var awarded   = false;
+  var elapsed   = 0;
+  var lastTick  = Date.now();
+  var hidden    = false;
+
+  // Pause timer when tab is hidden
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      elapsed += Date.now() - lastTick;
+      hidden = true;
+    } else {
+      lastTick = Date.now();
+      hidden = false;
+    }
+  });
+
+  var ticker = setInterval(function() {
+    if (awarded) { clearInterval(ticker); return; }
+    if (!hidden) elapsed += Date.now() - lastTick;
+    lastTick = Date.now();
+
+    if (elapsed >= READ_MS) {
+      clearInterval(ticker);
+      fetch('/points/page-reading', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','X-CSRF-TOKEN': csrf},
+        body: JSON.stringify({page_key: pageKey})
+      }).then(function(r){ return r.json(); }).then(function(d){
+        if (d.ok) {
+          awarded = true;
+          // Update points display if on offers page
+          if (typeof cpSetPts === 'function' && d.total != null) cpSetPts(d.total);
+          // Show a subtle toast if cp2Toast exists, else browser notification
+          if (typeof cpToast === 'function') {
+            cpToast('+2 Ruby Points for reading! 💎', 'ok');
+          } else {
+            var n = document.createElement('div');
+            n.textContent = '💎 +2 Ruby Points for reading!';
+            n.style.cssText = 'position:fixed;bottom:1.2rem;right:1.2rem;background:#10b981;color:#fff;padding:.55rem 1.1rem;border-radius:100px;font-size:.8rem;font-weight:700;z-index:99999;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:fadeInUp .3s ease';
+            document.body.appendChild(n);
+            setTimeout(function(){ n.remove(); }, 3500);
+          }
+        }
+      }).catch(function(){});
+    }
+  }, 5000); // check every 5s
+})();
+</script>
+@endauth
 
 </body>
 </html>

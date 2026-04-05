@@ -127,7 +127,7 @@
 
 ### Video Management
 - [x] Upload YouTube Shorts via link
-- [x] Upload Instagram Reels via link
+- [x] Upload Google Drive video via link
 - [x] URL extraction and validation
 - [x] Source URL privacy (encrypted/protected)
 - [x] Admin approval workflow

@@ -294,4 +294,17 @@ class RubyPointsService
             })
             ->toArray();
     }
+
+    /**
+     * Award points to a user for a specific reason
+     */
+    public static function awardPoints($userId, $points, $reason = null)
+    {
+        $user = \App\Models\User::find($userId);
+        if ($user) {
+            $user->ruby_points += $points;
+            $user->save();
+            // Optionally, log or store the reason for audit
+        }
+    }
 }

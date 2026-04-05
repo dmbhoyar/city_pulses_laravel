@@ -11,6 +11,7 @@ use App\Models\TemplateUnlockRequest;
 use App\Models\City;
 use App\Models\Job;
 use App\Models\Update;
+use App\Models\UserSubmission;
 
 class DashboardController extends Controller
 {
@@ -29,6 +30,7 @@ class DashboardController extends Controller
         $cities_count = City::count();
         $jobs_count = Job::count();
         $offers_count = Update::where('update_type', 'offer')->count();
+        $pending_submissions_count = UserSubmission::where('status', 'pending')->count();
 
         return view('admin.dashboard.index', compact(
             'users_count',
@@ -38,7 +40,8 @@ class DashboardController extends Controller
             'unlock_requests_pending_count',
             'cities_count',
             'jobs_count',
-            'offers_count'
+            'offers_count',
+            'pending_submissions_count'
         ));
     }
 }
