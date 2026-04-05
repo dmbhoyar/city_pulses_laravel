@@ -69,8 +69,8 @@ if (!function_exists('city_display_name')) {
             return '';
         }
 
-        $normalized = strtolower((string) preg_replace('/[^a-z0-9]+/', ' ', $value));
-        $normalized = trim(preg_replace('/\s+/', ' ', $normalized));
+        $normalized = strtolower($value);
+        $normalized = trim(preg_replace('/\s+/', ' ', preg_replace('/[^a-z0-9]+/', ' ', $normalized)));
 
         $map = [
             'washim' => 'city_washim',

@@ -342,6 +342,9 @@ Route::get('/{service}/{provider}/id-card', [ShopsController::class, 'publicIdca
 
 // User submission routes
 Route::get('/user-submissions', [UserSubmissionController::class, 'index'])->name('user_submissions.index');
+Route::get('/user-submissions/{userSubmission}', [UserSubmissionController::class, 'show'])
+    ->whereNumber('userSubmission')
+    ->name('user_submissions.show');
 Route::get('/user-submissions/create', [UserSubmissionController::class, 'create'])->name('user_submissions.create');
 Route::middleware('auth')->post('/user-submissions', [UserSubmissionController::class, 'store'])->name('user_submissions.store');
 
@@ -353,6 +356,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/user-submissions/{id}/reject', [UserSubmissionAdminController::class, 'reject'])->name('admin.user_submissions.reject');
     Route::delete('/user-submissions/{id}', [UserSubmissionAdminController::class, 'destroy'])->name('admin.user_submissions.destroy');
 });
+
+// Template Demo (must come before wildcard routes)
+Route::get('/template-demo/{template}', [ShopsController::class, 'templateDemo'])
+    ->where('template', '[a-z_]+')
+    ->name('template.demo');
 
 // Public Service Page (custom slug)
 Route::get('/{publicSlug}', [ShopsController::class, 'publicShowBySlug'])

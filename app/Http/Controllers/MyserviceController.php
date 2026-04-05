@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 
 class MyserviceController extends Controller
 {
-    private const AVAILABLE_TEMPLATES = ['dynamic_service', 'astro_dynamic'];
+    private const AVAILABLE_TEMPLATES = ['dynamic_service', 'metro_clean', 'saffron_local', 'astro_dynamic'];
     private const REQUEST_STATUSES = ['new', 'confirmed', 'pending', 'completed', 'cancelled', 'callback', 'called'];
 
     private const RESERVED_PUBLIC_SLUGS = [
@@ -232,6 +232,8 @@ class MyserviceController extends Controller
         $paymentQrUrl = $paymentQrPath !== '' ? Storage::url($paymentQrPath) : '';
         $paymentBarcodeUrl = $paymentBarcodePath !== '' ? Storage::url($paymentBarcodePath) : '';
 
+        $templateDemoBase = '/template-demo';
+
         return view('myservice.configure', compact(
             'shop',
             'pageConfig',
@@ -248,7 +250,8 @@ class MyserviceController extends Controller
             'yearlyBasePrice',
             'unlockSlaHours',
             'paymentQrUrl',
-            'paymentBarcodeUrl'
+            'paymentBarcodeUrl',
+            'templateDemoBase'
         ));
     }
 
@@ -388,13 +391,17 @@ class MyserviceController extends Controller
 
         $existingTc = is_array($cfg['template_content'] ?? null) ? $cfg['template_content'] : [];
 
-        // Dynamic template content
+        // Template content — common + template-specific fields
         $cfg['template_content'] = [
+            // Common
             'hero_badge'        => trim((string) $request->input('tc.hero_badge', 'विश्वासार्ह स्थानिक सेवा')),
             'hero_title'        => trim((string) $request->input('tc.hero_title', 'तुमच्या गरजांसाठी व्यावसायिक सेवा')),
             'hero_description'  => trim((string) $request->input('tc.hero_description', 'अनुभवी तज्ञांकडून जलद, विश्वासार्ह आणि परवडणारी सेवा.')),
             'primary_cta'       => trim((string) $request->input('tc.primary_cta', 'आत्ता बुक करा')),
             'secondary_cta'     => trim((string) $request->input('tc.secondary_cta', 'मोफत कोट घ्या')),
+            'footer_brand'      => trim((string) $request->input('tc.footer_brand', $shop->name ?: 'माझी सेवा')),
+            'footer_tagline'    => trim((string) $request->input('tc.footer_tagline', 'विश्वासार्ह · जलद · व्यावसायिक')),
+            // Dynamic Pro specific
             'services_label'    => trim((string) $request->input('tc.services_label', 'आमच्या सेवा')),
             'services_title'    => trim((string) $request->input('tc.services_title', 'आम्ही देत असलेल्या सेवा')),
             'services_subtitle' => trim((string) $request->input('tc.services_subtitle', 'आमच्या लोकप्रिय सेवांमधून निवडा.')),
@@ -403,8 +410,15 @@ class MyserviceController extends Controller
             'cta_title'         => trim((string) $request->input('tc.cta_title', 'आज मदत हवी आहे?')),
             'cta_description'   => trim((string) $request->input('tc.cta_description', 'आत्ताच संपर्क करा आणि त्वरित मदत मिळवा.')),
             'cta_button'        => trim((string) $request->input('tc.cta_button', 'आत्ता संपर्क करा')),
-            'footer_brand'      => trim((string) $request->input('tc.footer_brand', $shop->name ?: 'माझी सेवा')),
-            'footer_tagline'    => trim((string) $request->input('tc.footer_tagline', 'विश्वासार्ह · जलद · व्यावसायिक')),
+            // Metro Clean specific
+            'metro_accent'      => trim((string) $request->input('tc.metro_accent', 'blue')),
+            'about_title'       => trim((string) $request->input('tc.about_title', 'आमच्याबद्दल')),
+            'about_text'        => trim((string) $request->input('tc.about_text', $shop->description ?? '')),
+            'contact_heading'   => trim((string) $request->input('tc.contact_heading', 'संपर्क करा')),
+            // Saffron Local specific
+            'opening_hours'     => trim((string) $request->input('tc.opening_hours', '')),
+            'locality_note'     => trim((string) $request->input('tc.locality_note', '')),
+            'special_offer'     => trim((string) $request->input('tc.special_offer', '')),
             'provider_name'     => trim((string) ($existingTc['provider_name'] ?? ($owner->full_name ?: 'सेवा प्रदाता'))),
             'provider_age'      => trim((string) ($existingTc['provider_age'] ?? '')),
             'provider_email'    => trim((string) ($existingTc['provider_email'] ?? ($owner->email ?: ''))),

@@ -417,13 +417,19 @@
           <li><a href="{{ route('buy.index', ['subcategory' => 'land']) }}" class="panel-link">🌾 {{ __('ui.land') }}</a></li>
         @elseif(str_contains($ctrl, 'Services'))
           <li><a href="{{ route('services.index') }}" class="panel-link">{{ __('ui.service_id_cards') }}</a></li>
+        @elseif(request()->routeIs('user_submissions.*'))
+          <li><a href="{{ route('user_submissions.index') }}" class="panel-link">📰 {{ __('ui.browse_stories') }}</a></li>
+          @auth
+            <li><a href="{{ route('user_submissions.index', ['tab' => 'submit']) }}" class="panel-link">✍️ {{ __('ui.submit_story') }}</a></li>
+            <li><a href="{{ route('user_submissions.index', ['tab' => 'mine']) }}" class="panel-link">📁 {{ __('ui.my_stories') }}</a></li>
+          @endauth
         @else
           <li><a href="{{ route('home') }}" class="panel-link">{{ __('ui.todays_pulses') }}</a></li>
           <li><a href="{{ route('offers') }}" class="panel-link">{{ __('ui.offers_benefits') }}</a></li>
         @endif
       </ul>
       <div class="panel-details">
-        <h4>{{ $panelIsSuperadmin || $isMyService || $isMyShop ? __('ui.workspace') : __('ui.recommended') }}</h4>
+        <h4>{{ $panelIsSuperadmin || $isMyService || $isMyShop ? __('ui.workspace') : (request()->routeIs('user_submissions.*') ? __('ui.community_stories') : __('ui.recommended')) }}</h4>
         <ul class="recommendations">
           @if($panelIsSuperadmin)
             <li>{{ __('ui.rec_manage_platform') }}</li>
@@ -451,6 +457,9 @@
           @elseif(str_contains($ctrl, 'Jobs'))
             <li>{{ __('ui.rec_city_jobs') }}</li>
             <li>{{ __('ui.rec_superadmin_jobs') }}</li>
+          @elseif(request()->routeIs('user_submissions.*'))
+            <li>{{ __('ui.earn_10_points') }}</li>
+            <li>{{ __('ui.browse_stories') }}</li>
           @elseif(str_contains($ctrl, 'Updates'))
             <li>{{ __('ui.rec_updates_sections') }}</li>
             <li>{{ __('ui.rec_city_filter') }}</li>

@@ -662,7 +662,7 @@ return [
     'copied' => 'कॉपी हुआ ✓',
     'copy_this_link' => 'यह लिंक कॉपी करें:',
     // User Submission
-    'send_news' => 'न्यूज/कथा पाठवा',
+    'send_news' => 'कहानी/न्यूज शेयर करें',
     'community_stories' => 'कम्युनिटी स्टोरीज़',
     'browse_stories' => 'स्टोरीज़ देखें',
     'submit_story' => 'स्टोरी भेजें',

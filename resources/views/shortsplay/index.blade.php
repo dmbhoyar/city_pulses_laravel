@@ -658,15 +658,28 @@ html,body{height:100%;min-height:100svh;background:#03030a;font-family:var(--fb)
       </div>
       <!-- register -->
       <div class="lform" id="lf-up" style="display:none;">
-        <input type="text" placeholder="Username @handle" id="lu-username"/>
-        <input type="email" placeholder="Email" id="lu-email"/>
-        <input type="tel" placeholder="10-digit mobile" id="lu-mobile" maxlength="10" inputmode="numeric"/>
-        <div class="pwd-wrap">
-          <input type="password" placeholder="Password" id="lu-password"/>
-          <button type="button" class="pwd-toggle" id="lu-password-toggle" aria-label="Show password" onclick="togglePassword('lu-password','lu-password-toggle')">👁️</button>
+        <!-- Step 1: Fill details -->
+        <div id="lu-step1" style="display:flex;flex-direction:column;gap:10px;">
+          <input type="text" placeholder="Username @handle" id="lu-username" style="width:100%;"/>
+          <input type="email" placeholder="Email" id="lu-email" style="width:100%;"/>
+          <input type="tel" placeholder="10-digit mobile" id="lu-mobile" maxlength="10" inputmode="numeric" style="width:100%;"/>
+          <div class="pwd-wrap">
+            <input type="password" placeholder="Password" id="lu-password"/>
+            <button type="button" class="pwd-toggle" id="lu-password-toggle" aria-label="Show password" onclick="togglePassword('lu-password','lu-password-toggle')">👁️</button>
+          </div>
+          <button class="btnmain" id="lu-submit-btn" onclick="doRegister()">Create Account</button>
         </div>
-        <input type="text" placeholder="6-digit OTP (after first submit)" id="lu-otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code"/>
-        <button class="btnmain" onclick="doRegister()">Create Account</button>
+        <!-- Step 2: OTP verification (shown after first submit) -->
+        <div id="lu-step2" style="display:none;flex-direction:column;gap:10px;">
+          <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center;">
+            <div style="font-size:20px;margin-bottom:6px;">📱</div>
+            <div style="font-size:13px;color:var(--t1);font-weight:600;margin-bottom:4px;">OTP Sent!</div>
+            <div id="lu-otp-msg" style="font-size:12px;color:var(--t2);line-height:1.4;"></div>
+          </div>
+          <input type="text" placeholder="Enter 6-digit OTP" id="lu-otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code" style="width:100%;letter-spacing:6px;text-align:center;font-size:20px;font-weight:700;"/>
+          <button class="btnmain" onclick="doVerifyOtp()">Verify &amp; Complete Registration</button>
+          <button onclick="doBackToRegister()" style="background:transparent;border:1px solid var(--b2);color:var(--t2);border-radius:var(--r);padding:12px;font-size:14px;cursor:pointer;width:100%;">← Back to Edit Details</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1184,7 +1197,18 @@ async function loadTiers(){
 // ═══════════════════════════════════════════════
 //  LOGIN
 // ═══════════════════════════════════════════════
-function setLTab(t,btn){document.querySelectorAll('.ltab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('lf-in').style.display=t==='in'?'flex':'none';document.getElementById('lf-up').style.display=t==='up'?'flex':'none';}
+function setLTab(t,btn){
+  document.querySelectorAll('.ltab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  document.getElementById('lf-in').style.display=t==='in'?'flex':'none';
+  document.getElementById('lf-up').style.display=t==='up'?'flex':'none';
+  if(t==='up'){
+    // Reset register flow to step 1
+    document.getElementById('lu-step1').style.display='flex';
+    document.getElementById('lu-step2').style.display='none';
+    const btn2=document.getElementById('lu-submit-btn');
+    if(btn2){btn2.disabled=false;btn2.textContent='Create Account';}
+  }
+}
 async function doLogin(){
   const loginId=document.getElementById('li-email').value.trim();
   const password=document.getElementById('li-password').value;
@@ -1203,20 +1227,51 @@ async function doRegister(){
   const email=document.getElementById('lu-email').value.trim();
   const mobile=document.getElementById('lu-mobile').value.trim();
   const password=document.getElementById('lu-password').value;
-  const otpCode=document.getElementById('lu-otp').value.trim();
-  if(!username||!email||!mobile||!password){toast('⚠️ Fill all fields');return;}
+  if(!username||!mobile||!password){toast('⚠️ Fill all required fields');return;}
   if(!/^\d{10}$/.test(mobile)){toast('⚠️ Enter valid 10-digit mobile number');return;}
+  const btn=document.getElementById('lu-submit-btn');
+  btn.disabled=true;btn.textContent='Sending OTP…';
   try{
     const body={username,email,mobile_number:mobile,password};
-    if(otpCode)body.otp_code=otpCode;
     const res=await apiFetch('/shortsplay/auth/register',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)});
     const data=await readJson(res);
-    if(!res.ok){toast(`⚠️ ${readErrorMessage(data,'Registration failed')}`);return;}
-    if(data?.requires_otp){toast(data?.message||'OTP sent to mobile number. Enter OTP and submit again.');return;}
+    if(!res.ok){toast(`⚠️ ${readErrorMessage(data,'Registration failed')}`);btn.disabled=false;btn.textContent='Create Account';return;}
     if(data?.already_authenticated&&data?.user){setMeFromUser(data.user,username.replace(/^@+/,''));toast('Already signed in.');setTimeout(startApp,400);return;}
-    if(!data?.user){toast('⚠️ Registration failed.');return;}
+    if(data?.requires_otp){
+      // Show OTP step
+      document.getElementById('lu-step1').style.display='none';
+      const step2=document.getElementById('lu-step2');
+      step2.style.display='flex';
+      const otpRecipient=email||mobile;
+      document.getElementById('lu-otp-msg').textContent=`OTP sent to ${otpRecipient}. Enter the 6-digit code below. Valid for 10 minutes.`;
+      document.getElementById('lu-otp').value='';
+      setTimeout(()=>document.getElementById('lu-otp').focus(),100);
+      return;
+    }
+    if(!data?.user){toast('⚠️ Registration failed.');btn.disabled=false;btn.textContent='Create Account';return;}
     setMeFromUser(data.user,username.replace(/^@+/,''));toast('🎉 Welcome to ShortsPlay!');setTimeout(startApp,500);
-  }catch(e){toast('⚠️ Network error while registering');}
+  }catch(e){toast('⚠️ Network error while registering');btn.disabled=false;btn.textContent='Create Account';}
+}
+async function doVerifyOtp(){
+  const otpCode=document.getElementById('lu-otp').value.trim();
+  if(!otpCode||otpCode.length!==6){toast('⚠️ Enter the 6-digit OTP');return;}
+  const verifyBtn=document.querySelector('#lu-step2 .btnmain');
+  verifyBtn.disabled=true;verifyBtn.textContent='Verifying…';
+  try{
+    const res=await apiFetch('/shortsplay/auth/register',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({otp_code:otpCode})});
+    const data=await readJson(res);
+    if(!res.ok){toast(`⚠️ ${readErrorMessage(data,'Verification failed')}`);verifyBtn.disabled=false;verifyBtn.textContent='Verify & Complete Registration';return;}
+    if(!data?.user){toast('⚠️ Registration failed.');verifyBtn.disabled=false;verifyBtn.textContent='Verify & Complete Registration';return;}
+    const username=document.getElementById('lu-username').value.trim();
+    setMeFromUser(data.user,username.replace(/^@+/,'')||'player');toast('🎉 Welcome to ShortsPlay!');setTimeout(startApp,500);
+  }catch(e){toast('⚠️ Network error');verifyBtn.disabled=false;verifyBtn.textContent='Verify & Complete Registration';}
+}
+function doBackToRegister(){
+  document.getElementById('lu-step2').style.display='none';
+  document.getElementById('lu-step1').style.display='flex';
+  document.getElementById('lu-otp').value='';
+  const btn=document.getElementById('lu-submit-btn');
+  btn.disabled=false;btn.textContent='Create Account';
 }
 async function doLogout(){
   try{await apiFetch('/shortsplay/auth/logout',{method:'POST',headers:{'Accept':'application/json'}});}catch(e){}

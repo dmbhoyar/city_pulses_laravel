@@ -76,57 +76,12 @@
   .tpl-thumb.dynamic .mini-hero{padding:10px}.tpl-thumb.dynamic .mini-pill{width:58px;height:8px;border-radius:999px;background:rgba(255,255,255,.28);margin-bottom:8px}.tpl-thumb.dynamic .mini-title{width:84px;height:12px;border-radius:6px;background:#fff;margin-bottom:6px}.tpl-thumb.dynamic .mini-sub{width:110px;height:8px;border-radius:5px;background:rgba(255,255,255,.5);margin-bottom:10px}.tpl-thumb.dynamic .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tpl-thumb.dynamic .mini-box{height:24px;border-radius:8px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18)}
   .tpl-thumb.astro{background:linear-gradient(135deg,#05000f,#4b1f7a 48%,#c9860a 120%)}
   .tpl-thumb.astro .mini-top{height:20px;background:rgba(0,0,0,.24);display:flex;gap:4px;align-items:center;padding:0 8px}.tpl-thumb.astro .mini-dot{width:16px;height:6px;border-radius:999px;background:rgba(245,197,24,.5)}.tpl-thumb.astro .mini-hero{padding:10px}.tpl-thumb.astro .mini-title{width:105px;height:13px;border-radius:6px;background:linear-gradient(90deg,#fff,#f5c518);margin-bottom:7px}.tpl-thumb.astro .mini-sub{width:95px;height:8px;border-radius:5px;background:rgba(255,220,150,.5);margin-bottom:10px}.tpl-thumb.astro .mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.tpl-thumb.astro .mini-box{height:22px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(245,197,24,.2)}
-  .tpl-sample-wrap{margin-top:10px;border:1px solid #dbe7f8;border-radius:12px;overflow:hidden;background:#fff}
-  .tpl-sample-head{padding:10px 12px;background:#f8fbff;border-bottom:1px solid #e4edf9;font-size:12px;display:flex;justify-content:space-between;align-items:center}
-  .tpl-sample-head strong{color:#2f4e74}
-  .tpl-sample-head span{color:#6d84a5}
-  .tpl-sample{display:none}
-  .tpl-sample.active{display:block}
-  .tpl-sample-scroll{overflow-x:auto}
-  /* dynamic sample */
-  .sample-dyn{font-family:inherit}
-  .sample-dyn-top{display:flex;gap:12px;padding:10px 16px;background:#1a0a3b;font-size:11px;color:rgba(255,255,255,.7)}
-  .sample-dyn-hero{background:linear-gradient(135deg,#1a0a3b,#7b2ff7);padding:24px 18px 20px;color:#fff}
-  .sample-dyn-badge{display:inline-block;background:rgba(255,255,255,.15);border-radius:999px;padding:3px 12px;font-size:11px;margin-bottom:10px}
-  .sample-dyn-title{font-size:22px;font-weight:800;line-height:1.2;margin-bottom:8px}
-  .sample-dyn-sub{font-size:12px;opacity:.8;line-height:1.6;margin-bottom:14px}
-  .sample-dyn-actions{display:flex;gap:8px;flex-wrap:wrap}
-  .sample-dyn-actions span{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;background:rgba(255,255,255,.15);cursor:default}
-  .sample-dyn-actions span:first-child{background:#fff;color:#2f4e74}
-  .sample-dyn-body{background:#f4f8ff;padding:14px 16px}
-  .sample-dyn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-  .sample-dyn-card{background:#fff;border:1px solid #dbe7f8;border-radius:10px;padding:14px}
-  .sample-dyn-card h5{margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#6d84a5}
-  .sample-dyn-card h4{margin:0 0 6px;font-size:14px;color:#2f4e74}
-  .sample-dyn-card p{margin:0;font-size:12px;color:#4d647f;line-height:1.6}
-  .sample-dyn-card.tall{grid-row:span 2}
-  .sample-dyn-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
-  .sample-dyn-mini-grid .mini{background:#f0f5ff;border-radius:8px;padding:8px;font-size:11px}
-  .sample-dyn-mini-grid .mini strong{display:block;color:#2f4e74;margin-bottom:2px}
-  .sample-dyn-mini-grid .mini span{color:#6d84a5}
-  .sample-dyn-cta{background:linear-gradient(135deg,#1a0a3b,#7b2ff7);border-radius:10px;padding:18px;color:#fff;text-align:center;margin-top:12px}
-  .sample-dyn-cta h4{margin:0 0 6px;font-size:16px}
-  .sample-dyn-cta p{margin:0 0 12px;font-size:12px;opacity:.85}
-  .sample-dyn-footer{display:flex;gap:16px;padding:10px 16px;background:#1a0a3b;font-size:11px;color:rgba(255,255,255,.5);margin-top:10px;border-radius:0 0 12px 12px}
-  /* astro sample */
-  .sample-astro-outer{background:#0a0414}
-  .sample-astro-top{display:flex;gap:12px;padding:10px 16px;background:rgba(0,0,0,.3);font-size:11px;color:rgba(212,184,255,.7)}
-  .sample-astro-hero{padding:28px 18px 22px;background:linear-gradient(160deg,#0a0414 0%,#2e0a5e 55%,#7c3a04 100%);color:#fff}
-  .sample-astro-badge{display:inline-block;background:rgba(245,197,24,.15);border:1px solid rgba(245,197,24,.3);border-radius:999px;padding:3px 12px;font-size:11px;color:#f5c518;margin-bottom:10px}
-  .sample-astro-title{font-size:22px;font-weight:800;line-height:1.2;margin-bottom:8px;background:linear-gradient(90deg,#fff,#f5c518);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .sample-astro-sub{font-size:12px;color:rgba(232,224,255,.75);line-height:1.6;margin-bottom:14px}
-  .sample-astro-actions{display:flex;gap:8px;flex-wrap:wrap}
-  .sample-astro-actions span{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;background:rgba(255,255,255,.08);color:rgba(232,224,255,.9);cursor:default}
-  .sample-astro-actions span:first-child{background:linear-gradient(90deg,#f5c518,#e0a000);color:#1a0a00}
-  .sample-astro-body{background:#0a0414;padding:14px 16px}
-  .sample-astro-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-  .sample-astro-card{background:rgba(255,255,255,.04);border:1px solid rgba(245,197,24,.15);border-radius:10px;padding:12px}
-  .sample-astro-card strong{display:block;font-size:13px;color:#e9d5ff;margin-bottom:3px}
-  .sample-astro-card span{font-size:11px;color:rgba(232,224,255,.5)}
-  .sample-astro-cta{background:linear-gradient(160deg,#2e0a5e,#7c3a04);border-radius:10px;padding:18px;text-align:center;margin-top:12px;border:1px solid rgba(245,197,24,.2)}
-  .sample-astro-cta h4{margin:0 0 6px;font-size:16px;color:#f5c518}
-  .sample-astro-cta p{margin:0 0 12px;font-size:12px;color:rgba(232,224,255,.8)}
-  .sample-astro-footer{display:flex;gap:16px;padding:10px 16px;background:rgba(0,0,0,.4);font-size:11px;color:rgba(212,184,255,.4);margin-top:10px;border-radius:0 0 12px 12px}
+  .tpl-thumb.metro{background:linear-gradient(135deg,#1e3a5f,#2563eb)}
+  .tpl-thumb.metro .mini-top{height:20px;background:rgba(0,0,0,.22);display:flex;align-items:center;padding:0 8px;gap:4px}.tpl-thumb.metro .mini-dot{width:14px;height:5px;border-radius:999px;background:rgba(255,255,255,.45)}.tpl-thumb.metro .mini-hero{padding:10px}.tpl-thumb.metro .mini-title{width:90px;height:12px;border-radius:5px;background:#fff;margin-bottom:7px}.tpl-thumb.metro .mini-sub{width:108px;height:8px;border-radius:4px;background:rgba(255,255,255,.5);margin-bottom:10px}.tpl-thumb.metro .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.tpl-thumb.metro .mini-box{height:24px;border-radius:7px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2)}
+  .tpl-thumb.saffron-local{background:linear-gradient(135deg,#fffbf5,#ffe4cc 55%,#fdba74)}
+  .tpl-thumb.saffron-local .mini-top{height:20px;background:#ea580c;display:flex;align-items:center;padding:0 8px;gap:4px}.tpl-thumb.saffron-local .mini-dot{width:14px;height:5px;border-radius:999px;background:rgba(255,255,255,.5)}.tpl-thumb.saffron-local .mini-hero{padding:10px}.tpl-thumb.saffron-local .mini-title{width:90px;height:12px;border-radius:5px;background:#ea580c;margin-bottom:7px}.tpl-thumb.saffron-local .mini-sub{width:108px;height:8px;border-radius:4px;background:rgba(234,88,12,.35);margin-bottom:10px}.tpl-thumb.saffron-local .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.tpl-thumb.saffron-local .mini-box{height:24px;border-radius:7px;background:#fff;border:1px solid #f0d9c8}
+  .tpl-card .tpl-demo-link{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:600;color:#2f4e74;text-decoration:none;padding:4px 10px;border-radius:6px;border:1px solid #dbe7f8;background:#f0f6ff;transition:background .15s}
+  .tpl-card .tpl-demo-link:hover{background:#dce9ff}
 </style>
 <div class="panel">
   @php
@@ -363,67 +318,12 @@
     <h3 style="margin-top:0">Paid Template Add-on</h3>
     <p style="margin:0;color:#5d5332;line-height:1.7">
       Astro Dynamic Template is a premium add-on priced at <strong>₹{{ number_format((float) $astroUnlockPrice, 0) }}</strong>.
-      You can view sample in configuration, and submit unlock request with payment proof from your profile configuration page.
+      Click <strong>Preview</strong> on the template card to see a demo, and submit unlock request with payment proof from your profile configuration page.
     </p>
   </div>
 
   @php
     $activeTemplate = old('template', $shop->template ?: 'dynamic_service');
-    $tc = $shop->page_config['template_content'] ?? [];
-    $configuredServices = is_array($shop->page_config['services'] ?? null) ? $shop->page_config['services'] : [];
-    $serviceGroups = is_array($tc['service_groups'] ?? null) ? $tc['service_groups'] : [];
-
-    $serviceName = $shop->name ?: 'तुमच्या सेवेचे नाव';
-    $heroTitle = trim((string)($tc['hero_title'] ?? 'तुमच्या गरजांसाठी व्यावसायिक सेवा'));
-    $heroDesc = trim((string)($tc['hero_description'] ?? 'अनुभवी तज्ञांकडून जलद, विश्वासार्ह आणि परवडणारी सेवा.'));
-    $providerName = trim((string)($tc['provider_name'] ?? (auth()->user()->full_name ?: 'सेवा प्रदाता')));
-    $providerContact = trim((string)($tc['provider_contact'] ?? ($shop->phone ?: (auth()->user()->mobile_number ?? 'सेट नाही'))));
-
-    $heroBadge = trim((string)($tc['hero_badge'] ?? 'विश्वासार्ह स्थानिक सेवा'));
-    $primaryCta = trim((string)($tc['primary_cta'] ?? 'सेवा बुक करा'));
-    $secondaryCta = trim((string)($tc['secondary_cta'] ?? 'मोफत कोट घ्या'));
-    $servicesLabel = trim((string)($tc['services_label'] ?? 'आमच्या सेवा'));
-    $servicesTitle = trim((string)($tc['services_title'] ?? 'आम्ही देत असलेल्या सेवा'));
-    $servicesSubtitle = trim((string)($tc['services_subtitle'] ?? 'आमच्या लोकप्रिय सेवांमधून निवडा.'));
-    $ctaTitle = trim((string)($tc['cta_title'] ?? 'आज मदत हवी आहे?'));
-    $ctaDescription = trim((string)($tc['cta_description'] ?? 'आत्ताच संपर्क करा आणि विश्वासार्ह स्थानिक तज्ञाकडून त्वरित मदत मिळवा.'));
-    $ctaButton = trim((string)($tc['cta_button'] ?? 'आत्ता संपर्क करा'));
-    $footerBrand = trim((string)($tc['footer_brand'] ?? ($shop->name ?: 'माझा सेवा ब्रँड')));
-    $footerTagline = trim((string)($tc['footer_tagline'] ?? 'विश्वासार्ह · जलद · व्यावसायिक'));
-
-    $dynamicPreviewItems = array_slice(array_values(array_filter(array_map(function($svc){
-      $name = trim((string)($svc['name'] ?? ''));
-      if ($name === '') return null;
-      return [
-        'name' => $name,
-        'desc' => trim((string)($svc['description'] ?? 'Professional service')),
-      ];
-    }, $configuredServices))), 0, 4);
-
-    if (empty($dynamicPreviewItems)) {
-      $dynamicPreviewItems = [
-        ['name' => 'Plumbing Repair', 'desc' => 'Fast leak fixing'],
-        ['name' => 'Home Wiring', 'desc' => 'Safe installation'],
-        ['name' => 'AC Service', 'desc' => 'Cleaning & repair'],
-        ['name' => 'Emergency', 'desc' => 'Quick response'],
-      ];
-    }
-
-    $astroPreviewItems = [];
-    foreach ($serviceGroups as $group) {
-      foreach ((array)($group['items'] ?? []) as $item) {
-        $itemName = trim((string)($item['name'] ?? ''));
-        if ($itemName === '') continue;
-        $astroPreviewItems[] = [
-          'name' => $itemName,
-          'desc' => trim((string)($item['description'] ?? 'Premium service item')),
-        ];
-        if (count($astroPreviewItems) >= 4) break 2;
-      }
-    }
-    if (empty($astroPreviewItems)) {
-      $astroPreviewItems = $dynamicPreviewItems;
-    }
   @endphp
 
   <div class="card" style="margin-top:12px;padding:16px;border:1px solid #dbe7f8">
@@ -439,6 +339,7 @@
         </div>
         <h4>Dynamic Service Template</h4>
         <p>Premium dynamic template included in your yearly subscription.</p>
+        <a href="{{ route('template.demo', 'dynamic_service') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
       </button>
 
       <button type="button" class="tpl-card {{ $activeTemplate === 'astro_dynamic' ? 'active' : '' }} {{ !$astroUnlocked ? 'locked' : '' }}" data-template="astro_dynamic" data-locked="{{ $astroUnlocked ? '0' : '1' }}">
@@ -457,6 +358,29 @@
         @else
           <p>Cosmic premium landing style. Unlock is required before saving this template.</p>
         @endif
+        <a href="{{ route('template.demo', 'astro_dynamic') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
+      </button>
+
+      <button type="button" class="tpl-card {{ $activeTemplate === 'metro_clean' ? 'active' : '' }}" data-template="metro_clean" data-locked="0">
+        <span class="tpl-chip free">Included · Free</span>
+        <div class="tpl-thumb metro">
+          <div class="mini-top"><span class="mini-dot"></span><span class="mini-dot"></span></div>
+          <div class="mini-hero"><div class="mini-title"></div><div class="mini-sub"></div><div class="mini-grid"><div class="mini-box"></div><div class="mini-box"></div><div class="mini-box"></div></div></div>
+        </div>
+        <h4>Metro Clean Template</h4>
+        <p>Clean modern blue layout — ideal for consultants, clinics, and professional services.</p>
+        <a href="{{ route('template.demo', 'metro_clean') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
+      </button>
+
+      <button type="button" class="tpl-card {{ $activeTemplate === 'saffron_local' ? 'active' : '' }}" data-template="saffron_local" data-locked="0">
+        <span class="tpl-chip free">Included · Free</span>
+        <div class="tpl-thumb saffron-local">
+          <div class="mini-top"><span class="mini-dot"></span><span class="mini-dot"></span></div>
+          <div class="mini-hero"><div class="mini-title"></div><div class="mini-sub"></div><div class="mini-grid"><div class="mini-box"></div><div class="mini-box"></div><div class="mini-box"></div></div></div>
+        </div>
+        <h4>Saffron Local Template</h4>
+        <p>Warm orange style for local shops — with offer banners, opening hours, and WhatsApp contact.</p>
+        <a href="{{ route('template.demo', 'saffron_local') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
       </button>
     </div>
 
@@ -477,77 +401,6 @@
       @endif
     </div>
 
-    <div class="tpl-sample-wrap">
-      <div class="tpl-sample-head"><strong>Sample View</strong><span>Visual preview of each template</span></div>
-
-      {{-- Dynamic Service Sample --}}
-      <div class="tpl-sample {{ $activeTemplate === 'dynamic_service' ? 'active' : '' }}" data-sample="dynamic_service">
-        <div class="tpl-sample-scroll">
-        <div class="sample-dyn">
-          <div class="sample-dyn-top"><span>Home</span><span>Services</span><span>Contact</span></div>
-          <div class="sample-dyn-hero">
-            <div class="sample-dyn-badge">{{ $heroBadge }}</div>
-            <div class="sample-dyn-title">{{ $heroTitle }}</div>
-            <div class="sample-dyn-sub">{{ $heroDesc }}</div>
-            <div class="sample-dyn-actions"><span>{{ $primaryCta }}</span><span>{{ $secondaryCta }}</span></div>
-          </div>
-          <div class="sample-dyn-body">
-            <div class="sample-dyn-grid">
-              <div class="sample-dyn-card tall">
-                <h5>{{ $servicesLabel }}</h5>
-                <h4>{{ $servicesTitle }}</h4>
-                <p>{{ $servicesSubtitle }}</p>
-                <div class="sample-dyn-mini-grid">
-                  @foreach($dynamicPreviewItems as $item)
-                    <div class="mini"><strong>{{ $item['name'] }}</strong><span>{{ $item['desc'] }}</span></div>
-                  @endforeach
-                </div>
-              </div>
-              <div class="sample-dyn-card">
-                <h5>Provider Card</h5>
-                <h4>{{ $providerName }}</h4>
-                <p>Contact: {{ $providerContact }}</p>
-              </div>
-            </div>
-            <div class="sample-dyn-cta">
-              <h4>{{ $ctaTitle }}</h4>
-              <p>{{ $ctaDescription }}</p>
-              <div class="sample-dyn-actions" style="justify-content:center"><span>{{ $ctaButton }}</span><span>{{ $secondaryCta }}</span></div>
-            </div>
-            <div class="sample-dyn-footer"><span>{{ $footerBrand }}</span><span>{{ $footerTagline }}</span><span>© 2026</span></div>
-          </div>
-        </div>
-        </div>
-      </div>
-
-      {{-- Astro Dynamic Sample --}}
-      <div class="tpl-sample {{ $activeTemplate === 'astro_dynamic' ? 'active' : '' }}" data-sample="astro_dynamic">
-        <div class="tpl-sample-scroll">
-        <div class="sample-astro-outer">
-          <div class="sample-astro-top"><span>Home</span><span>Services</span><span>Consult</span></div>
-          <div class="sample-astro-hero">
-            <div class="sample-astro-badge">✦ Premium Cosmic Style</div>
-            <div class="sample-astro-title">{{ $heroTitle }}</div>
-            <div class="sample-astro-sub">{{ $heroDesc }}</div>
-            <div class="sample-astro-actions"><span>{{ $primaryCta }}</span><span>{{ $secondaryCta }}</span></div>
-          </div>
-          <div class="sample-astro-body">
-            <div class="sample-astro-grid">
-              @foreach($astroPreviewItems as $item)
-                <div class="sample-astro-card"><strong>{{ $item['name'] }}</strong><span>{{ $item['desc'] }}</span></div>
-              @endforeach
-            </div>
-            <div class="sample-astro-cta">
-              <h4>{{ $ctaTitle }}</h4>
-              <p>{{ $ctaDescription }}</p>
-              <div class="sample-astro-actions" style="justify-content:center"><span>{{ $ctaButton }}</span><span>{{ $secondaryCta }}</span></div>
-            </div>
-            <div class="sample-astro-footer"><span>{{ $footerBrand }}</span><span>{{ $footerTagline }}</span><span>© 2026</span></div>
-          </div>
-        </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -556,22 +409,13 @@ document.addEventListener('DOMContentLoaded', function(){
   const templateInput = document.getElementById('subscription-template-input');
   const templateForm  = document.getElementById('subscription-template-form');
   const unlockPageUrl = '{{ route($unlockRoute) }}';
-  const sampleViews   = document.querySelectorAll('.tpl-sample');
-
-  function syncTemplateSelection(card){
-    if (!card || !templateInput) return;
-    templateInput.value = card.dataset.template;
-    sampleViews.forEach(function(view){
-      view.classList.toggle('active', view.dataset.sample === card.dataset.template);
-    });
-  }
 
   document.querySelectorAll('.tpl-card').forEach(function(card){
     card.addEventListener('click', function(){
       const isLocked = card.dataset.locked === '1';
       document.querySelectorAll('.tpl-card').forEach(c => c.classList.remove('active'));
       card.classList.add('active');
-      syncTemplateSelection(card);
+      if (templateInput) templateInput.value = card.dataset.template;
       if (isLocked) {
         window.location.href = unlockPageUrl;
       }

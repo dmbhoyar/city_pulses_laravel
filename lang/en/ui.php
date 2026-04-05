@@ -662,7 +662,7 @@ return [
     'copy_this_link' => 'Copy this link',
 
     // User Submission
-    'send_news' => 'Send News/Story',
+    'send_news' => 'Share a Story/News',
     'community_stories' => 'Community Stories',
     'browse_stories' => 'Browse Stories',
     'submit_story' => 'Submit Story',

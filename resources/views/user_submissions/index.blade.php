@@ -117,8 +117,8 @@
 
   /* ── reading modal ── */
   #cpReadModal{display:none;position:fixed;inset:0;background:rgba(26,18,8,.9);z-index:999;overflow-y:auto;padding:1.5rem 1rem}
-  #cpReadModal.open{display:flex;align-items:flex-start;justify-content:center}
-  #cpReadInner{background:var(--paper);max-width:720px;width:100%;padding:0;position:relative;margin:auto}
+  #cpReadModal.open{display:block}
+  #cpReadInner{background:var(--paper);max-width:720px;width:100%;padding:0;position:relative;margin:0 auto}
   #cpReadModal .rm-img{width:100%;max-height:320px;object-fit:cover;display:block}
   #cpReadModal .rm-body{padding:1.6rem 1.8rem}
   #cpReadModal .rm-flag{font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);border-bottom:2px solid var(--red);display:inline-block;padding-bottom:1px;margin-bottom:.6rem}
@@ -259,13 +259,14 @@
                 $imgUrl = $item->photo ? asset('storage/' . $item->photo) : null;
                 $excerpt = \Illuminate\Support\Str::limit(strip_tags($item->content), 110);
               @endphp
-              <div class="card" onclick="cpOpenStory({{ $item->id }},
-                @json($item->title),
-                @json($item->content),
-                @json($item->user->name ?? 'Community'),
-                @json($item->created_at->format('d M Y')),
-                @json($flagLabels[$item->type] ?? $item->type),
-                @json($imgUrl))">
+              <div class="card cp-story-card"
+                data-id="{{ $item->id }}"
+                data-title="{{ e($item->title) }}"
+                data-content="{{ e($item->content) }}"
+                data-author="{{ e($item->user->name ?? 'Community') }}"
+                data-date="{{ $item->created_at->format('d M Y') }}"
+                data-type="{{ e($flagLabels[$item->type] ?? $item->type) }}"
+                data-img="{{ $imgUrl ?? '' }}">
                 @if($imgUrl)
                   <img class="card-img" src="{{ $imgUrl }}" alt="{{ $item->title }}">
                 @else
@@ -520,7 +521,7 @@ function cpShowFile(input) {
 }
 
 // ── Reading modal
-function cpOpenStory(id, title, content, author, date, type, imgUrl) {
+function cpOpenStory(title, content, author, date, type, imgUrl) {
   document.getElementById('rmTitle').textContent = title;
   document.getElementById('rmAuthor').textContent = '✍ ' + author;
   document.getElementById('rmDate').textContent = date;
@@ -528,8 +529,7 @@ function cpOpenStory(id, title, content, author, date, type, imgUrl) {
   document.getElementById('rmType').textContent = type;
   var img = document.getElementById('rmImg');
   if (imgUrl) { img.src = imgUrl; img.style.display = 'block'; }
-  else { img.style.display = 'none'; }
-  // render content as paragraphs
+  else { img.src = ''; img.style.display = 'none'; }
   var paragraphs = content.split(/\n\n+/).map(function(p){
     return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
   }).join('');
@@ -542,5 +542,19 @@ function cpCloseModal() {
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cpCloseModal(); });
+
+// ── Card click via event delegation
+document.addEventListener('click', function(e) {
+  var card = e.target.closest('.cp-story-card');
+  if (!card) return;
+  cpOpenStory(
+    card.dataset.title,
+    card.dataset.content,
+    card.dataset.author,
+    card.dataset.date,
+    card.dataset.type,
+    card.dataset.img || ''
+  );
+});
 </script>
 @endsection

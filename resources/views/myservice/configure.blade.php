@@ -84,84 +84,26 @@
   .tpl-preview-visual{border-radius:10px;overflow:hidden;border:1px solid #dbe7f8;background:#fff;min-height:180px}
   .tpl-preview-copy h4{margin:0 0 6px;color:#2f4e74;font-size:15px}
   .tpl-preview-copy p{margin:0;color:#6d84a5;line-height:1.6}
-  .tpl-sample-wrap{margin-top:12px;border:1px solid #dbe7f8;border-radius:12px;background:#f8fbff;padding:12px}
-  .tpl-sample-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-  .tpl-sample-head strong{font-size:14px;color:#2f4e74}
-  .tpl-sample-head span{font-size:12px;color:#7a90ad}
-  .tpl-sample{display:none;border-radius:12px;overflow:hidden;height:680px;border:1px solid #dbe7f8;background:#fff}
-  .tpl-sample.active{display:block}
-  .tpl-sample-scroll{height:100%;overflow-y:auto;overflow-x:hidden;background:#fff}
-  .tpl-sample-scroll::-webkit-scrollbar{width:10px}
-  .tpl-sample-scroll::-webkit-scrollbar-thumb{background:#c9d9ef;border-radius:999px}
-  .tpl-sample-scroll::-webkit-scrollbar-track{background:#eef4fb}
-  .sample-dyn{background:#fff;min-height:1100px}
-  .sample-dyn-top{height:40px;background:#1a0a3b;display:flex;align-items:center;padding:0 12px;gap:8px}
-  .sample-dyn-top span{display:inline-flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:#dcd6ff;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-  .sample-dyn-hero{padding:24px;background:linear-gradient(135deg,#1a0a3b,#7b2ff7);color:#fff}
-  .sample-dyn-badge{display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);margin-bottom:14px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-  .sample-dyn-title{font-size:28px;font-weight:800;line-height:1.15;max-width:560px;margin-bottom:10px}
-  .sample-dyn-sub{font-size:13px;line-height:1.7;max-width:680px;color:rgba(255,255,255,.82);margin-bottom:18px}
-  .sample-dyn-actions{display:flex;gap:10px;flex-wrap:wrap}.sample-dyn-actions span{display:inline-flex;align-items:center;justify-content:center;min-width:128px;height:34px;padding:0 14px;border-radius:10px;font-size:11px;font-weight:700}.sample-dyn-actions span:first-child{background:#fff;color:#46238c}.sample-dyn-actions span:last-child{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);color:#fff}
-  .sample-dyn-body{padding:18px}.sample-dyn-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.sample-dyn-card{border:1px solid #dbe7f8;border-radius:14px;padding:16px;background:#fff}.sample-dyn-card.tall{min-height:210px}.sample-dyn-card h5{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7c3aed;margin-bottom:8px}.sample-dyn-card h4{font-size:21px;color:#243f63;margin-bottom:8px}.sample-dyn-card p{font-size:13px;color:#6d84a5;line-height:1.7}.sample-dyn-mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.sample-dyn-mini-grid .mini{min-height:74px;border-radius:12px;background:#eef4ff;border:1px solid #dbe7f8;padding:10px}.sample-dyn-mini-grid .mini strong{display:block;font-size:12px;color:#2f4e74;margin-bottom:4px}.sample-dyn-mini-grid .mini span{font-size:11px;color:#6d84a5;line-height:1.5}
-  .sample-dyn-provider{display:grid;grid-template-columns:260px 1fr;gap:14px;margin-top:14px}.sample-dyn-provider-card{border-radius:18px;padding:18px;background:linear-gradient(145deg,#20395f,#4b86d7);color:#fff;min-height:250px}.sample-dyn-provider-card .avatar{width:72px;height:72px;border-radius:18px;background:#fff;margin-bottom:12px}.sample-dyn-provider-card h4{font-size:20px;margin-bottom:4px;color:#fff}.sample-dyn-provider-card small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#d7ebff;margin-bottom:10px}.sample-dyn-provider-card p{font-size:12px;line-height:1.7;color:rgba(255,255,255,.82)}.sample-dyn-provider-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.sample-dyn-provider-meta .meta{border:1px solid #dbe7f8;border-radius:14px;padding:14px;background:#fff;min-height:92px}.sample-dyn-provider-meta .meta strong{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6c84a8;margin-bottom:6px}.sample-dyn-provider-meta .meta span{font-size:13px;color:#304c72;line-height:1.5}
-  .sample-dyn-alt{margin-top:16px;background:#f8fbff;border-radius:16px;padding:18px}.sample-dyn-alt h4{font-size:24px;color:#243f63;margin-bottom:8px}.sample-dyn-alt p{font-size:13px;color:#6d84a5;line-height:1.7;margin-bottom:12px}.sample-dyn-why{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.sample-dyn-why .why{border:1px solid #dbe7f8;border-radius:14px;background:#fff;padding:14px;min-height:110px}.sample-dyn-why .why strong{display:block;font-size:13px;color:#2f4e74;margin:8px 0 6px}.sample-dyn-why .why span{font-size:11px;color:#6d84a5;line-height:1.5}
-  .sample-dyn-testi{margin-top:16px}.sample-dyn-testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.sample-dyn-testi-grid .testi{border:1px solid #dbe7f8;border-radius:14px;background:#fff;padding:16px;min-height:120px}.sample-dyn-testi-grid .testi strong{display:block;color:#7c3aed;margin-bottom:8px}.sample-dyn-testi-grid .testi span{font-size:12px;color:#6d84a5;line-height:1.7}
-  .sample-dyn-cta{margin-top:16px;border-radius:18px;padding:28px;background:linear-gradient(135deg,#2d1265,#7b2ff7);color:#fff;text-align:center}.sample-dyn-cta h4{font-size:30px;margin-bottom:10px}.sample-dyn-cta p{font-size:13px;line-height:1.7;color:rgba(255,255,255,.84);margin-bottom:14px}.sample-dyn-footer{padding:18px;margin-top:16px;background:#1a0a3b;color:rgba(255,255,255,.72);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px}
-  .sample-astro{background:#04010c;color:#fff;position:relative;min-height:1520px}
-  .sample-astro-switch{height:42px;background:rgba(8,3,18,.95);display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid rgba(245,197,24,.16)}
-  .sample-astro-switch span{height:22px;padding:0 10px;border-radius:999px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.2);display:inline-flex;align-items:center;font-size:10px;color:#f5c518}
-  .sample-astro-canvas{display:grid;grid-template-columns:1fr;min-height:278px}
-  .sample-astro-pane{padding:18px;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden;min-height:470px}
-  .sample-astro-pane:last-child{border-right:none}
-  .sample-astro-pane h5{font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
-  .sample-astro-pane .hero{min-height:132px;border-radius:12px;margin-bottom:12px;padding:14px;display:flex;flex-direction:column;justify-content:flex-end}
-  .sample-astro-pane .hero small{display:inline-flex;align-self:flex-start;padding:4px 8px;border-radius:999px;margin-bottom:8px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-  .sample-astro-pane .hero strong{display:block;font-size:19px;line-height:1.1;margin-bottom:6px}
-  .sample-astro-pane .hero p{font-size:11px;line-height:1.55;max-width:220px}
-  .sample-astro-pane .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.sample-astro-pane .cards div{min-height:92px;border-radius:10px;padding:12px}.sample-astro-pane .cards strong{display:block;font-size:11px;margin-bottom:4px}.sample-astro-pane .cards span{font-size:10px;line-height:1.45;display:block}.sample-astro-pane .why-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}.sample-astro-pane .why-row div{min-height:84px;border-radius:10px;padding:12px}.sample-astro-pane .why-row strong{display:block;font-size:11px;margin-bottom:4px}.sample-astro-pane .why-row span{display:block;font-size:10px;line-height:1.45}
-  .sample-astro-pane.cosmic{background:radial-gradient(circle at 20% 20%,rgba(120,0,255,.18),transparent 26%),#03000d}.sample-astro-pane.cosmic h5{color:#f5c518}.sample-astro-pane.cosmic .hero{background:linear-gradient(135deg,#120028,#5d2399 60%,#c9860a)}.sample-astro-pane.cosmic .l1{background:#fff}.sample-astro-pane.cosmic .l2{background:rgba(255,255,255,.55)}.sample-astro-pane.cosmic .l3{background:rgba(245,197,24,.45)}.sample-astro-pane.cosmic .cards div{background:rgba(255,255,255,.05);border:1px solid rgba(245,197,24,.15)}
-  .sample-astro-pane.cosmic .why-row div{background:rgba(255,255,255,.05);border:1px solid rgba(245,197,24,.15)}
-  .sample-astro-pane.saffron{background:#fdf6ec}.sample-astro-pane.saffron h5{color:#d4520a}.sample-astro-pane.saffron .hero{background:linear-gradient(135deg,#fff,#ffe3cf 58%,#d4520a)}.sample-astro-pane.saffron .hero small{background:#fff3e6;color:#d4520a}.sample-astro-pane.saffron .hero strong{color:#1a0a00}.sample-astro-pane.saffron .hero p{color:#6e5a4a}.sample-astro-pane.saffron .cards div,.sample-astro-pane.saffron .why-row div{background:#fff;border:1px solid #f0d9c8}.sample-astro-pane.saffron .cards strong,.sample-astro-pane.saffron .why-row strong{color:#1a0a00}.sample-astro-pane.saffron .cards span,.sample-astro-pane.saffron .why-row span{color:#846c5b}
-  .sample-astro-pane.neon{background:#04010c}.sample-astro-pane.neon h5{color:#a855f7}.sample-astro-pane.neon .hero{background:linear-gradient(135deg,#120028,#3e1a72 55%,#06b6d4)}.sample-astro-pane.neon .hero small{background:rgba(168,85,247,.16);color:#c4b5fd}.sample-astro-pane.neon .hero strong{color:#fff}.sample-astro-pane.neon .hero p{color:rgba(232,224,255,.75)}.sample-astro-pane.neon .cards div,.sample-astro-pane.neon .why-row div{background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.16)}.sample-astro-pane.neon .cards strong,.sample-astro-pane.neon .why-row strong{color:#c4b5fd}.sample-astro-pane.neon .cards span,.sample-astro-pane.neon .why-row span{color:rgba(232,224,255,.5)}
-  .sample-astro-full{background:radial-gradient(circle at 20% 10%,rgba(94,40,170,.22),transparent 35%),#04010c;min-height:1620px;color:#fff}
-  .sample-astro-top{height:44px;background:rgba(8,3,18,.95);display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid rgba(245,197,24,.16)}
-  .sample-astro-top .chip{height:24px;padding:0 10px;border-radius:999px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.24);display:inline-flex;align-items:center;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#f5c518;font-weight:700}
-  .sample-astro-top .brand{font-size:11px;color:rgba(255,255,255,.74);letter-spacing:.12em;text-transform:uppercase}
-  .sample-astro-hero{padding:22px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-  .sample-astro-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.24);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#f5c518;margin-bottom:10px}
-  .sample-astro-eyebrow i{width:7px;height:7px;border-radius:50%;background:#f5c518;box-shadow:0 0 0 4px rgba(245,197,24,.15)}
-  .sample-astro-hero h4{font-size:29px;line-height:1.14;margin:0 0 8px;background:linear-gradient(90deg,#fff,#f5c518);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .sample-astro-hero p{font-size:13px;line-height:1.75;color:rgba(235,226,255,.78);max-width:640px;margin:0 0 12px}
-  .sample-astro-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-  .sample-astro-actions span{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 14px;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.04em}
-  .sample-astro-actions span:first-child{background:linear-gradient(135deg,#f5c518,#efb900);color:#221008}
-  .sample-astro-actions span:last-child{border:1px solid rgba(245,197,24,.26);background:rgba(255,255,255,.05);color:#f5c518}
-  .sample-astro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .sample-astro-stats div{border:1px solid rgba(245,197,24,.2);background:rgba(255,255,255,.03);border-radius:10px;padding:10px 12px}
-  .sample-astro-stats strong{display:block;font-size:16px;color:#f5c518}
-  .sample-astro-stats small{display:block;font-size:11px;color:rgba(235,226,255,.7);margin-top:2px}
-  .sample-astro-block{padding:18px;border-bottom:1px solid rgba(255,255,255,.08)}
-  .sample-astro-head{margin-bottom:10px}
-  .sample-astro-head em{display:block;font-style:normal;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#f5c518;margin-bottom:6px}
-  .sample-astro-head h5{margin:0 0 5px;font-size:22px;line-height:1.2;color:#fff}
-  .sample-astro-head p{margin:0;font-size:12px;line-height:1.7;color:rgba(235,226,255,.72)}
-  .sample-astro-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .sample-astro-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .sample-astro-card{border-radius:12px;border:1px solid rgba(245,197,24,.18);background:rgba(255,255,255,.04);padding:12px;min-height:96px}
-  .sample-astro-card strong{display:block;font-size:12px;color:#fff;margin-bottom:4px}
-  .sample-astro-card span{display:block;font-size:11px;line-height:1.5;color:rgba(235,226,255,.72)}
-  .sample-astro-card b{display:inline-flex;margin-top:6px;padding:3px 8px;border-radius:999px;background:rgba(245,197,24,.16);font-size:10px;color:#f5c518}
-  .sample-astro-product{border-radius:12px;border:1px solid rgba(245,197,24,.2);background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(245,197,24,.08));padding:14px;min-height:88px}
-  .sample-astro-product strong{display:block;font-size:13px;color:#fff;margin-bottom:4px}
-  .sample-astro-product span{display:block;font-size:11px;line-height:1.55;color:rgba(235,226,255,.75)}
-  .sample-astro-cta{padding:24px 18px;text-align:center;background:linear-gradient(135deg,rgba(82,28,147,.7),rgba(179,115,8,.55));border-top:1px solid rgba(245,197,24,.2);border-bottom:1px solid rgba(245,197,24,.2)}
-  .sample-astro-cta h5{margin:0 0 7px;font-size:28px;color:#fff}
-  .sample-astro-cta p{margin:0 0 12px;font-size:13px;line-height:1.75;color:rgba(250,244,229,.82)}
-  .sample-astro-foot{padding:14px 18px;background:#090214;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11px;color:rgba(235,226,255,.66)}
-  @media (max-width: 860px){.tpl-preview{grid-template-columns:1fr}.tpl-sample{height:560px}.sample-dyn-grid,.sample-dyn-provider,.sample-dyn-why,.sample-dyn-testi-grid,.sample-astro-pane .cards,.sample-astro-pane .why-row{grid-template-columns:1fr 1fr}}
-  @media (max-width: 620px){.sample-dyn-grid,.sample-dyn-provider,.sample-dyn-why,.sample-dyn-testi-grid,.sample-astro-pane .cards,.sample-astro-pane .why-row{grid-template-columns:1fr}.tpl-sample{height:520px}}
-  @media (max-width: 860px){.sample-astro-stats,.sample-astro-grid4,.sample-astro-grid3{grid-template-columns:1fr 1fr}}
-  @media (max-width: 620px){.sample-astro-stats,.sample-astro-grid4,.sample-astro-grid3{grid-template-columns:1fr}}
+  .tpl-thumb.metro{background:linear-gradient(135deg,#1e3a5f,#2563eb)}
+  .tpl-thumb.metro .mini-top{height:22px;background:rgba(0,0,0,.22);display:flex;align-items:center;padding:0 8px;gap:4px}
+  .tpl-thumb.metro .mini-dot{width:16px;height:5px;border-radius:999px;background:rgba(255,255,255,.45)}
+  .tpl-thumb.metro .mini-hero{padding:10px}
+  .tpl-thumb.metro .mini-title{width:90px;height:12px;border-radius:5px;background:#fff;margin-bottom:7px}
+  .tpl-thumb.metro .mini-sub{width:108px;height:8px;border-radius:4px;background:rgba(255,255,255,.5);margin-bottom:10px}
+  .tpl-thumb.metro .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .tpl-thumb.metro .mini-box{height:26px;border-radius:7px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2)}
+  .tpl-thumb.saffron-local{background:linear-gradient(135deg,#fffbf5,#ffe4cc 55%,#fdba74)}
+  .tpl-thumb.saffron-local .mini-top{height:22px;background:#ea580c;display:flex;align-items:center;padding:0 8px;gap:4px}
+  .tpl-thumb.saffron-local .mini-dot{width:16px;height:5px;border-radius:999px;background:rgba(255,255,255,.5)}
+  .tpl-thumb.saffron-local .mini-hero{padding:10px}
+  .tpl-thumb.saffron-local .mini-title{width:90px;height:12px;border-radius:5px;background:#ea580c;margin-bottom:7px}
+  .tpl-thumb.saffron-local .mini-sub{width:108px;height:8px;border-radius:4px;background:rgba(234,88,12,.35);margin-bottom:10px}
+  .tpl-thumb.saffron-local .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .tpl-thumb.saffron-local .mini-box{height:26px;border-radius:7px;background:#fff;border:1px solid #f0d9c8}
+  .tpl-card .tpl-demo-link{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:600;color:#2f4e74;text-decoration:none;padding:4px 10px;border-radius:6px;border:1px solid #dbe7f8;background:#f0f6ff;transition:background .15s}
+  .tpl-card .tpl-demo-link:hover{background:#dce9ff}
+  .tpl-specific-fields{display:none;margin-top:12px;padding:12px;background:#f8fbff;border:1px solid #dbe7f8;border-radius:8px}
+  .tpl-specific-fields.active{display:block}
   .city-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;max-height:220px;overflow-y:auto;border:1px solid #e2ecf9;border-radius:6px;padding:8px;background:#fafcff}
   .city-item label{display:flex;align-items:center;gap:5px;font-size:13px;color:#3a5478;cursor:pointer;padding:3px 4px;border-radius:4px}
   .city-item label:hover{background:#eef4ff}
@@ -287,6 +229,7 @@
           </div>
           <h4>Dynamic Template</h4>
           <p>Premium dynamic template (included free in your subscription plan).</p>
+          <a href="{{ route('template.demo', 'dynamic_service') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
         </button>
         <button type="button" class="tpl-card {{ $activeTemplate === 'astro_dynamic' ? 'active' : '' }} {{ !$astroUnlocked ? 'locked' : '' }}" data-template="astro_dynamic" data-locked="{{ $astroUnlocked ? '0' : '1' }}"
           data-desc="Premium cosmic dark template with dramatic hero, luxury cards, and a richer high-visual landing page.">
@@ -314,6 +257,45 @@
           @else
             <p>Cosmic premium landing page in a single dark luxury style. Paid unlock required.</p>
           @endif
+          <a href="{{ route('template.demo', 'astro_dynamic') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
+        </button>
+        <button type="button" class="tpl-card {{ $activeTemplate === 'metro_clean' ? 'active' : '' }}" data-template="metro_clean"
+          data-desc="Clean professional blue template with bold header, services grid, about section, and contact panel.">
+          <span class="tpl-chip free">Included · Free</span>
+          <div class="tpl-thumb metro">
+            <div class="mini-top"><span class="mini-dot"></span><span class="mini-dot"></span></div>
+            <div class="mini-hero">
+              <div class="mini-title"></div>
+              <div class="mini-sub"></div>
+              <div class="mini-grid">
+                <div class="mini-box"></div>
+                <div class="mini-box"></div>
+                <div class="mini-box"></div>
+              </div>
+            </div>
+          </div>
+          <h4>Metro Clean Template</h4>
+          <p>Clean modern blue layout — ideal for consultants, clinics, and professional services.</p>
+          <a href="{{ route('template.demo', 'metro_clean') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
+        </button>
+        <button type="button" class="tpl-card {{ $activeTemplate === 'saffron_local' ? 'active' : '' }}" data-template="saffron_local"
+          data-desc="Warm saffron-orange local business template with offer banner, opening hours, and WhatsApp CTA.">
+          <span class="tpl-chip free">Included · Free</span>
+          <div class="tpl-thumb saffron-local">
+            <div class="mini-top"><span class="mini-dot"></span><span class="mini-dot"></span></div>
+            <div class="mini-hero">
+              <div class="mini-title"></div>
+              <div class="mini-sub"></div>
+              <div class="mini-grid">
+                <div class="mini-box"></div>
+                <div class="mini-box"></div>
+                <div class="mini-box"></div>
+              </div>
+            </div>
+          </div>
+          <h4>Saffron Local Template</h4>
+          <p>Warm orange style for local shops — with offer banners, opening hours, and WhatsApp contact.</p>
+          <a href="{{ route('template.demo', 'saffron_local') }}" target="_blank" class="tpl-demo-link" onclick="event.stopPropagation()">👁 Preview</a>
         </button>
       </div>
       @error('template')
@@ -325,156 +307,6 @@
           <a href="{{ route($unlockRoute) }}" class="button" style="background:#f5c518;border-color:#e0b10f;color:#2d1c00;text-decoration:none;display:inline-block">Unlock Astro Dynamic →</a>
         </div>
       @endif
-      <div class="tpl-sample-wrap">
-        <div class="tpl-sample-head">
-          <strong>Sample View</strong>
-          <span>Customers will see a full-page version of the selected design.</span>
-        </div>
-        <div class="tpl-sample active" data-sample="dynamic_service">
-          <div class="tpl-sample-scroll">
-          <div class="sample-dyn">
-            <div class="sample-dyn-top"><span>Home</span><span>Services</span><span>Contact</span></div>
-            <div class="sample-dyn-hero">
-              <div class="sample-dyn-badge">Trusted Local Service</div>
-              <div class="sample-dyn-title">Premium Home Repair & Local Expert Support</div>
-              <div class="sample-dyn-sub">A clean modern landing page with a hero area, action buttons, service grid, provider section, and trust-building content blocks.</div>
-              <div class="sample-dyn-actions"><span>Book Service</span><span>Get Free Quote</span></div>
-            </div>
-            <div class="sample-dyn-body">
-              <div class="sample-dyn-grid">
-                <div class="sample-dyn-card tall">
-                  <h5>Our Services</h5>
-                  <h4>Services We Offer</h4>
-                  <p>Ideal for plumbers, electricians, mechanics, local consultants, home service teams, and all service providers who want a strong professional web presence.</p>
-                  <div class="sample-dyn-mini-grid">
-                    <div class="mini"><strong>Plumbing Repair</strong><span>Fast leak fixing and pipe service</span></div>
-                    <div class="mini"><strong>Home Wiring</strong><span>Safe installation and maintenance</span></div>
-                    <div class="mini"><strong>AC Service</strong><span>Regular cleaning and repair support</span></div>
-                    <div class="mini"><strong>Emergency Visit</strong><span>Quick response with direct contact</span></div>
-                  </div>
-                </div>
-                <div class="sample-dyn-card">
-                  <h5>Provider Card</h5>
-                  <h4>Meet Dhananjay</h4>
-                  <p>Show provider name, experience, age, email, contact number, service area, and photo in a clear, trust-focused layout.</p>
-                </div>
-              </div>
-              <div class="sample-dyn-provider">
-                <div class="sample-dyn-provider-card">
-                  <div class="avatar"></div>
-                  <h4>Dhananjay Bhoyar</h4>
-                  <small>Founder & Lead Expert</small>
-                  <p>Experienced local provider focused on fast support, premium presentation, and direct communication with customers.</p>
-                </div>
-                <div class="sample-dyn-provider-meta">
-                  <div class="meta"><strong>Experience</strong><span>10+ years of on-ground service support.</span></div>
-                  <div class="meta"><strong>Email</strong><span>dhananjay@example.com</span></div>
-                  <div class="meta"><strong>Contact</strong><span>902281139</span></div>
-                  <div class="meta"><strong>Service Area</strong><span>Wasim and nearby locations</span></div>
-                </div>
-              </div>
-              <div class="sample-dyn-alt">
-                <h4>Why Customers Choose This Layout</h4>
-                <p>This template gives a clean trust-first experience with a bold hero, clear service cards, visible provider profile, and a strong call-to-action section.</p>
-                <div class="sample-dyn-why">
-                  <div class="why"><strong>Fast Response</strong><span>Quick support with clear contact options.</span></div>
-                  <div class="why"><strong>Modern Design</strong><span>Professional landing page feel.</span></div>
-                  <div class="why"><strong>Trust Building</strong><span>Provider profile shown clearly.</span></div>
-                  <div class="why"><strong>Action Ready</strong><span>Call and quote buttons stand out.</span></div>
-                </div>
-              </div>
-              <div class="sample-dyn-testi">
-                <div class="sample-dyn-card" style="padding:0;border:none;background:transparent">
-                  <h5>Testimonials</h5>
-                  <h4>Customer Feedback</h4>
-                  <div class="sample-dyn-testi-grid">
-                    <div class="testi"><strong>★★★★★</strong><span>Quick response and very professional service. Highly recommended for home visits.</span></div>
-                    <div class="testi"><strong>★★★★★</strong><span>Good pricing, clear communication, and fast completion of work.</span></div>
-                    <div class="testi"><strong>★★★★★</strong><span>Trustworthy provider profile and clean page design create confidence.</span></div>
-                  </div>
-                </div>
-              </div>
-              <div class="sample-dyn-cta">
-                <h4>Need Help Today?</h4>
-                <p>Contact now and get quick support from a trusted local expert.</p>
-                <div class="sample-dyn-actions" style="justify-content:center"><span>Contact Now</span><span>View My Services</span></div>
-              </div>
-              <div class="sample-dyn-footer"><span>My Service Brand</span><span>Trusted · Fast · Professional</span><span>© 2026</span></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="tpl-sample" data-sample="astro_dynamic">
-          <div class="tpl-sample-scroll">
-          <div class="sample-astro-full">
-            <div class="sample-astro-top">
-              <span class="chip">Cosmic Dark</span>
-              <span class="brand">Nakshtea Astro Sample</span>
-            </div>
-
-            <div class="sample-astro-hero">
-              <span class="sample-astro-eyebrow"><i></i> Trusted Astro Guidance</span>
-              <h4>Discover Your Path with Premium Vedic Astrology</h4>
-              <p>Full-page preview flow for Astro Dynamic template: hero, service sections, products, trust cards, testimonials, CTA and footer — matching the actual template structure.</p>
-              <div class="sample-astro-actions"><span>Book Consultation</span><span>View Services</span></div>
-              <div class="sample-astro-stats">
-                <div><strong>50K+</strong><small>Happy Clients</small></div>
-                <div><strong>25+</strong><small>Years Experience</small></div>
-                <div><strong>4.9★</strong><small>Average Rating</small></div>
-                <div><strong>24×7</strong><small>Support</small></div>
-              </div>
-            </div>
-
-            <div class="sample-astro-block">
-              <div class="sample-astro-head"><em>01 · Astrology Consultation</em><h5>Expert Readings for Every Life Area</h5><p>Personalised astrology cards grouped under one heading.</p></div>
-              <div class="sample-astro-grid4">
-                <div class="sample-astro-card"><strong>Education & Studies</strong><span>Guidance for focus and academic growth.</span><b>From ₹499</b></div>
-                <div class="sample-astro-card"><strong>Career & Business</strong><span>Timing support for work and growth.</span><b>From ₹699</b></div>
-                <div class="sample-astro-card"><strong>Love & Marriage</strong><span>Compatibility and relationship insights.</span><b>From ₹799</b></div>
-                <div class="sample-astro-card"><strong>Health & Wellness</strong><span>Balanced lifestyle and remedy guidance.</span><b>From ₹599</b></div>
-              </div>
-            </div>
-
-            <div class="sample-astro-block">
-              <div class="sample-astro-head"><em>02 · Premium Services</em><h5>Remedies, Pujas & Special Reports</h5><p>Secondary service section with its own dynamic heading and cards.</p></div>
-              <div class="sample-astro-grid4">
-                <div class="sample-astro-card"><strong>Kundali Analysis</strong><span>Complete birth chart interpretation.</span><b>From ₹999</b></div>
-                <div class="sample-astro-card"><strong>Manglik Dosha</strong><span>Detailed dosha analysis and remedy path.</span><b>From ₹899</b></div>
-                <div class="sample-astro-card"><strong>Vastu Consultation</strong><span>Home and office energy balancing.</span><b>From ₹1499</b></div>
-                <div class="sample-astro-card"><strong>Personal Puja</strong><span>Custom puja recommendations and timing.</span><b>From ₹1299</b></div>
-              </div>
-            </div>
-
-            <div class="sample-astro-block">
-              <div class="sample-astro-head"><em>Astro Products</em><h5>Gemstones, Vastu Tools & Spiritual Kits</h5><p>Product cards and trust-building blocks in full page flow.</p></div>
-              <div class="sample-astro-grid3">
-                <div class="sample-astro-product"><strong>Natural Gemstones</strong><span>Energised and authenticity-verified options.</span></div>
-                <div class="sample-astro-product"><strong>Vastu Products</strong><span>Yantras, pyramids and directional solutions.</span></div>
-                <div class="sample-astro-product"><strong>Spiritual Accessories</strong><span>Rudraksha, malas and puja essentials.</span></div>
-              </div>
-            </div>
-
-            <div class="sample-astro-block">
-              <div class="sample-astro-head"><em>Testimonials</em><h5>What Clients Say</h5><p>Review and social-proof section from the Astro template flow.</p></div>
-              <div class="sample-astro-grid3">
-                <div class="sample-astro-card"><strong>★★★★★ Priya S.</strong><span>Very accurate guidance and practical remedies.</span></div>
-                <div class="sample-astro-card"><strong>★★★★★ Rahul K.</strong><span>Clear predictions and supportive consultation.</span></div>
-                <div class="sample-astro-card"><strong>★★★★★ Meena P.</strong><span>Professional experience with premium design feel.</span></div>
-              </div>
-            </div>
-
-            <div class="sample-astro-cta">
-              <h5>Ready to Get Your Personal Reading?</h5>
-              <p>Strong CTA block in the final section of page flow with high visual focus.</p>
-              <div class="sample-astro-actions" style="justify-content:center"><span>Book Now</span><span>WhatsApp</span></div>
-            </div>
-
-            <div class="sample-astro-foot"><span>Nakshtea Astro</span><span>Trusted · Accurate · Confidential</span><span>© 2026</span></div>
-          </div>
-          </div>
-        </div>
-      </div>
-
       @if(!$astroUnlocked)
       <div class="unlock-modal" id="astro-unlock-modal" style="display:none" aria-hidden="true">
         <div class="unlock-modal-backdrop" data-close-astro-unlock></div>
@@ -630,6 +462,52 @@
         <div class="form-row" style="margin:0">
           <label for="tc_footer_tagline">Footer Tagline</label>
           <input id="tc_footer_tagline" type="text" name="tc[footer_tagline]" value="{{ $tc['footer_tagline'] ?? '' }}" placeholder="Trusted · Fast · Professional">
+        </div>
+      </div>
+
+      {{-- Metro Clean specific fields --}}
+      <div class="tpl-specific-fields {{ $activeTemplate === 'metro_clean' ? 'active' : '' }}" id="tpl-fields-metro_clean">
+        <h3 style="margin:0 0 10px;font-size:14px;color:#1e3a5f;border-bottom:1px solid #dbe7f8;padding-bottom:6px">Metro Clean — Extra Fields</h3>
+        <div class="cfg-grid three">
+          <div class="form-row" style="margin:0">
+            <label for="tc_metro_accent">Accent Color</label>
+            <select id="tc_metro_accent" name="tc[metro_accent]">
+              <option value="blue" {{ ($tc['metro_accent'] ?? 'blue') === 'blue' ? 'selected' : '' }}>Blue (default)</option>
+              <option value="green" {{ ($tc['metro_accent'] ?? '') === 'green' ? 'selected' : '' }}>Green</option>
+              <option value="red" {{ ($tc['metro_accent'] ?? '') === 'red' ? 'selected' : '' }}>Red</option>
+            </select>
+          </div>
+          <div class="form-row" style="margin:0">
+            <label for="tc_about_title">About Section Title</label>
+            <input id="tc_about_title" type="text" name="tc[about_title]" value="{{ $tc['about_title'] ?? '' }}" placeholder="About Our Business">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label for="tc_contact_heading">Contact Section Heading</label>
+            <input id="tc_contact_heading" type="text" name="tc[contact_heading]" value="{{ $tc['contact_heading'] ?? '' }}" placeholder="Get In Touch">
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="tc_about_text">About Section Text</label>
+          <textarea id="tc_about_text" name="tc[about_text]" rows="3" placeholder="Tell visitors about your business history and mission…">{{ $tc['about_text'] ?? '' }}</textarea>
+        </div>
+      </div>
+
+      {{-- Saffron Local specific fields --}}
+      <div class="tpl-specific-fields {{ $activeTemplate === 'saffron_local' ? 'active' : '' }}" id="tpl-fields-saffron_local">
+        <h3 style="margin:0 0 10px;font-size:14px;color:#92400e;border-bottom:1px solid #f0d9c8;padding-bottom:6px">Saffron Local — Extra Fields</h3>
+        <div class="cfg-grid two">
+          <div class="form-row" style="margin:0">
+            <label for="tc_opening_hours">Opening Hours</label>
+            <input id="tc_opening_hours" type="text" name="tc[opening_hours]" value="{{ $tc['opening_hours'] ?? '' }}" placeholder="Mon–Sat: 9 AM – 8 PM  |  Sun: 10 AM – 5 PM">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label for="tc_locality_note">Locality / Area Note</label>
+            <input id="tc_locality_note" type="text" name="tc[locality_note]" value="{{ $tc['locality_note'] ?? '' }}" placeholder="Serving Washim, Mangrulpir and nearby areas">
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="tc_special_offer">Special Offer Banner <small style="color:#86a0be;font-weight:400">(shown at the top — leave blank to hide)</small></label>
+          <input id="tc_special_offer" type="text" name="tc[special_offer]" value="{{ $tc['special_offer'] ?? '' }}" placeholder="🎉 Grand Opening Offer: 20% off on all services this month!">
         </div>
       </div>
     </div>
@@ -805,11 +683,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* ── Template picker ─────────────────────────────────── */
   const tplInput   = document.getElementById('cfg-template');
-  const tplPreview = document.getElementById('tpl-preview');
-  const tplPreviewVisual = tplPreview ? tplPreview.querySelector('.tpl-preview-visual') : null;
-  const tplPreviewTitle = tplPreview ? tplPreview.querySelector('.tpl-preview-copy h4') : null;
-  const tplPreviewDesc = tplPreview ? tplPreview.querySelector('.tpl-preview-copy p') : null;
-  const tplSamples = document.querySelectorAll('.tpl-sample');
   const unlockModal = document.getElementById('astro-unlock-modal');
   const templateLockMessage = document.getElementById('template-lock-message');
   function openUnlockModal(){
@@ -838,13 +711,12 @@ document.addEventListener('DOMContentLoaded', function(){
   });
   function syncTemplatePreview(card){
     if (!card) return;
-    tplInput.value = card.dataset.template;
-    if (tplPreviewVisual && tplPreviewTitle && tplPreviewDesc) {
-      tplPreviewVisual.innerHTML = card.querySelector('.tpl-thumb').outerHTML;
-      tplPreviewTitle.textContent = card.querySelector('h4').textContent;
-      tplPreviewDesc.textContent = card.dataset.desc || '';
-    }
-    tplSamples.forEach(sample => sample.classList.toggle('active', sample.dataset.sample === card.dataset.template));
+    const tpl = card.dataset.template;
+    tplInput.value = tpl;
+    // Show/hide template-specific field panels
+    document.querySelectorAll('.tpl-specific-fields').forEach(function(panel){
+      panel.classList.toggle('active', panel.id === 'tpl-fields-' + tpl);
+    });
   }
   const unlockPageUrl = '{{ route($unlockRoute) }}';
   document.querySelectorAll('.tpl-card').forEach(function(card){

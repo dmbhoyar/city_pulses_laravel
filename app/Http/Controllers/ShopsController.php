@@ -13,7 +13,7 @@ class ShopsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show', 'publicShow', 'publicIdcard', 'publicShowBySlug', 'publicIdcardBySlug']);
+        $this->middleware('auth')->except(['index', 'show', 'publicShow', 'publicIdcard', 'publicShowBySlug', 'publicIdcardBySlug', 'templateDemo']);
     }
 
     public function index()
@@ -196,15 +196,115 @@ class ShopsController extends Controller
 
     private function resolvePublicTemplateView(Shop $shop): string
     {
-        $astroUnlocked = TemplateUnlockRequest::query()
-            ->where('shop_id', $shop->id)
-            ->where('template_key', 'astro_dynamic')
-            ->where('status', 'approved')
-            ->exists();
+        $tpl = (string) $shop->template;
 
-        return match ((string) $shop->template) {
-            'astro_dynamic' => $astroUnlocked ? 'shops.templates.astro_dynamic' : 'shops.show',
-            default => 'shops.show',
+        if ($tpl === 'astro_dynamic') {
+            $unlocked = TemplateUnlockRequest::query()
+                ->where('shop_id', $shop->id)
+                ->where('template_key', 'astro_dynamic')
+                ->where('status', 'approved')
+                ->exists();
+            return $unlocked ? 'shops.templates.astro_dynamic' : 'shops.show';
+        }
+
+        return match ($tpl) {
+            'metro_clean'   => 'shops.templates.metro_clean',
+            'saffron_local' => 'shops.templates.saffron_local',
+            default         => 'shops.show',
         };
+    }
+
+    public function templateDemo(string $template)
+    {
+        $allowed = ['dynamic_service', 'metro_clean', 'saffron_local', 'astro_dynamic'];
+        if (!in_array($template, $allowed, true)) {
+            abort(404);
+        }
+
+        // Build a realistic demo shop with sample data
+        $shop = new Shop();
+        $shop->id   = 0;
+        $shop->name = 'Demo Business';
+        $shop->description = 'Professional local service trusted by 500+ customers in your area.';
+        $shop->phone = '+91 98765 43210';
+        $shop->address = 'Main Road, Washim, MH';
+        $shop->template = $template;
+
+        $context = request()->query('ctx', 'service'); // shop | service
+
+        $isShop = $context === 'shop';
+
+        $shop->page_config = [
+            'public_slug' => 'demo-page',
+            'services' => [
+                ['icon' => '🔧', 'name' => $isShop ? 'Premium Product A' : 'Plumbing Repair',    'description' => 'Fast and reliable, available 24/7.', 'price' => 'From ₹499'],
+                ['icon' => '⚡', 'name' => $isShop ? 'Premium Product B' : 'Electrical Work',    'description' => 'Certified experts for safe installations.', 'price' => 'From ₹599'],
+                ['icon' => '🏠', 'name' => $isShop ? 'Premium Product C' : 'Home Renovation',   'description' => 'Complete renovation with quality materials.', 'price' => 'From ₹2,999'],
+                ['icon' => '✨', 'name' => $isShop ? 'Premium Product D' : 'Deep Cleaning',     'description' => 'Professional cleaning for home and office.', 'price' => 'From ₹799'],
+            ],
+            'template_content' => [
+                'hero_badge'       => $isShop ? 'Trusted Local Shop · 500+ Customers' : 'Trusted Service Provider · 10+ Years',
+                'hero_title'       => $isShop ? 'Your Premium Local Shop' : 'Professional Service For Every Need',
+                'hero_description' => $isShop
+                    ? 'Quality products at the best prices. Visit us or order online for fast delivery in your area.'
+                    : 'Fast, reliable and affordable services by certified local experts. Book online or call now.',
+                'primary_cta'      => $isShop ? 'Shop Now' : 'Book Service',
+                'secondary_cta'    => $isShop ? 'View Products' : 'Get Free Quote',
+                'services_label'   => $isShop ? 'Our Products' : 'Our Services',
+                'services_title'   => $isShop ? 'What We Offer' : 'Services We Provide',
+                'services_subtitle'=> $isShop ? 'Choose from our wide range of products.' : 'Pick from our most popular services.',
+                'why_title'        => $isShop ? 'Why Shop With Us' : 'Why Choose Us',
+                'why_subtitle'     => $isShop ? 'Quality, value and trusted service since 2015.' : 'Transparent pricing, expert team and fast response.',
+                'cta_title'        => $isShop ? 'Visit Us Today' : 'Need Help Today?',
+                'cta_description'  => $isShop ? 'Come in or call us for the best deals in town.' : 'Contact us now and get quick support from local experts.',
+                'cta_button'       => $isShop ? 'Call Now' : 'Contact Now',
+                'footer_brand'     => $isShop ? 'Demo Shop' : 'Demo Service',
+                'footer_tagline'   => $isShop ? 'Quality · Value · Trusted' : 'Trusted · Fast · Professional',
+                'provider_name'    => 'Dhananjay Bhoyar',
+                'provider_title'   => $isShop ? 'Shop Owner' : 'Founder & Lead Expert',
+                'provider_bio'     => 'Experienced local professional dedicated to quality service and customer satisfaction.',
+                'provider_email'   => 'demo@example.com',
+                'provider_contact' => '+91 98765 43210',
+                'provider_experience' => '10+ Years',
+                // Metro Clean
+                'metro_accent'     => 'blue',
+                'about_title'      => 'About Our Business',
+                'about_text'       => 'We are a trusted local business serving the community since 2015. Our mission is to provide quality services at affordable prices.',
+                'contact_heading'  => 'Get In Touch',
+                // Saffron Local
+                'opening_hours'    => 'Mon–Sat: 9 AM – 8 PM  |  Sun: 10 AM – 5 PM',
+                'locality_note'    => 'Serving Washim, Mangrulpir, Karanja and nearby areas',
+                'special_offer'    => '🎉 Grand Opening Offer: 20% off on all services this month!',
+                // Astro specific stats
+                'hero_stats' => [
+                    ['value' => '500+', 'label' => 'Happy Customers'],
+                    ['value' => '10+',  'label' => 'Years Experience'],
+                    ['value' => '4.8★', 'label' => 'Average Rating'],
+                    ['value' => '24/7', 'label' => 'Available'],
+                ],
+                'service_groups' => [
+                    ['eyebrow' => '01 · Core Services', 'title' => 'Main Services', 'subtitle' => 'Our most popular offerings.', 'items' => [
+                        ['icon' => '🔧', 'name' => 'Service A', 'description' => 'Quick and reliable.', 'price' => 'From ₹499'],
+                        ['icon' => '⚡', 'name' => 'Service B', 'description' => 'Expert installation.', 'price' => 'From ₹699'],
+                        ['icon' => '🏠', 'name' => 'Service C', 'description' => 'Complete solutions.', 'price' => 'From ₹999'],
+                        ['icon' => '✨', 'name' => 'Service D', 'description' => 'Premium experience.', 'price' => 'From ₹1299'],
+                    ]],
+                    ['eyebrow' => '02 · Special Packages', 'title' => 'Package Deals', 'subtitle' => 'Bundle and save more.', 'items' => [
+                        ['icon' => '💎', 'name' => 'Basic Pack', 'description' => 'Starter combo.', 'price' => '₹1,499'],
+                        ['icon' => '🌟', 'name' => 'Pro Pack',   'description' => 'Best value combo.', 'price' => '₹2,999'],
+                        ['icon' => '👑', 'name' => 'Elite Pack', 'description' => 'Complete package.', 'price' => '₹4,999'],
+                    ]],
+                ],
+            ],
+        ];
+
+        $viewMap = [
+            'astro_dynamic' => 'shops.templates.astro_dynamic',
+            'metro_clean'   => 'shops.templates.metro_clean',
+            'saffron_local' => 'shops.templates.saffron_local',
+            'dynamic_service' => 'shops.show',
+        ];
+
+        return view($viewMap[$template], compact('shop'));
     }
 }

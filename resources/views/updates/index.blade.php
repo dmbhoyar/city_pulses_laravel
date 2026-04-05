@@ -26,7 +26,7 @@
   ]);
   $editionDate = now()->format('l, d F Y');
   $cityEdition = $selectedCity?->name ? city_display_name($selectedCity->name) : __('ui.all_cities');
-  $leadLink = $leadStory ? ($leadStory->source_url ?: route('updates.show', $leadStory)) : '#';
+  $leadLink = $leadStory ? (((!empty($leadStory->source_url) && $leadStory->source_url !== '#') ? $leadStory->source_url : route('updates.show', $leadStory))) : '#';
   $leadPhoto = $leadStory && $leadStory->photo_path ? \Illuminate\Support\Facades\Storage::url($leadStory->photo_path) : null;
 @endphp
 
@@ -201,7 +201,7 @@
           <a class="btn-a" href="{{ route('updates.create') }}">+ {{ __('ui.upd_new_update') }}</a>
         @endif
       @endauth
-      <a class="btn-a" href="{{ route('user_submissions.index', ['tab' => 'submit']) }}">+ {{ __('ui.send_news') }}</a>
+      <a class="btn-a" href="{{ route('user_submissions.create') }}">+ {{ __('ui.send_news') }}</a>
       <button class="btn-d" type="button" onclick="document.getElementById('cpDlModal').classList.add('open')">⬇ {{ __('ui.upd_download_edition') }}</button>
     </div>
   </div>
@@ -247,13 +247,13 @@
           <div class="hero-cap">{{ $leadStory?->update_type ? strtoupper($leadStory->update_type) : __('ui.upd_news') }} · {{ __('ui.upd_citypulse_desk') }}</div>
         </div>
         <p class="body dc">{{ \Illuminate\Support\Str::limit(strip_tags($leadStory?->content ?: __('ui.upd_publish_updates_note')), 520) }}</p>
-        <a href="{{ $leadLink }}" target="{{ $leadStory && $leadStory->source_url ? '_blank' : '_self' }}" class="byl" style="color:var(--red)">{{ __('ui.upd_continue_reading') }} →</a>
+        <a href="{{ $leadLink }}" target="{{ $leadStory && !empty($leadStory->source_url) && $leadStory->source_url !== '#' ? '_blank' : '_self' }}" class="byl" style="color:var(--red)">{{ __('ui.upd_continue_reading') }} →</a>
         @if($secondaryStories->isNotEmpty())
           <hr class="rule2">
           <div class="flag">{{ __('ui.upd_also') }}</div>
           @foreach($secondaryStories as $story)
             <div style="margin-bottom:.7rem">
-              <h3 class="h3"><a href="{{ $story->source_url ?: route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h3>
+              <h3 class="h3"><a href="{{ (!empty($story->source_url) && $story->source_url !== '#') ? $story->source_url : route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h3>
                 <p class="body" style="font-size:.8rem;margin-bottom:0">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: __('ui.upd_open_full_update')), 120) }}</p>
             </div>
           @endforeach
@@ -292,7 +292,7 @@
           <div class="evt">
             <div class="ebox"><div class="ed">{{ $eventDate->format('d') }}</div><div class="em">{{ strtoupper($eventDate->format('M')) }}</div></div>
             <div>
-              <div class="etitle"><a href="{{ $event->source_url ?: route('updates.show', $event) }}" style="color:inherit">{{ $event->title }}</a></div>
+              <div class="etitle"><a href="{{ (!empty($event->source_url) && $event->source_url !== '#') ? $event->source_url : route('updates.show', $event) }}" style="color:inherit">{{ $event->title }}</a></div>
               <div class="emeta">📍 {{ $event->city?->name ?: $cityEdition }}</div>
             </div>
           </div>
@@ -366,7 +366,7 @@
       @forelse($newsGridItems as $story)
         <div class="col row-b">
           <div class="flag">{{ strtoupper($story->update_type ?: 'general') }}</div>
-          <h3 class="h2"><a href="{{ $story->source_url ?: route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h3>
+          <h3 class="h2"><a href="{{ (!empty($story->source_url) && $story->source_url !== '#') ? $story->source_url : route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h3>
           <div class="byl"><em>{{ $story->city?->name ?: $cityEdition }}</em> · {{ optional($story->published_at ?: $story->created_at)->format('d M Y, h:i A') }}</div>
           <p class="body">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: __('ui.upd_open_story')), 240) }}</p>
         </div>
@@ -396,7 +396,7 @@
         @forelse($offerUpdates->take(4) as $offer)
           <div class="col">
             <div class="flag">{{ __('ui.upd_offer') }}</div>
-            <h4 class="h4"><a href="{{ $offer->source_url ?: route('updates.show', $offer) }}" style="color:inherit">{{ $offer->title }}</a></h4>
+            <h4 class="h4"><a href="{{ (!empty($offer->source_url) && $offer->source_url !== '#') ? $offer->source_url : route('updates.show', $offer) }}" style="color:inherit">{{ $offer->title }}</a></h4>
             <p class="body" style="font-size:.78rem">{{ \Illuminate\Support\Str::limit(strip_tags($offer->content ?: __('ui.upd_open_offer')), 140) }}</p>
           </div>
         @empty
@@ -415,7 +415,7 @@
         <div class="col row-b">
           <div class="evt" style="border:none;padding:0;margin-bottom:.6rem">
             <div class="ebox"><div class="ed">{{ $eventDate->format('d') }}</div><div class="em">{{ strtoupper($eventDate->format('M')) }}</div></div>
-            <div><div class="etitle"><a href="{{ $event->source_url ?: route('updates.show', $event) }}" style="color:inherit">{{ $event->title }}</a></div><div class="emeta">📍 {{ $event->city?->name ?: $cityEdition }}</div></div>
+            <div><div class="etitle"><a href="{{ (!empty($event->source_url) && $event->source_url !== '#') ? $event->source_url : route('updates.show', $event) }}" style="color:inherit">{{ $event->title }}</a></div><div class="emeta">📍 {{ $event->city?->name ?: $cityEdition }}</div></div>
           </div>
           <p class="body" style="font-size:.81rem">{{ \Illuminate\Support\Str::limit(strip_tags($event->content ?: __('ui.upd_open_event')), 220) }}</p>
           <span class="tag tg">{{ __('ui.upd_event_tag') }}</span>
@@ -503,7 +503,7 @@
       @forelse($editorials as $story)
         <div class="col">
           <div class="flag">{{ strtoupper($story->update_type ?: 'general') }}</div>
-          <h2 class="h2" style="font-size:1.25rem"><a href="{{ $story->source_url ?: route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h2>
+          <h2 class="h2" style="font-size:1.25rem"><a href="{{ (!empty($story->source_url) && $story->source_url !== '#') ? $story->source_url : route('updates.show', $story) }}" style="color:inherit">{{ $story->title }}</a></h2>
           <div class="byl">{{ __('ui.upd_by') }} <em>{{ $story->city?->name ?: __('ui.upd_citypulse_desk') }}</em></div>
           <p class="body dc">{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: __('ui.upd_publish_long_form')), 340) }}</p>
           <div class="pq"><p>“{{ \Illuminate\Support\Str::limit(strip_tags($story->content ?: $story->title), 110) }}”</p><cite>{{ $story->city?->name ?: 'CityPulse' }}</cite></div>

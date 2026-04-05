@@ -51,7 +51,7 @@ class UpdatesController extends Controller
                 'city' => null,
                 'published_at' => $submission->created_at,
                 'created_at' => $submission->created_at,
-                'source_url' => '#',
+                'source_url' => route('user_submissions.show', $submission->id),
             ]);
         }
         $updates = $updates->sortByDesc(function($item) {
