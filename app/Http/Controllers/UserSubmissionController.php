@@ -45,6 +45,17 @@ class UserSubmissionController extends Controller
         ));
     }
 
+    public function show(UserSubmission $userSubmission)
+    {
+        if ($userSubmission->status !== 'approved') {
+            abort(404);
+        }
+
+        $userSubmission->loadMissing('user');
+
+        return view('user_submissions.show', ['submission' => $userSubmission]);
+    }
+
     public function create()
     {
         return redirect()->route('user_submissions.index', ['tab' => 'submit']);

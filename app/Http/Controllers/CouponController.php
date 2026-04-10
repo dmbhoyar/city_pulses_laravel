@@ -22,7 +22,6 @@ class CouponController extends Controller
     // API: Get available coupons (AJAX)
     public function getCoupons(Request $request)
     {
-        // Fetch coupons from the database (including Amazon coupons)
         $coupons = \App\Models\Coupon::where(function($q) {
             $q->whereNull('expiry_date')->orWhere('expiry_date', '>=', now());
         })
@@ -33,7 +32,7 @@ class CouponController extends Controller
                 'id' => $coupon->id,
                 'title' => $coupon->title,
                 'store' => $coupon->store,
-                'code' => $coupon->discount_text, // Use discount_text for code if that's where it's stored
+                'code' => $coupon->discount_text,
                 'coupon_code' => $coupon->discount_text,
                 'expiry' => $coupon->expiry_date,
                 'shop_url' => $coupon->shop_url,
@@ -70,11 +69,13 @@ class CouponController extends Controller
             }
 
             $redemption = CouponRedemption::create([
-                'user_id'     => $user->id,
-                'coupon_code' => 'coupon_' . $coupon->id,
-                'store'       => $coupon->store,
-                'title'       => $coupon->title,
-                'redeemed_at' => now(),
+                'user_id'      => $user->id,
+                'coupon_ref_id'=> $coupon->id,
+                'coupon_code'  => 'coupon_' . $coupon->id,
+                'store'        => $coupon->store,
+                'title'        => $coupon->title,
+                'redeemed_at'  => now(),
+                'status'       => 'pending',
             ]);
             $user->ruby_points = max(0, $user->ruby_points - $points);
             $user->save();
@@ -89,14 +90,27 @@ class CouponController extends Controller
 
         // If redeeming an offer
         if ($request->has('offer_id')) {
-            $request->validate([
-                'offer_id' => 'required|integer|exists:updates,id',
-            ]);
-            $offer = Update::find($request->offer_id);
+            $offer = Update::find($request->input('offer_id'));
             if (!$offer || $offer->update_type !== 'offer') {
                 return response()->json(['error' => 'Invalid offer'], 400);
             }
-            // Prevent duplicate redemption
+
+            $isProduct = ($offer->offer_category ?? 'coupon') === 'product';
+
+            // For product offers, validate delivery address
+            $rules = ['offer_id' => 'required|integer|exists:updates,id'];
+            if ($isProduct) {
+                $rules['delivery_name']     = 'required|string|max:120';
+                $rules['delivery_phone']    = 'required|string|max:20';
+                $rules['delivery_address1'] = 'required|string|max:255';
+                $rules['delivery_address2'] = 'nullable|string|max:255';
+                $rules['delivery_city']     = 'required|string|max:100';
+                $rules['delivery_state']    = 'required|string|max:100';
+                $rules['delivery_pincode']  = 'required|string|max:20';
+                $rules['delivery_landmark'] = 'nullable|string|max:255';
+            }
+            $request->validate($rules);
+
             $exists = CouponRedemption::where('user_id', $user->id)
                 ->where('coupon_code', 'offer_'.$offer->id)
                 ->exists();
@@ -107,13 +121,29 @@ class CouponController extends Controller
             if ($user->ruby_points < $points) {
                 return response()->json(['error' => 'Not enough points'], 400);
             }
-            $redemption = CouponRedemption::create([
-                'user_id' => $user->id,
+
+            $data = [
+                'user_id'     => $user->id,
+                'offer_id'    => $offer->id,
                 'coupon_code' => 'offer_'.$offer->id,
-                'store' => $offer->shop->name ?? '',
-                'title' => $offer->title,
+                'store'       => $offer->shop->name ?? '',
+                'title'       => $offer->title,
                 'redeemed_at' => now(),
-            ]);
+                'status'      => 'pending',
+            ];
+
+            if ($isProduct) {
+                $data['delivery_name']     = $request->input('delivery_name');
+                $data['delivery_phone']    = $request->input('delivery_phone');
+                $data['delivery_address1'] = $request->input('delivery_address1');
+                $data['delivery_address2'] = $request->input('delivery_address2');
+                $data['delivery_city']     = $request->input('delivery_city');
+                $data['delivery_state']    = $request->input('delivery_state');
+                $data['delivery_pincode']  = $request->input('delivery_pincode');
+                $data['delivery_landmark'] = $request->input('delivery_landmark');
+            }
+
+            $redemption = CouponRedemption::create($data);
             $user->ruby_points = max(0, $user->ruby_points - $points);
             $user->save();
             return response()->json([

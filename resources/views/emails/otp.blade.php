@@ -18,7 +18,7 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="https://aajchaoffer.com/assets/logo.png" alt="AajchaOffer Logo">
+            <img src="https://aajchaoffer.com/assets/logo.png" alt="AajchaOffer">
         </div>
         <div class="brand">AajchaOffer</div>
         <div class="info">Use the following OTP to complete your action:</div>

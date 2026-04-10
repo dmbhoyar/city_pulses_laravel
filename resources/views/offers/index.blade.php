@@ -225,6 +225,11 @@
 #cpHub .btn-del-exp{padding:.45rem 1rem;border:1.5px solid rgba(239,68,68,.4);border-radius:8px;background:transparent;color:#f87171;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s}
 #cpHub .btn-del-exp:hover{background:rgba(239,68,68,.15)}
 
+/* ── address modal select options ── */
+#addrModal select option { background:#1a1033; color:#fff; }
+#addrModal { display:none; }
+#addrModal.open { display:flex; }
+
 /* ── responsive ── */
 @media(max-width:900px){#cpHub{margin:-12px}}
 @media(max-width:640px){#cpHub .grid{grid-template-columns:1fr 1fr}#cpHub .chips{gap:.35rem}#cpHub .chip{font-size:.7rem;padding:.35rem .8rem}}
@@ -252,6 +257,107 @@
     </div>
   </div>
 
+  {{-- Address Modal --}}
+  <div id="addrModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);z-index:99999;align-items:center;justify-content:center;padding:1rem;overflow-y:auto" onclick="if(event.target===this)closeAddrModal()">
+    <div style="background:#1a1033;border:1.5px solid rgba(255,255,255,.12);border-radius:24px;padding:0;max-width:520px;width:100%;position:relative;max-height:92vh;overflow-y:auto">
+
+      {{-- Modal header --}}
+      <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:20px 24px;border-radius:22px 22px 0 0;position:sticky;top:0;z-index:1">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:4px">📦 Product Order</div>
+            <div style="font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff" id="addrModalTitle">Enter Delivery Address</div>
+          </div>
+          <button onclick="closeAddrModal()" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+        </div>
+        {{-- Offer info strip --}}
+        <div id="addrOfferStrip" style="margin-top:12px;background:rgba(0,0,0,.25);border-radius:10px;padding:8px 12px;font-size:.8rem;color:rgba(255,255,255,.85)"></div>
+      </div>
+
+      <div style="padding:20px 24px 24px">
+        {{-- Points warning --}}
+        <div id="addrPtsWarning" style="display:none;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:.82rem;color:#fcd34d;display:flex;align-items:center;gap:8px">
+          <span>💎</span><span id="addrPtsText"></span>
+        </div>
+
+        <form id="addrForm" autocomplete="on">
+          <input type="hidden" id="addrOfferId">
+
+          {{-- Contact info --}}
+          <div style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9f8fc0;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            <span style="flex:1;height:1px;background:rgba(255,255,255,.08)"></span> Contact Info <span style="flex:1;height:1px;background:rgba(255,255,255,.08)"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">Full Name *</label>
+              <input id="addr_name" name="delivery_name" type="text" autocomplete="name" placeholder="Your full name" required style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">Phone Number *</label>
+              <input id="addr_phone" name="delivery_phone" type="tel" autocomplete="tel" placeholder="+91 98765 43210" required style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+            </div>
+          </div>
+
+          {{-- Address --}}
+          <div style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9f8fc0;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            <span style="flex:1;height:1px;background:rgba(255,255,255,.08)"></span> Delivery Address <span style="flex:1;height:1px;background:rgba(255,255,255,.08)"></span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">Address Line 1 * <span style="color:#6b7280;font-weight:400">(House / Flat / Street)</span></label>
+              <input id="addr_line1" name="delivery_address1" type="text" autocomplete="address-line1" placeholder="House no., Building, Street" required style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">Address Line 2 <span style="color:#6b7280;font-weight:400">(optional)</span></label>
+              <input id="addr_line2" name="delivery_address2" type="text" autocomplete="address-line2" placeholder="Area, Colony, Locality" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">City / Town *</label>
+                <input id="addr_city" name="delivery_city" type="text" autocomplete="address-level2" placeholder="City" required style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">PIN Code *</label>
+                <input id="addr_pin" name="delivery_pincode" type="text" autocomplete="postal-code" placeholder="400001" required maxlength="10" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">State *</label>
+                <select id="addr_state" name="delivery_state" required style="background:#1a1033;border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+                  <option value="">Select state</option>
+                  @foreach(['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'] as $st)
+                    <option value="{{ $st }}">{{ $st }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <label style="font-size:.73rem;font-weight:600;color:#9f8fc0">Landmark <span style="color:#6b7280;font-weight:400">(optional)</span></label>
+                <input id="addr_landmark" name="delivery_landmark" type="text" placeholder="Near school, temple..." style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:9px 12px;font-size:.88rem;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(255,255,255,.12)'">
+              </div>
+            </div>
+          </div>
+
+          {{-- Error msg --}}
+          <div id="addrError" style="display:none;margin-top:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:9px 14px;font-size:.8rem;color:#fca5a5"></div>
+
+          {{-- Submit --}}
+          <div style="margin-top:18px;display:flex;gap:10px">
+            <button type="submit" id="addrSubmitBtn" style="flex:1;padding:.75rem;border:none;border-radius:14px;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px">
+              <span id="addrSubmitIcon">📦</span> <span id="addrSubmitText">Place Order</span>
+            </button>
+            <button type="button" onclick="closeAddrModal()" style="padding:.75rem 1.2rem;border:1.5px solid rgba(255,255,255,.15);border-radius:14px;background:transparent;color:#9f8fc0;font-size:.85rem;font-weight:600;cursor:pointer">Cancel</button>
+          </div>
+
+          <div style="margin-top:12px;text-align:center;font-size:.72rem;color:#6b7280;line-height:1.5">
+            🔒 Your address is stored securely and only used for this delivery
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   {{-- Hero --}}
   <div class="hero">
     <div class="hero-eyebrow"><span></span> {{ __('ui.offers_rewards') }}</div>
@@ -271,6 +377,11 @@
           {!! __('ui.offers_points_earn_story') !!}<br>
           {!! __('ui.offers_points_earn_shortsplay') !!}
         </div>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <a href="{{ route('offers.my_orders') }}" style="display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.4rem;border-radius:100px;background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35));border:1.5px solid rgba(99,102,241,.45);color:#a5b4fc;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(99,102,241,.5),rgba(139,92,246,.5))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35))'">
+          📦 My Orders &amp; Redemptions →
+        </a>
       </div>
     @else
       <div style="margin-bottom:2rem">
@@ -431,9 +542,10 @@
       {{-- ── Local Offers ── --}}
       @forelse($offers as $offer)
         @php
-          $pts       = ($offer->points_required > 0) ? (int)$offer->points_required : 200;
-          $canAfford = $userPoints >= $pts;
-          $redeemed  = in_array('offer_' . $offer->id, $redeemedIds);
+          $pts        = ($offer->points_required > 0) ? (int)$offer->points_required : 200;
+          $canAfford  = $userPoints >= $pts;
+          $redeemed   = in_array('offer_' . $offer->id, $redeemedIds);
+          $isProduct  = ($offer->offer_category ?? 'coupon') === 'product';
         @endphp
         <div class="ocard"
              data-type="offer" data-id="{{ $offer->id }}"
@@ -444,27 +556,46 @@
           @if($offer->photo_path)
             <img class="ocard-img" src="{{ \Illuminate\Support\Facades\Storage::url($offer->photo_path) }}" alt="{{ $offer->title }}" loading="lazy">
           @else
-            <div class="ocard-img-ph">🎁</div>
+            <div class="ocard-img-ph">{{ $isProduct ? '📦' : '🎁' }}</div>
           @endif
           <div class="ocard-body">
-            <span class="ocard-store local">{{ $offer->shop?->name ?? __('ui.offers_local_offer') }}</span>
+            <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.3rem">
+              <span class="ocard-store local">{{ $offer->shop?->name ?? __('ui.offers_local_offer') }}</span>
+              @if($isProduct)
+                <span style="background:rgba(99,102,241,.18);color:#a5b4fc;border:1px solid rgba(99,102,241,.3);font-size:.63rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:2px 8px;border-radius:100px;">📦 Product</span>
+              @else
+                <span style="background:rgba(245,158,11,.12);color:#fcd34d;border:1px solid rgba(245,158,11,.25);font-size:.63rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:2px 8px;border-radius:100px;">🎟 Coupon</span>
+              @endif
+            </div>
             <div class="ocard-title">{{ $offer->title }}</div>
             <div class="ocard-desc">{{ \Illuminate\Support\Str::limit(strip_tags($offer->content), 80) }}</div>
             <div class="pts-badge">💎 {{ $pts }} {{ __('ui.offers_pts_required') }}</div>
 
             @if($redeemed)
-              <div class="redeemed-badge">✓ {{ __('ui.offers_redeemed_successfully') }}</div>
+              @if($isProduct)
+                <div style="display:flex;align-items:center;gap:.4rem;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);padding:5px 10px;border-radius:10px;font-size:.73rem;font-weight:700;color:#a5b4fc;">📦 Order Placed — Pending Review</div>
+              @else
+                <div class="redeemed-badge">✓ {{ __('ui.offers_redeemed_successfully') }}</div>
+              @endif
             @else
-              <div class="code-lock">🔒 <span>{{ __('ui.offers_redeem_unlock_offer') }}</span></div>
+              @if($isProduct)
+                <div class="code-lock">🔒 <span>Redeem to place order</span></div>
+              @else
+                <div class="code-lock">🔒 <span>{{ __('ui.offers_redeem_unlock_offer') }}</span></div>
+              @endif
             @endif
 
             <div class="ocard-actions">
               @auth
-                <button class="btn-redeem cp-redeem"
-                        data-type="offer" data-id="{{ $offer->id }}" data-pts="{{ $pts }}"
-                        {{ $redeemed ? 'disabled' : (!$canAfford ? 'disabled' : '') }}>
-                  {{ $redeemed ? '✓ '.__('ui.offers_redeemed') : ($canAfford ? '💎 '.__('ui.offers_redeem').' · '.$pts.' '.__('ui.pts') : '⚡ '.__('ui.offers_need_points', ['pts' => $pts])) }}
-                </button>
+                @if($redeemed && $isProduct)
+                  <a href="{{ route('offers.my_orders') }}" class="btn-redeem" style="text-decoration:none;text-align:center;background:linear-gradient(135deg,#6366f1,#4f46e5);">📦 Track Order</a>
+                @else
+                  <button class="btn-redeem cp-redeem"
+                          data-type="offer" data-id="{{ $offer->id }}" data-pts="{{ $pts }}" data-is-product="{{ $isProduct ? '1' : '0' }}"
+                          {{ $redeemed ? 'disabled' : (!$canAfford ? 'disabled' : '') }}>
+                    {{ $redeemed ? '✓ '.__('ui.offers_redeemed') : ($canAfford ? ($isProduct ? '📦 Order · '.$pts.' '.(__('ui.pts')) : '💎 '.__('ui.offers_redeem').' · '.$pts.' '.__('ui.pts')) : '⚡ '.__('ui.offers_need_points', ['pts' => $pts])) }}
+                  </button>
+                @endif
               @else
                 <a href="{{ route('login') }}" class="btn-login-cta">{{ __('ui.login_to_redeem') }}</a>
               @endauth
@@ -698,18 +829,117 @@ function cpCopyCode(el, code) {
   });
 }
 
+// ── Address modal
+let _addrBtn = null;
+function openAddrModal(btn, offerId, offerTitle, pts) {
+  _addrBtn = btn;
+  document.getElementById('addrOfferId').value = offerId;
+  document.getElementById('addrModalTitle').textContent = 'Delivery Address';
+  document.getElementById('addrOfferStrip').innerHTML =
+    `<strong>${offerTitle}</strong> &nbsp;·&nbsp; 💎 ${pts} pts`;
+  const warn = document.getElementById('addrPtsWarning');
+  warn.style.display = 'flex';
+  document.getElementById('addrPtsText').textContent =
+    `${pts} Ruby Points will be deducted from your balance (${window._pts} pts remaining)`;
+  document.getElementById('addrError').style.display = 'none';
+  document.getElementById('addrSubmitText').textContent = 'Place Order';
+  document.getElementById('addrSubmitIcon').textContent = '📦';
+  document.getElementById('addrSubmitBtn').disabled = false;
+  document.getElementById('addrModal').classList.add('open');
+}
+function closeAddrModal() {
+  document.getElementById('addrModal').classList.remove('open');
+  if (_addrBtn) {
+    const pts = parseInt(_addrBtn.dataset.pts||200);
+    _addrBtn.disabled = false;
+    _addrBtn.innerHTML = '📦 Order · ' + pts + ' ' + I18N.pts;
+  }
+  _addrBtn = null;
+}
+
+// Address form submit
+document.getElementById('addrForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const offerId = document.getElementById('addrOfferId').value;
+  const btn     = document.getElementById('addrSubmitBtn');
+  const errEl   = document.getElementById('addrError');
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  document.getElementById('addrSubmitText').textContent = 'Placing Order...';
+  document.getElementById('addrSubmitIcon').textContent = '⏳';
+
+  const payload = {
+    offer_id:          offerId,
+    delivery_name:     document.getElementById('addr_name').value,
+    delivery_phone:    document.getElementById('addr_phone').value,
+    delivery_address1: document.getElementById('addr_line1').value,
+    delivery_address2: document.getElementById('addr_line2').value,
+    delivery_city:     document.getElementById('addr_city').value,
+    delivery_state:    document.getElementById('addr_state').value,
+    delivery_pincode:  document.getElementById('addr_pin').value,
+    delivery_landmark: document.getElementById('addr_landmark').value,
+  };
+
+  fetch('/coupons/redeem', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','X-CSRF-TOKEN':_csrf},
+    body: JSON.stringify(payload)
+  }).then(r => r.json()).then(data => {
+    if (data.success) {
+      cpSetPts(data.points_left ?? window._pts);
+      closeAddrModal();
+      // Update the card UI
+      if (_addrBtn === null && offerId) {
+        const card = document.querySelector(`.ocard[data-id="${offerId}"]`);
+        if (card) {
+          const lock = card.querySelector('.code-lock');
+          if (lock) lock.outerHTML = '<div style="display:flex;align-items:center;gap:.4rem;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);padding:5px 10px;border-radius:10px;font-size:.73rem;font-weight:700;color:#a5b4fc;">📦 Order Placed — Pending Review</div>';
+          const redeemBtn = card.querySelector('.cp-redeem');
+          if (redeemBtn) redeemBtn.outerHTML = `<a href="{{ route('offers.my_orders') }}" class="btn-redeem" style="text-decoration:none;text-align:center;background:linear-gradient(135deg,#6366f1,#4f46e5);">📦 Track Order</a>`;
+        }
+      }
+      cpToast('📦 Order placed! Track it in My Orders.', 'ok');
+      cpLoadMine();
+    } else {
+      errEl.textContent = data.error || 'Something went wrong. Please try again.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      document.getElementById('addrSubmitText').textContent = 'Place Order';
+      document.getElementById('addrSubmitIcon').textContent = '📦';
+    }
+  }).catch(() => {
+    errEl.textContent = 'Network error. Please check your connection.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    document.getElementById('addrSubmitText').textContent = 'Place Order';
+    document.getElementById('addrSubmitIcon').textContent = '📦';
+  });
+});
+
 // ── Redeem
 document.querySelectorAll('.cp-redeem').forEach(btn => {
   btn.addEventListener('click', function() {
     if (this.disabled) return;
     if (!window._auth) { location.href = '/login'; return; }
-    const type = this.dataset.type;
-    const id   = this.dataset.id;
-    const pts  = parseInt(this.dataset.pts||200);
+    const type      = this.dataset.type;
+    const id        = this.dataset.id;
+    const pts       = parseInt(this.dataset.pts||200);
+    const isProduct = this.dataset.isProduct === '1';
+
     if (window._pts < pts) {
       cpToast(I18N.needPoints.replace(':pts', pts).replace(':have', window._pts), 'err');
       return;
     }
+
+    // Product offer → show address modal
+    if (type === 'offer' && isProduct) {
+      const title = this.closest('.ocard')?.querySelector('.ocard-title')?.textContent || 'Offer';
+      this.disabled = true;
+      openAddrModal(this, id, title, pts);
+      return;
+    }
+
+    // Coupon or standard offer → direct redeem
     const self = this;
     self.disabled = true;
     self.textContent = '⏳ ' + I18N.redeeming;
@@ -723,14 +953,12 @@ document.querySelectorAll('.cp-redeem').forEach(btn => {
         cpSetPts(data.points_left ?? (window._pts - pts));
         self.textContent = '✓ ' + I18N.redeemed;
         self.dataset.redeemed = '1';
-        // reveal code for coupons
         if (type === 'coupon') {
           const locked   = self.closest('.ocard-body')?.querySelector('.cp-locked-' + id);
           const revealed = self.closest('.ocard-body')?.querySelector('.cp-code-' + id);
           if (locked)   locked.style.display = 'none';
           if (revealed) revealed.style.display = 'block';
         }
-        // replace lock with redeemed badge
         const lock = self.closest('.ocard-body')?.querySelector('.code-lock');
         if (lock) { lock.outerHTML = '<div class="redeemed-badge">✓ ' + I18N.redeemedSuccess + '</div>'; }
         cpToast(I18N.offerRedeemedToast + ' 🎉', 'ok');
@@ -811,15 +1039,31 @@ function cpLoadMine() {
       g.innerHTML = '<div style="color:var(--muted);font-size:.82rem;padding:.5rem 0">'+I18N.myRedeemedEmpty+'</div>';
       return;
     }
+    const statusColors = {pending:'#f59e0b',approved:'#6366f1',on_the_way:'#8b5cf6',delivered:'#10b981',rejected:'#ef4444'};
+    const statusLabels = {pending:'⏳ Pending',approved:'✅ Confirmed',on_the_way:'🚚 Shipped',delivered:'🎉 Delivered',rejected:'❌ Rejected'};
     g.innerHTML = list.map(r => {
       const code = r.coupon_code||'';
-      const isOfferRedeemed = code.startsWith('offer_') || code.startsWith('coupon_');
-      const displayCode = isOfferRedeemed ? '' : code;
+      const isOffer = code.startsWith('offer_');
+      const isCpn   = code.startsWith('coupon_');
+      const status  = r.status || 'pending';
+      const sColor  = statusColors[status] || '#6b7280';
+      const sLabel  = statusLabels[status] || status;
+      let bottom = '';
+      if (isOffer) {
+        bottom = `<div style="display:inline-flex;align-items:center;gap:4px;background:${sColor}22;border:1px solid ${sColor}55;padding:3px 9px;border-radius:100px;font-size:.7rem;font-weight:700;color:${sColor}">${sLabel}</div>`;
+      } else if (isCpn) {
+        bottom = '<div class="redeemed-badge" style="font-size:.7rem">🎟 Coupon Redeemed</div>';
+      } else if (code) {
+        bottom = `<div class="rcard-code" onclick="navigator.clipboard&&navigator.clipboard.writeText('${code}')" title="${I18N.clickToCopy}" style="cursor:pointer">${code}</div>`;
+      }
       return `<div class="rcard">
         <div class="rcard-store">${r.store||I18N.citypulse}</div>
         <div class="rcard-title">${r.title||''}</div>
-        ${!isOfferRedeemed && displayCode ? `<div class="rcard-code" onclick="navigator.clipboard&&navigator.clipboard.writeText('${displayCode}')" title="${I18N.clickToCopy}" style="cursor:pointer">${displayCode}</div>` : '<div class="redeemed-badge" style="font-size:.7rem">✓ '+I18N.offerRedeemed+'</div>'}
-        <div class="rcard-date">📅 ${r.redeemed_at?r.redeemed_at.substring(0,10):''}</div>
+        ${bottom}
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:.3rem">
+          <div class="rcard-date">📅 ${r.redeemed_at?r.redeemed_at.substring(0,10):''}</div>
+          ${isOffer ? '<a href="{{ route("offers.my_orders") }}" style="font-size:.65rem;color:#a5b4fc;font-weight:700;">Track →</a>' : ''}
+        </div>
       </div>`;
     }).join('');
   });

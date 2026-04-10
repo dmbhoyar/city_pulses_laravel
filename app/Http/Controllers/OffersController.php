@@ -99,4 +99,32 @@ class OffersController extends Controller
 
         return view('offers.index', compact('city', 'offers', 'events', 'today', 'apiCoupons', 'userRedemptions'));
     }
+
+    public function myOrders(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $userId = Auth::id();
+
+        $redemptions = CouponRedemption::query()
+            ->with([
+                'offer:id,title,photo_path,offer_category,points_required,source_url',
+                'coupon:id,discount_text,store,title',
+            ])
+            ->where('user_id', $userId)
+            ->orderByDesc('redeemed_at')
+            ->paginate(15);
+
+        // Counts for tabs
+        $allUserRedemptions = CouponRedemption::where('user_id', $userId)->get();
+
+        $productCount  = $allUserRedemptions->filter(fn($r) => $r->offer?->offer_category === 'product')->count();
+        $couponCount   = $allUserRedemptions->filter(fn($r) => $r->offer?->offer_category !== 'product')->count();
+        $pendingCount  = $allUserRedemptions->whereIn('status', ['pending','approved','on_the_way'])->count();
+        $deliveredCount= $allUserRedemptions->where('status', 'delivered')->count();
+
+        return view('offers.my_orders', compact('redemptions', 'productCount', 'couponCount', 'pendingCount', 'deliveredCount'));
+    }
 }

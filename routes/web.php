@@ -163,6 +163,7 @@ Route::get('/newspaper', [NewspaperController::class, 'show'])->name('newspaper'
 
 // Offers
 Route::get('/offers', [OffersController::class, 'index'])->name('offers');
+Route::get('/offers/my-orders', [OffersController::class, 'myOrders'])->middleware('auth')->name('offers.my_orders');
 
 // About
 Route::view('/about', 'about.index')->name('about');
@@ -264,6 +265,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/offers', [AdminOffersController::class, 'store'])->name('offers.store');
     Route::patch('/offers/{offer}', [AdminOffersController::class, 'update'])->name('offers.update');
     Route::delete('/offers/{offer}', [AdminOffersController::class, 'destroy'])->name('offers.destroy');
+    Route::get('/offers/redemptions', [AdminOffersController::class, 'redemptions'])->name('offers.redemptions');
+    Route::patch('/offers/redemptions/{redemption}/status', [AdminOffersController::class, 'updateRedemptionStatus'])->name('offers.redemptions.status');
     Route::get('/listings', [AdminListingsController::class, 'index'])->name('listings.index');
     Route::patch('/listings/{listing}/status', [AdminListingsController::class, 'updateStatus'])->name('listings.status');
     Route::get('/shops', [AdminShopsController::class, 'index'])->name('shops.index');

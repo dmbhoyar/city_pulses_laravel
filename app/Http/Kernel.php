@@ -23,7 +23,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\SetLocale::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
-            \App\Http\Middleware\TrackRubyVisitPoints::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
         'api' => [
