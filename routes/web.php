@@ -82,8 +82,13 @@ use App\Http\Controllers\Admin\UserSubmissionAdminController;
 |--------------------------------------------------------------------------
 */
 
-// Root
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Root — redirect to Offers & Benefits on site load
+Route::get('/', function () {
+    return redirect()->route('offers');
+});
+
+// Today's Pulses
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::post('/set_city', [HomeController::class, 'setCity'])->name('set_city');
 Route::post('/set-language', [HomeController::class, 'setLanguage'])->name('set_language');
 
