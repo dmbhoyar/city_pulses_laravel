@@ -249,6 +249,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('/myservice/requests/{id}', [MyserviceController::class, 'updateClientRequest'])->name('myservice_requests_update');
     Route::get('/myservice/experience', [MyserviceController::class, 'experience'])->name('myservice_experience');
     Route::get('/myservice/idcard', [MyserviceController::class, 'idcard'])->name('myservice_idcard');
+
+    // Invoice Business Profile (settings: bank, QR, signature, default terms)
+    Route::get('/invoices/settings', [\App\Http\Controllers\BusinessProfileController::class, 'edit'])->name('invoices.settings');
+    Route::post('/invoices/settings', [\App\Http\Controllers\BusinessProfileController::class, 'update'])->name('invoices.settings.save');
+
+    // Invoices — for shop owners & service providers
+    Route::get('/invoices', [\App\Http\Controllers\InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/invoices/create', [\App\Http\Controllers\InvoiceController::class, 'create'])->name('invoices.create');
+    Route::post('/invoices', [\App\Http\Controllers\InvoiceController::class, 'store'])->name('invoices.store');
+    Route::get('/invoices/{invoice}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('invoices.show');
+    Route::get('/invoices/{invoice}/edit', [\App\Http\Controllers\InvoiceController::class, 'edit'])->name('invoices.edit');
+    Route::put('/invoices/{invoice}', [\App\Http\Controllers\InvoiceController::class, 'update'])->name('invoices.update');
+    Route::delete('/invoices/{invoice}', [\App\Http\Controllers\InvoiceController::class, 'destroy'])->name('invoices.destroy');
+    Route::post('/invoices/{invoice}/payment', [\App\Http\Controllers\InvoiceController::class, 'markPayment'])->name('invoices.payment');
+    Route::post('/invoices/{invoice}/share', [\App\Http\Controllers\InvoiceController::class, 'markShared'])->name('invoices.share');
+    Route::get('/invoices/{invoice}/print', [\App\Http\Controllers\InvoiceController::class, 'printView'])->name('invoices.print');
 });
 
 // Admin

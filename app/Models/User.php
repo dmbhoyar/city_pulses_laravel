@@ -57,6 +57,11 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->hasMany(ServiceReview::class);
     }
 
+    public function businessProfile()
+    {
+        return $this->hasOne(BusinessProfile::class);
+    }
+
     // ShortsPlay Relationships
     public function shortVideos()
     {

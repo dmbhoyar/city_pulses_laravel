@@ -259,14 +259,7 @@
                 $imgUrl = $item->photo ? asset('storage/' . $item->photo) : null;
                 $excerpt = \Illuminate\Support\Str::limit(strip_tags($item->content), 110);
               @endphp
-              <div class="card cp-story-card"
-                data-id="{{ $item->id }}"
-                data-title="{{ e($item->title) }}"
-                data-content="{{ e($item->content) }}"
-                data-author="{{ e($item->user->name ?? 'Community') }}"
-                data-date="{{ $item->created_at->format('d M Y') }}"
-                data-type="{{ e($flagLabels[$item->type] ?? $item->type) }}"
-                data-img="{{ $imgUrl ?? '' }}">
+              <a class="card cp-story-card" href="{{ route('user_submissions.show', $item->id) }}" style="text-decoration:none;color:inherit;display:block">
                 @if($imgUrl)
                   <img class="card-img" src="{{ $imgUrl }}" alt="{{ $item->title }}">
                 @else
@@ -285,7 +278,7 @@
                   <div class="card-excerpt">{{ $excerpt }}</div>
                   <div class="card-read">{{ __('ui.read_more') }} →</div>
                 </div>
-              </div>
+              </a>
             @endforeach
           </div>
 
@@ -543,18 +536,5 @@ function cpCloseModal() {
 }
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cpCloseModal(); });
 
-// ── Card click via event delegation
-document.addEventListener('click', function(e) {
-  var card = e.target.closest('.cp-story-card');
-  if (!card) return;
-  cpOpenStory(
-    card.dataset.title,
-    card.dataset.content,
-    card.dataset.author,
-    card.dataset.date,
-    card.dataset.type,
-    card.dataset.img || ''
-  );
-});
 </script>
 @endsection

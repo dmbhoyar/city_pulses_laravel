@@ -133,6 +133,18 @@ class UpdatesController extends Controller
 
     public function show(Update $update)
     {
+        $locale = app()->getLocale();
+        if ($locale !== 'en') {
+            if (!empty($update->title)) {
+                $update->title = TextTranslationService::translate((string) $update->title, $locale);
+            }
+            if (!empty($update->content)) {
+                $update->content = TextTranslationService::translate((string) $update->content, $locale);
+            }
+            if (!empty($update->update_type)) {
+                $update->update_type = TextTranslationService::translate((string) $update->update_type, $locale);
+            }
+        }
         return view('updates.show', compact('update'));
     }
 

@@ -5,7 +5,7 @@
 @section('content')
 <div class="container" style="max-width:860px;margin:0 auto;padding:1.2rem 1rem 2rem">
     <div style="margin-bottom:1rem">
-        <a href="{{ route('updates.index') }}" style="font-size:.85rem;color:#b91c1c;text-decoration:none">← {{ __('ui.back') }} {{ __('ui.updates') }}</a>
+        <a href="{{ route('user_submissions.index') }}" style="font-size:.85rem;color:#b91c1c;text-decoration:none">← {{ __('ui.back') }} {{ __('ui.community_stories') }}</a>
     </div>
 
     <article style="background:#f8f3e8;border:1px solid rgba(26,18,8,.2);padding:1.2rem 1.2rem 1.4rem">

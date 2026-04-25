@@ -588,7 +588,18 @@ class MyserviceController extends Controller
 
     private function getOrBuildShop(): Shop
     {
-        return auth()->user()->shops()->first()
-            ?? auth()->user()->shops()->make(['name' => 'My Service']);
+        $shop = auth()->user()->shops()->first();
+        
+        if (!$shop) {
+            // Create a new service shop for first-time service providers
+            $shop = auth()->user()->shops()->create([
+                'name' => 'My Service',
+                'shop_type' => 'service',
+                'city_id' => auth()->user()->city_id,
+                'page_config' => json_encode([]),
+            ]);
+        }
+        
+        return $shop;
     }
 }

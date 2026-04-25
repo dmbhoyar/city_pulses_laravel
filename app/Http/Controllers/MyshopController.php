@@ -627,7 +627,17 @@ class MyshopController extends Controller
 
     private function getOrBuildShop(): Shop
     {
-        return auth()->user()->shops()->first()
-            ?? auth()->user()->shops()->make(['name' => auth()->user()->full_name . "'s Shop"]);
+        $shop = auth()->user()->shops()->first();
+        
+        if (!$shop) {
+            // Create a new shop for first-time shopowners
+            $shop = auth()->user()->shops()->create([
+                'name' => auth()->user()->full_name . "'s Shop",
+                'city_id' => auth()->user()->city_id,
+                'page_config' => json_encode([]),
+            ]);
+        }
+        
+        return $shop;
     }
 }

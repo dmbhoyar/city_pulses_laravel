@@ -26,7 +26,6 @@
       $isSuperadmin = $user->isSuperadmin();
       $showMyService = !$isSuperadmin && $user->isServiceProvider();
       $showMyShop    = !$isSuperadmin && $user->isShopowner();
-      $showDashboard = !$isSuperadmin && ($showMyService || $showMyShop);
     @endphp
 
     {{-- User identity card --}}
@@ -43,7 +42,7 @@
     </div>
 
     {{-- Quick workspace jump links --}}
-    @if($showMyService || $showMyShop || $showDashboard || Route::has('profile.edit'))
+    @if($showMyService || $showMyShop || Route::has('profile.show'))
     <div class="su-links">
       @if($showMyService)
         <a href="{{ route('myservice') }}" class="ws-btn">{{ __('ui.my_service') }}</a>
@@ -51,9 +50,7 @@
       @if($showMyShop)
         <a href="{{ route('myshop') }}" class="ws-btn">{{ __('ui.my_shop') }}</a>
       @endif
-      @if($showDashboard)
-        <a href="{{ route('shop_dashboard') }}">📊 {{ __('ui.dashboard') }}</a>
-      @endif
+
       @if(Route::has('profile.show'))
         <a href="{{ route('profile.show') }}">{{ __('ui.profile') }}</a>
       @endif

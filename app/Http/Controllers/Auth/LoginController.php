@@ -38,9 +38,15 @@ class LoginController extends Controller
                 return redirect()->to($redirectTo)->with('notice', 'Welcome back!');
             }
 
-            $defaultRoute = $user && method_exists($user, 'isSuperadmin') && $user->isSuperadmin()
-                ? route('admin.dashboard')
-                : route('home');
+            // Determine default route based on user role
+            $defaultRoute = route('home');
+            if ($user && method_exists($user, 'isSuperadmin') && $user->isSuperadmin()) {
+                $defaultRoute = route('admin.dashboard');
+            } elseif ($user && method_exists($user, 'isShopowner') && $user->isShopowner()) {
+                $defaultRoute = route('myshop');
+            } elseif ($user && method_exists($user, 'isServiceProvider') && $user->isServiceProvider()) {
+                $defaultRoute = route('myservice');
+            }
 
             return redirect()->intended($defaultRoute)->with('notice', 'Welcome back!');
         }
@@ -55,6 +61,6 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('home');
+        return redirect()->route('offers');
     }
 }
